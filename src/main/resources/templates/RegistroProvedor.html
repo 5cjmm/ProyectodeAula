@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Proveedores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 min-h-screen flex flex-col items-center p-6">
+    
+    <h1 class="text-white text-4xl font-bold mb-6">Registro de Proveedores</h1>
+    
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-6">
+        
+        <!-- Corregir aqui, que los botones esten dentro del formulario para el metodo POST-->
+        <form class="grid grid-cols-2 gap-4 mb-6">
+            <input type="text" placeholder="Nombre" class="p-3 border rounded-lg shadow-sm" required>
+            <input type="text" placeholder="Identificación" class="p-3 border rounded-lg shadow-sm" required>
+            <input type="text" placeholder="Dirección" class="p-3 border rounded-lg shadow-sm" required>
+            <input type="text" placeholder="Teléfono" class="p-3 border rounded-lg shadow-sm" required>
+        </form>
+        
+        <!-- Corregir aqui tambien los botones, lo mismo que en la vista de inventario-->
+        <div class="flex justify-center gap-4 mb-6">
+            <button class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Guardar</button>
+            <button class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-yellow-600">Actualizar</button>
+            <button class="bg-red-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-red-600">Eliminar</button>
+        </div>
+        
+        <div class="overflow-x-auto bg-gray-100 p-4 rounded-xl shadow-md">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 text-white">
+                        <th class="p-3">Nombre</th>
+                        <th class="p-3">Identificación</th>
+                        <th class="p-3">Dirección</th>
+                        <th class="p-3">Teléfono</th>
+                        <th class="p-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b">
+                        <td class="p-3">Proveedor 1</td>
+                        <td class="p-3">123456789</td>
+                        <td class="p-3">Calle 123</td>
+                        <td class="p-3">+123456789</td>
+                        <td class="p-3">
+                            <!-- ¿Si ya se tienen estos botones aqui, es necesario tenerlos arriba? -->
+                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600">Editar</button>
+                            <button class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</body>
+</html>
+

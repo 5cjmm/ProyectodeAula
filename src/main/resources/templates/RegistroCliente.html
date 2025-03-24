@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cliente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 min-h-screen flex flex-col items-center p-6">
+    
+    <h1 class="text-white text-4xl font-bold mb-6">Registro de Cliente</h1>
+    
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+        
+        
+        <div class="grid grid-cols-2 gap-4">
+            <input type="text" placeholder="Nombre" class="p-3 border rounded-md">
+            <input type="text" placeholder="Identificación" class="p-3 border rounded-md">
+            <input type="text" placeholder="Dirección" class="p-3 border rounded-md">
+            <input type="text" placeholder="Teléfono" class="p-3 border rounded-md">
+        </div>
+        
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Guardar Cliente</button>
+        
+        
+        <div class="overflow-x-auto bg-gray-100 p-4 rounded-xl shadow-md">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 text-white">
+                        <th class="p-3">Nombre</th>
+                        <th class="p-3">Identificación</th>
+                        <th class="p-3">Dirección</th>
+                        <th class="p-3">Teléfono</th>
+                        <th class="p-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b">
+                        <td class="p-3">Martha Borja</td>
+                        <td class="p-3">30765359</td>

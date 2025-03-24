@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function llenarFormularioDesdeBoton(button) {
+    let id = button.dataset.id;
+    let codigo = button.dataset.codigo;
+    let nombre = button.dataset.nombre;
+    let stock = button.dataset.stock;
+    let precio = button.dataset.precio;
+    let proveedor = button.dataset.proveedor;
+
+    document.getElementById("edit-id").value = id;
+    document.getElementById("edit-codigo").value = codigo;
+    document.getElementById("edit-nombre").value = nombre;
+    document.getElementById("edit-stock").value = stock;
+    document.getElementById("edit-precio").value = precio;
+    document.getElementById("edit-proveedor").value = proveedor;
+    document.getElementById("edit-form").style.display = "block";
+}
+
+    </script>
+</head>
+<body class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 min-h-screen flex flex-col items-center p-6">
+    
+    <h1 class="text-white text-4xl font-bold mb-6">Gestión de Inventario</h1>
+    
+    <div class="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 flex gap-6">
+        
+        <div class="w-1/3 p-4 bg-gray-100 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Agregar Producto</h2>
+            <form th:action="@{/admin/crear-producto}" method="post">
+                <label class="block text-gray-700">Código:</label>
+                <input type="text" name="codigo" class="w-full p-2 mb-3 border rounded-md" required>
+                
+                <label class="block text-gray-700">Descripción:</label>
+                <input type="text" name="nombre" class="w-full p-2 mb-3 border rounded-md" required>
+                
+                <label class="block text-gray-700">Cantidad:</label>
+                <input type="number" name="stock" class="w-full p-2 mb-3 border rounded-md" required>
+                
+                <label class="block text-gray-700">Precio:</label>
+                <input type="text" name="precio" class="w-full p-2 mb-3 border rounded-md" required>
+                
+                <label class="block text-gray-700">Proveedor:</label>
+                <input type="text" name="proveedor" class="w-full p-2 mb-4 border rounded-md" required>
+                
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600 w-full">Guardar</button>
+            </form>
+        </div>
+        
+        <div class="w-2/3">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Productos Registrados</h2>
+            <div class="overflow-x-auto bg-gray-100 p-4 rounded-xl shadow-md">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 text-white">
+                            <th class="p-3">Código</th>
+                            <th class="p-3">Nombre</th>
+                            <th class="p-3">Cantidad</th>
+                            <th class="p-3">Precio</th>
+                            <th class="p-3">Proveedor</th>
+                            <th class="p-3">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b" th:each="producto : ${productos}">
+                            <td class="p-3" th:text="${producto.codigo}"></td>
+                            <td class="p-3" th:text="${producto.nombre}"></td>
+                            <td class="p-3" th:text="${producto.stock}"></td>
+                            <td class="p-3" th:text="${producto.precio}"></td>
+                            <td class="p-3" th:text="${producto.proveedor}"></td>
+                            <td>
+                                <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
+                                th:data-id="${producto.id}"
+                                th:data-codigo="${producto.codigo}"
+                                th:data-nombre="${producto.nombre}"
+                                th:data-stock="${producto.stock}"
+                                th:data-precio="${producto.precio}"
+                                th:data-proveedor="${producto.proveedor}"
+                                onclick="llenarFormularioDesdeBoton(this)">
+                                Editar
+                                </button>
+                                <form th:action="@{/admin/eliminar/{id}(id=${producto.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-red-600">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 rounded-xl shadow-md mt-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Editar Producto</h3>
+        <form th:action="@{/admin/actualizar}" method="post">
+            <input type="hidden" name="id" id="edit-id">
+            <label class="block text-gray-700">Código:</label>
+            <input type="text" name="codigo" id="edit-codigo" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Nombre:</label>
+            <input type="text" name="nombre" id="edit-nombre" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Cantidad:</label>
+            <input type="number" name="stock" id="edit-stock" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Precio:</label>
+            <input type="text" name="precio" id="edit-precio" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Proveedor:</label>
+            <input type="text" name="proveedor" id="edit-proveedor" class="w-full p-2 mb-3 border rounded-md" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600 w-full">Actualizar</button>
+        </form>
+    </div>
+</body>
+</html>

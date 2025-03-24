@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto de Venta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 min-h-screen flex flex-col items-center p-6">
+    
+    <h1 class="text-white text-4xl font-bold mb-6">Punto de Venta</h1>
+    
+    <div class="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+        
+      
+        <div class="flex gap-4">
+            <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
+            <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
+        </div>
+        
+        
+        <div class="overflow-x-auto bg-gray-100 p-4 rounded-xl shadow-md">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 text-white">
+                        <th class="p-3">Código</th>
+                        <th class="p-3">Descripción</th>
+                        <th class="p-3">Cantidad</th>
+                        <th class="p-3">Precio</th>
+                        <th class="p-3">Total</th>
+                        <th class="p-3">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b">
+                        <td class="p-3">001</td>
+                        <td class="p-3">Producto Ejemplo</td>
+                        <td class="p-3">2</td>
+                        <td class="p-3">$50.200</td>
+                        <td class="p-3">$20.00</td>
+                        <td class="p-3"><button class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    
+        <div class="flex justify-between">
+            <input type="text" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md">
+            <span class="text-lg font-bold">Total: $70.200</span>
+            <button class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
+        </div>
+    </div>
+    
+</body>
+</html>
