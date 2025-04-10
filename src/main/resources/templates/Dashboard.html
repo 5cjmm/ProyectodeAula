@@ -16,15 +16,15 @@
             </button>
             <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
     </nav>
     
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Gestión de Deudas</h1>
+    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Dashboard - Administrador</h1>
     
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
         
@@ -34,27 +34,7 @@
             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
         </div>
         
-        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
-                        <th class="p-3">Cliente</th>
-                        <th class="p-3">Monto Adeudado (COP)</th>
-                        <th class="p-3">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b dark:border-blue-600">
-                        <td class="p-3">Juan Pérez</td>
-                        <td class="p-3">$250.00</td>
-                        <td class="p-3">
-                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600">Abonar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        
     <script>
         const menuToggle = document.getElementById("menu-toggle");
         const menu = document.getElementById("menu");
