@@ -9,7 +9,7 @@ public class Venta {
 
     @Id
     private String id;
-    private int codigo;
+    private String codigo;
     private String cliente;
     private String nombre;
     private int cantidad;
@@ -17,9 +17,9 @@ public class Venta {
     private double total;
     private Date fecha;
 
-    public Venta(Productos producto, int cantidad2) {}
+    public Venta() {}
 
-    public Venta(int codigo, String cliente, String nombre, int cantidad, double precio, double total) {
+    public Venta(String codigo, String cliente, String nombre, int cantidad, double precio, double total) {
         this.codigo = codigo;
         this.cliente = cliente;
         this.nombre = nombre;
@@ -32,8 +32,8 @@ public class Venta {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public int getCodigo() { return codigo; }
-    public void setCodigo(int codigo) { this.codigo = codigo; }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public String getCliente() { return cliente; }
     public void setCliente(String cliente) { this.cliente = cliente; }

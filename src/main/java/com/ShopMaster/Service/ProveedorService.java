@@ -21,6 +21,8 @@ public class ProveedorService {
         return proveedorRepository.findAll();
     }
 
+    
+
     public void actualizarProveedor(Proveedores proveedores) {
         if(proveedorRepository.existsById(proveedores.getId())) {
             proveedorRepository.save(proveedores);

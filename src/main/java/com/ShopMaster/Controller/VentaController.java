@@ -31,7 +31,7 @@ public class VentaController {
     }
 
     @PostMapping("/agregar")
-    public String agregarProducto(@RequestParam("codigo") int codigo, 
+    public String agregarProducto(@RequestParam("codigo") String codigo, 
                                   @RequestParam("cantidad") int cantidad, 
                                   @ModelAttribute("carrito") List<Venta> carrito, 
                                   Model model) {
@@ -51,18 +51,18 @@ public class VentaController {
 
         double total = cantidad * producto.getPrecio();
 
-        // Crear objeto Venta para agregarlo al carrito
-        Venta venta = new Venta(cantidad, null, null, cantidad, total, total);
+     
+        Venta venta = new Venta();
         venta.setCodigo(producto.getCodigo());
         venta.setNombre(producto.getNombre());
+        venta.setCliente(venta.getCliente());
         venta.setCantidad(cantidad);
         venta.setPrecio(producto.getPrecio());
         venta.setTotal(total);
 
-        // Agregar el producto al carrito
         carrito.add(venta);
 
-        // Enviar los datos a la vista
+        
         model.addAttribute("carrito", carrito);
         model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
 
@@ -70,7 +70,7 @@ public class VentaController {
     }
 
         @GetMapping("/eliminar/{codigo}")
-        public String eliminarProducto(@PathVariable("codigo") int codigo, 
+        public String eliminarProducto(@PathVariable("codigo") String codigo, 
                                     @ModelAttribute("carrito") List<Venta> carrito, 
                                     Model model) {
         carrito.removeIf(p -> p.getCodigo() == codigo);
@@ -79,16 +79,27 @@ public class VentaController {
     }
 
     @PostMapping("/finalizar")
-public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Model model) {
+    public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Model model) {
     if (carrito.isEmpty()) {
         model.addAttribute("error", "No hay productos en la venta.");
         return "PuntoVenta";
+
     }
 
-    // Guardar ventas en la base de datos
+        for (Venta venta : carrito) {
+            Optional<Productos> productoOpt = productosRepository.findByCodigo(venta.getCodigo());
+            if (productoOpt.isPresent()) {
+                Productos producto = productoOpt.get();
+                producto.setCantidad(producto.getCantidad() - venta.getCantidad());
+                productosRepository.save(producto);
+            }
+        
+    }
+        
+
+
     ventaRepository.saveAll(carrito);
 
-    // Limpiar el carrito después de la compra
     carrito.clear();
     
     model.addAttribute("carrito", carrito);
@@ -97,5 +108,5 @@ public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Mod
     return "PuntoVenta";
 }
 
-
+    
 }

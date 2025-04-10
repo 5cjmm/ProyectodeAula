@@ -15,13 +15,11 @@
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
             <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a href="Inicio.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a href="Deudas.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
-                <a href="InformeVenta.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a href="Inventario.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a href="Login.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Login</a>
-                <a href="PuntoVenta.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a href="RegistroProveedor.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                
             </div>
         </div>
     </nav>
@@ -34,17 +32,19 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-blue-500 text-white">
-                        <th class="p-3">ID</th>
-                        <th class="p-3">Cliente</th>
-                        <th class="p-3">Total</th>
+                        <th class="p-3">Nombre</th>
+                        <th class="p-3">Cantidad</th>
+                        <th class="p-3">Precio (COP)</th>
+                        <th class="p-3">Total (COP)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b text-gray-900 dark:text-white">
-                        <td class="p-3">001</td>
-                        <td class="p-3">Juan Pérez</td>
-                        <td class="p-3">$150.00</td>
-                    </tr>
+                    <tr class="border-b text-gray-900 dark:text-white" th:each="venta : ${venta}">
+                        <td class="p-3 dark:text-white" th:text="${venta.nombre}"></td>
+                        <td class="p-3 dark:text-white" th:text="${venta.cantidad}"></td>
+                        <td class="p-3 dark:text-white" th:text="${venta.precio}"></td>
+                        <td class="p-3 dark:text-white" th:text="${venta.total}"></td>
+                    
                 </tbody>
             </table>
         </div>
