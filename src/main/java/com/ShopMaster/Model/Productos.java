@@ -1,5 +1,6 @@
 package com.ShopMaster.Model;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
@@ -8,20 +9,21 @@ public class Productos {
     
     @Id
     private String id;
+    @Indexed(unique = true)
     private String codigo;
     private String nombre;
     private String proveedor;
-    private String stock;
-    private String precio;
+    private int cantidad;
+    private double precio;
     private Date fecha;
 
     public Productos() {}
 
-    public Productos(String codigo, String nombre, String proveedor, String stock, String precio, Date fecha) {
+    public Productos(String codigo, String nombre, String proveedor, int cantidad, Double precio, Date fecha) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.proveedor = proveedor;
-        this.stock = stock;
+        this.cantidad = cantidad;
         this.precio = precio;
         this.fecha = fecha;
     }
@@ -38,11 +40,11 @@ public class Productos {
     public String getProveedor() { return proveedor; }
     public void setProveedor(String proveedor) { this.proveedor = proveedor; }
 
-    public String getStock() { return stock; }
-    public void setStock(String stock) { this.stock = stock; }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
-    public String getPrecio() { return precio; }
-    public void setPrecio(String precio) { this.precio = precio; }
+    public Double getPrecio() { return precio; }
+    public void setPrecio(Double precio) { this.precio = precio; }
 
     public Date getFecha() { return fecha; }
     public void setFecha(Date fecha) { this.fecha = fecha; }
