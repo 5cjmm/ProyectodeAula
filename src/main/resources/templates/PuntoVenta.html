@@ -15,13 +15,11 @@
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
             <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a href="Inicio.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <!--<a href="Deudas.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
-                <a href="InformeVenta.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a href="Inventario.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a> -->
-                <a href="Login.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Login</a>
-                <a href="PuntoVenta.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
     </nav>
@@ -32,7 +30,7 @@
         
         <div class="flex gap-4">
             <form th:action="@{/tendero/agregar}" method="post">
-                <input type="text" name="codigo" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
+                <input type="nu" name="codigo" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
                 <input type="number" name="cantidad" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
             </form>
@@ -45,8 +43,8 @@
                         <th class="p-3">Código</th>
                         <th class="p-3">Descripción</th>
                         <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio</th>
-                        <th class="p-3">Total</th>
+                        <th class="p-3">Precio Unidad (COP)</th>
+                        <th class="p-3">Total (COP)</th>
                         <th class="p-3">Acción</th>
                     </tr>
                 </thead>

@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ShopMaster.Model.Proveedores;
-import com.ShopMaster.Service.ProductosService;
 import com.ShopMaster.Service.ProveedorService;
 
 @Controller
@@ -23,21 +23,24 @@ public class ProveedorController {
     }
 
     @PostMapping("/crear-proveedor")
-    public String guardarProveedor(@ModelAttribute("nuevoProveedor") Proveedores proveedores) {
+    public String guardarProveedor(@ModelAttribute("nuevoProveedor") Proveedores proveedores, RedirectAttributes redirectAttributes) {
         proveedorService.guardarProveedor(proveedores);
+        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor guardado exitosamente!");
         return "redirect:/tendero/RegistroProveedor";
     }
 
     @PostMapping("/actualizar")
-    public String actuaizarProveedor(@ModelAttribute Proveedores proveedor) {
+    public String actuaizarProveedor(@ModelAttribute Proveedores proveedor, RedirectAttributes redirectAttributes) {
         proveedorService.actualizarProveedor(proveedor);
-        return "RegistroProveedor";
+        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto actualizado exitosamente!");
+        return "redirect:/tendero/RegistroProveedor";
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminarProveedor(@PathVariable String id) {
+    public String eliminarProveedor(@PathVariable String id, RedirectAttributes redirectAttributes) {
         proveedorService.eliminarProveedor(id);
-        return "RegistroProveedor";
+        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto eliminado exitosamente!");
+        return "redirect:/tendero/RegistroProveedor";
     }
 
 }

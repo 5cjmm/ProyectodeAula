@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.ShopMaster.Model.Proveedores;
-import com.ShopMaster.Service.ProductosService;
 import com.ShopMaster.Service.ProveedorService;
 
 @Controller
@@ -14,13 +13,18 @@ public class TenderoController {
 
     private ProveedorService proveedorService;
 
-    @GetMapping
+    @GetMapping("/PuntoVenta")
     public String mostrarPuntodeVenta() {
         return "PuntoVenta";
     }
 
     public TenderoController(ProveedorService proveedorService) {
         this.proveedorService = proveedorService;
+    }
+
+    @GetMapping("/Deudas")
+    public String mostrarDeudas() {
+        return "Deudas";
     }
 
     @GetMapping("/RegistroProveedor")

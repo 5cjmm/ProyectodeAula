@@ -59,9 +59,9 @@ public class SecurityConfig {
                 authentication.getAuthorities().forEach(grantedAuthority -> {
                     try {
                         if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
-                            response.sendRedirect("/admin");
+                            response.sendRedirect("/admin/Dashboard");
                         } else if (grantedAuthority.getAuthority().equals("ROLE_TENDERO")) {
-                            response.sendRedirect("/tendero");
+                            response.sendRedirect("/tendero/PuntoVenta");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
