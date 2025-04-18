@@ -17,9 +17,7 @@ public class ProductosService {
     public void guardarProducto(Productos productos) {
         productosRepository.save(productos);
     }
-    public Productos obtenerProductos(String id) {
-        return productosRepository.findById(id).orElse(null);
-    }
+    
     public List<Productos> obtenerTodosLosProductos(){
         return productosRepository.findAll();
     }

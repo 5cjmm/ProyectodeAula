@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Proveedores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function llenarFormularioDesdeBoton(button) {
+            let id = button.dataset.id;
+            let nombre = button.dataset.nombre;
+            let identificacion = button.dataset.identificacion;
+            let direccion = button.dataset.direccion;
+            let telefono = button.dataset.telefono;
+
+            document.getElementById("edit-id").value = id;
+            document.getElementById("edit-nombre").value = nombre;
+            document.getElementById("edit-identificacion").value = identificacion;
+            document.getElementById("edit-direccion").value = direccion;
+            document.getElementById("edit-telefono").value = telefono;
+            document.getElementById("edit-form").style.display = "block";
+        }
+    </script>
+</head>
+<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
+    
+    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
+        <div class="relative">
+            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
+                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+            </button>
+            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+    
+    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Registro de Proveedores</h1>
+    
+    <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
+        
+        <form class="grid grid-cols-2 gap-4 mb-6" th:action="@{/tendero/crear-proveedor}" method="POST">
+            <input type="text" name="nombre" placeholder="Nombre" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" name="identificacion" placeholder="RUC" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" name="direccion" placeholder="Dirección" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" name="telefono" placeholder="Teléfono" class="w-full p-2 mb-3 border rounded-md" required>
+        
+            <div class="col-span-2 flex justify-center gap-4 mt-4">
+                <button type="submit" class="bg-blue-400 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-500">
+                    Guardar
+                </button>
+            </div>          
+        </form>
+
+        <input type="text" class="w-full p-2 mb-3 border rounded-md" id="buscar" placeholder="Buscar proveedor..." onkeyup="filtrarPorPrimeraLetra()">
+        <div th:if="${SuccessMessage != null}" class="bg-green-500 text-white p-2 rounded-md">
+            <p th:text="${SuccessMessage}"></p>
+        </div>
+        
+        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
+            <table id="tablaProveedor" class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
+                        <th class="p-3">Nombre</th>
+                        <th class="p-3">Identificación</th>
+                        <th class="p-3">Dirección</th>
+                        <th class="p-3">Teléfono</th>
+                        <th class="p-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b dark:border-blue-600" th:each="proveedor : ${proveedores}">
+                        <td class="p-3 dark:text-white" th:text="${proveedor.nombre}"></td>
+                        <td class="p-3 dark:text-white" th:text="${proveedor.identificacion}"></td>
+                        <td class="p-3 dark:text-white" th:text="${proveedor.direccion}"></td>
+                        <td class="p-3 dark:text-white" th:text="${proveedor.telefono}"></td>
+                        <td class="p-3">
+                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
+                            th:data-id="${proveedor.id}"
+                            th:data-nombre="${proveedor.nombre}"
+                            th:data-identificacion="${proveedor.identificacion}"
+                            th:data-direccion="${proveedor.direccion}"
+                            th:data-telefono="${proveedor.telefono}"
+                            onclick="llenarFormularioDesdeBoton(this)">
+                            Editar
+                            </button>
+                            <form th:action="@{/tendero/eliminar/{id}(id=${proveedor.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-red-600">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pagination">
+        <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
+        <span id="paginaActual">1</span>
+        <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+    </div>
+
+    <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Editar Producto</h3>
+        <form th:action="@{/tendero/actualizar}" method="post">
+            <input type="hidden" name="id" id="edit-id">
+            <label class="block text-gray-700">Nombre:</label>
+            <input type="text" name="nombre" id="edit-nombre" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Identificacion:</label>
+            <input type="text" name="identificacion" id="edit-identificacion" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Direccion:</label>
+            <input type="text" name="direccion" id="edit-direccion" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">Telefono:</label>
+            <input type="text" name="telefono" id="edit-telefono" class="w-full p-2 mb-3 border rounded-md" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600 w-full">Actualizar</button>
+        </form>
+    </div>
+    
+    <script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("menu");
+        
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
+
+<script>
+    function filtrarPorPrimeraLetra() {
+        let input = document.getElementById("buscar").value.toLowerCase();
+        let tabla = document.getElementById("tablaProveedor");
+        let filas = tabla.getElementsByTagName("tr");
+
+        for (let i = 1; i < filas.length; i++) { // Omitimos la cabecera
+            let nombreProducto = filas[i].getElementsByTagName("td")[1]; // Segunda columna (Nombre)
+
+            if (nombreProducto) {
+                let texto = nombreProducto.textContent.toLowerCase();
+                filas[i].style.display = texto.startsWith(input) ? "" : "none"; // Filtra por primera letra
+            }
+        }
+    }
+</script>
+
+<script>
+const filasPorPagina = 5;
+let paginaActual = 1;
+const tabla = document.getElementById("tablaProductos").getElementsByTagName("tbody")[0];
+const filas = tabla.getElementsByTagName("tr");
+
+function mostrarPagina(pagina) {
+    let inicio = (pagina - 1) * filasPorPagina;
+    let fin = inicio + filasPorPagina;
+    
+    for (let i = 0; i < filas.length; i++) {
+        filas[i].style.display = (i >= inicio && i < fin) ? "" : "none";
+    }
+
+    document.getElementById("paginaActual").innerText = pagina;
+}
+
+function cambiarPagina(direccion) {
+    let totalPaginas = Math.ceil(filas.length / filasPorPagina);
+    paginaActual += direccion;
+    
+    if (paginaActual < 1) paginaActual = 1;
+    if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+    
+    mostrarPagina(paginaActual);
+}
+
+// Mostrar la primera página al cargar
+mostrarPagina(paginaActual);
+</script>
+
+<script>
+
+    
+</script>
+</body>
+</html>

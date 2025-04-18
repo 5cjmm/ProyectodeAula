@@ -6,52 +6,87 @@
     <title>Punto de Venta</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 min-h-screen flex flex-col items-center p-6">
+<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
     
-    <h1 class="text-white text-4xl font-bold mb-6">Punto de Venta</h1>
+    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
+        <div class="relative">
+            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
+                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+            </button>
+            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
     
-    <div class="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Punto de Venta</h1>
+    
+    <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
         
-      
         <div class="flex gap-4">
-            <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
-            <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
+            <form th:action="@{/tendero/agregar}" method="post">
+                <input type="nu" name="codigo" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
+                <input type="number" name="cantidad" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
+            </form>
         </div>
         
-        
-        <div class="overflow-x-auto bg-gray-100 p-4 rounded-xl shadow-md">
+        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gradient-to-r from-red-500 via-orange-500 to-green-400 text-white">
+                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
                         <th class="p-3">Código</th>
                         <th class="p-3">Descripción</th>
                         <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio</th>
-                        <th class="p-3">Total</th>
+                        <th class="p-3">Precio Unidad (COP)</th>
+                        <th class="p-3">Total (COP)</th>
                         <th class="p-3">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b">
-                        <td class="p-3">001</td>
-                        <td class="p-3">Producto Ejemplo</td>
-                        <td class="p-3">2</td>
-                        <td class="p-3">$50.200</td>
-                        <td class="p-3">$20.00</td>
-                        <td class="p-3"><button class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</button></td>
+                    <tr th:each="producto : ${carrito}"  class="border-b dark:border-blue-600">
+                        <td th:text="${producto.codigo}" class="p-3 dark:text-white"></td>
+                        <td th:text="${producto.nombre}" class="p-3 dark:text-white"></td>
+                        <td th:text="${producto.cantidad}" class="p-3 dark:text-white"></td>
+                        <td th:text="${producto.precio}" class="p-3 dark:text-white"></td>
+                        <td th:text="${producto.total}" class="p-3 dark:text-white"></td>
+                        <td class="p-3">
+                            <a th:href="@{/tendero/eliminar/{codigo}(codigo=${producto.codigo})}" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</a>
+                        </td>
+                        
                     </tr>
                 </tbody>
             </table>
         </div>
         
-    
         <div class="flex justify-between">
-            <input type="text" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md">
-            <span class="text-lg font-bold">Total: $70.200</span>
-            <button class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
+            <input type="text" name="cliente" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md">
+            <span th:text="${totalVenta}" class="text-lg font-bold dark:text-white"></span>
+            <form th:action="@{/tendero/finalizar}" method="post">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
+        </form>
+        </div>
+        <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
+            <p th:text="${error}"></p>
+        </div>
+        <div th:if="${success}" class="bg-green-500 text-white p-2 rounded-md">
+            <p th:text="${success}"></p>
         </div>
     </div>
     
+    <script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("menu");
+        
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
 </body>
 </html>
+
