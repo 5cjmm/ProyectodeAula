@@ -9,17 +9,17 @@ public class Proveedores {
     @Id
     private String id;
     private String nombre;
-    private String identificacion;
+    private String ruc;
     private String direccion;
     private String telefono;
 
     public Proveedores() {
     }
 
-    public Proveedores(String id, String nombre, String identificacion, String direccion, String telefono) {
+    public Proveedores(String id, String nombre, String ruc, String direccion, String telefono) {
         this.id = id;
         this.nombre = nombre;
-        this.identificacion = identificacion;
+        this.ruc = ruc;
         this.direccion = direccion;
         this.telefono = telefono;
     }
@@ -40,12 +40,12 @@ public class Proveedores {
         this.nombre = nombre;
     }
 
-    public String getIdentificacion() {
-        return this.nombre;
+    public String getRuc() {
+        return this.ruc;
     }
 
-    public void setIdentificacion(String identificacion) {
-        this.identificacion = identificacion;
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     public String getDireccion() {

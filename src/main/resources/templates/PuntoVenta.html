@@ -30,8 +30,9 @@
         
         <div class="flex gap-4">
             <form th:action="@{/tendero/agregar}" method="post">
-                <input type="nu" name="codigo" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
-                <input type="number" name="cantidad" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
+                <input type="nu" name="codigo" placeholder="Código del Producto" class="w-1/1 p-2 border rounded-md" id="codigoProducto">
+                <!-- <input type="text" name="cliente" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md"> -->
+                <input type="number" name="cantidad" placeholder="Cantidad" class="w-1/1 p-2 border rounded-md" id="cantidad" required>
                 <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
             </form>
         </div>
@@ -65,7 +66,6 @@
         </div>
         
         <div class="flex justify-between">
-            <input type="text" name="cliente" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md">
             <span th:text="${totalVenta}" class="text-lg font-bold dark:text-white"></span>
             <form th:action="@{/tendero/finalizar}" method="post">
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
@@ -89,4 +89,3 @@
     </script>
 </body>
 </html>
-

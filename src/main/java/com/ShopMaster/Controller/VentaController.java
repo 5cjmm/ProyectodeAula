@@ -33,13 +33,14 @@ public class VentaController {
     @PostMapping("/agregar")
     public String agregarProducto(@RequestParam("codigo") String codigo, 
                                   @RequestParam("cantidad") int cantidad, 
+                                 // @RequestParam("cliente") String cliente,
                                   @ModelAttribute("carrito") List<Venta> carrito, 
                                   Model model) {
         Optional<Productos> productoOpt = productosRepository.findByCodigo(codigo);
 
         if (!productoOpt.isPresent()) {
             model.addAttribute("error", "El producto no existe.");
-            return "PuntoVenta"; // Vuelve a la vista
+            return "PuntoVenta";
         }
 
         Productos producto = productoOpt.get();
@@ -48,9 +49,15 @@ public class VentaController {
             model.addAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " unidades disponibles.");
             return "PuntoVenta";
         }
+            
+        
 
         double total = cantidad * producto.getPrecio();
 
+       /*  if (cliente.isEmpty()) {
+            model.addAttribute("error", "Falta el ID del cliente en la venta.");
+            return "PuntoVenta";
+        } */
      
         Venta venta = new Venta();
         venta.setCodigo(producto.getCodigo());
@@ -69,14 +76,14 @@ public class VentaController {
         return "PuntoVenta";
     }
 
-        @GetMapping("/eliminar/{codigo}")
-        public String eliminarProducto(@PathVariable("codigo") String codigo, 
-                                    @ModelAttribute("carrito") List<Venta> carrito, 
-                                    Model model) {
-        carrito.removeIf(p -> p.getCodigo() == codigo);
-        model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
-        return "PuntoVenta";
-    }
+    @GetMapping("/eliminar/{codigo}")
+    public String eliminarProducto(@PathVariable("codigo") String codigo, 
+                                @ModelAttribute("carrito") List<Venta> carrito, 
+                                Model model) {
+   carrito.removeIf(p -> p.getCodigo().equals(codigo));
+    model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
+    return "PuntoVenta";
+}
 
     @PostMapping("/finalizar")
     public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Model model) {
