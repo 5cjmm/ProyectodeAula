@@ -68,7 +68,7 @@
                 <label class="block text-gray-900 dark:text-white">Proveedor:</label>
                 <select class="w-full p-2 mb-3 border rounded-md" id="proveedor" name="proveedor">
                     <option value="">-- Seleccione --</option>
-                    <option th:each="prov : ${proveedores}" th:value="${prov.id}" th:text="${prov.nombre}"></option>
+                    <option th:each="prov : ${proveedores}" th:value="${prov.nombre}" th:text="${prov.nombre}"></option>
                 </select>
                 
                 <button class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600 w-full">Guardar</button>
@@ -163,12 +163,12 @@
             let tabla = document.getElementById("tablaProductos");
             let filas = tabla.getElementsByTagName("tr");
 
-            for (let i = 1; i < filas.length; i++) { // Omitimos la cabecera
-                let nombreProducto = filas[i].getElementsByTagName("td")[1]; // Segunda columna (Nombre)
+            for (let i = 1; i < filas.length; i++) {
+                let nombreProducto = filas[i].getElementsByTagName("td")[1]; 
 
                 if (nombreProducto) {
                     let texto = nombreProducto.textContent.toLowerCase();
-                    filas[i].style.display = texto.startsWith(input) ? "" : "none"; // Filtra por primera letra
+                    filas[i].style.display = texto.startsWith(input) ? "" : "none";
                 }
             }
         }

@@ -12,6 +12,7 @@ import com.ShopMaster.Model.Productos;
 public interface ProductosRepository extends MongoRepository<Productos, String> {
     List<Productos> findAll();
     Optional<Productos> findByCodigo(String codigo);
+    Optional<Productos> findByNombre(String nombre);
     Page<Productos> findAll(Pageable pageable);
 
 }

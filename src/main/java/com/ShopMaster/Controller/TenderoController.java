@@ -14,7 +14,7 @@ public class TenderoController {
     private ProveedorService proveedorService;
 
     @GetMapping("/PuntoVenta")
-    public String mostrarPuntodeVenta() {
+    public String mostrarPuntodeVenta(Model model) {
         return "PuntoVenta";
     }
 

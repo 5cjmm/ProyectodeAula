@@ -9,13 +9,13 @@
         function llenarFormularioDesdeBoton(button) {
             let id = button.dataset.id;
             let nombre = button.dataset.nombre;
-            let identificacion = button.dataset.identificacion;
+            let ruc = button.dataset.ruc;
             let direccion = button.dataset.direccion;
             let telefono = button.dataset.telefono;
 
             document.getElementById("edit-id").value = id;
             document.getElementById("edit-nombre").value = nombre;
-            document.getElementById("edit-identificacion").value = identificacion;
+            document.getElementById("edit-ruc").value = ruc;
             document.getElementById("edit-direccion").value = direccion;
             document.getElementById("edit-telefono").value = telefono;
             document.getElementById("edit-form").style.display = "block";
@@ -46,7 +46,7 @@
         
         <form class="grid grid-cols-2 gap-4 mb-6" th:action="@{/tendero/crear-proveedor}" method="POST">
             <input type="text" name="nombre" placeholder="Nombre" class="w-full p-2 mb-3 border rounded-md" required>
-            <input type="text" name="identificacion" placeholder="RUC" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" name="ruc" placeholder="RUC" class="w-full p-2 mb-3 border rounded-md" required>
             <input type="text" name="direccion" placeholder="Dirección" class="w-full p-2 mb-3 border rounded-md" required>
             <input type="text" name="telefono" placeholder="Teléfono" class="w-full p-2 mb-3 border rounded-md" required>
         
@@ -67,7 +67,7 @@
                 <thead>
                     <tr class="bg-blue-400 dark:bg-blue-600 text-white">
                         <th class="p-3">Nombre</th>
-                        <th class="p-3">Identificación</th>
+                        <th class="p-3">RUC</th>
                         <th class="p-3">Dirección</th>
                         <th class="p-3">Teléfono</th>
                         <th class="p-3">Acciones</th>
@@ -76,14 +76,14 @@
                 <tbody>
                     <tr class="border-b dark:border-blue-600" th:each="proveedor : ${proveedores}">
                         <td class="p-3 dark:text-white" th:text="${proveedor.nombre}"></td>
-                        <td class="p-3 dark:text-white" th:text="${proveedor.identificacion}"></td>
+                        <td class="p-3 dark:text-white" th:text="${proveedor.ruc}"></td>
                         <td class="p-3 dark:text-white" th:text="${proveedor.direccion}"></td>
                         <td class="p-3 dark:text-white" th:text="${proveedor.telefono}"></td>
                         <td class="p-3">
                             <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
                             th:data-id="${proveedor.id}"
                             th:data-nombre="${proveedor.nombre}"
-                            th:data-identificacion="${proveedor.identificacion}"
+                            th:data-identificacion="${proveedor.ruc}"
                             th:data-direccion="${proveedor.direccion}"
                             th:data-telefono="${proveedor.telefono}"
                             onclick="llenarFormularioDesdeBoton(this)">
@@ -110,8 +110,8 @@
             <input type="hidden" name="id" id="edit-id">
             <label class="block text-gray-700">Nombre:</label>
             <input type="text" name="nombre" id="edit-nombre" class="w-full p-2 mb-3 border rounded-md" required>
-            <label class="block text-gray-700">Identificacion:</label>
-            <input type="text" name="identificacion" id="edit-identificacion" class="w-full p-2 mb-3 border rounded-md" required>
+            <label class="block text-gray-700">RUC:</label>
+            <input type="text" name="ruc" id="edit-ruc" class="w-full p-2 mb-3 border rounded-md" required>
             <label class="block text-gray-700">Direccion:</label>
             <input type="text" name="direccion" id="edit-direccion" class="w-full p-2 mb-3 border rounded-md" required>
             <label class="block text-gray-700">Telefono:</label>
