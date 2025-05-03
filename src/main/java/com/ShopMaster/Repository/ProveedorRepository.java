@@ -1,9 +1,9 @@
 package com.ShopMaster.Repository;
-
+import org.bson.types.ObjectId;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.ShopMaster.Model.Proveedores;
+import com.ShopMaster.Model.Proveedor;
 
-public interface ProveedorRepository extends MongoRepository<Proveedores, String> {
-    List<Proveedores> findAll();
+public interface ProveedorRepository extends MongoRepository<Proveedor, ObjectId> {
+    List<Proveedor> findAll();
 }

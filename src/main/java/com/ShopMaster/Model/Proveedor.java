@@ -1,22 +1,25 @@
 package com.ShopMaster.Model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "proveedores")
-public class Proveedores {
+public class Proveedor {
     
     @Id
-    private String id;
+    private ObjectId id;
     private String nombre;
     private String ruc;
     private String direccion;
     private String telefono;
 
-    public Proveedores() {
+    
+
+    public Proveedor() {
     }
 
-    public Proveedores(String id, String nombre, String ruc, String direccion, String telefono) {
+    public Proveedor(ObjectId id, String nombre, String ruc, String direccion, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.ruc = ruc;
@@ -24,11 +27,11 @@ public class Proveedores {
         this.telefono = telefono;
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

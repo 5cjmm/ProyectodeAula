@@ -97,12 +97,14 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="pagination">
-        <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-        <span id="paginaActual">1</span>
-        <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
-    </div>
+    
+        <div class="pagination flex justify-center items-center gap-4 mt-4">
+            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
+            <span id="paginaActual">1</span>
+            <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+        </div>
+        
+    </div> 
 
     <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Editar Producto</h3>
