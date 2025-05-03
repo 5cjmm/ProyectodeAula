@@ -1,5 +1,6 @@
 package com.ShopMaster.Controller;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ShopMaster.Model.Proveedores;
+import com.ShopMaster.Model.Proveedor;
 import com.ShopMaster.Service.ProveedorService;
 
 @Controller
@@ -16,6 +17,7 @@ import com.ShopMaster.Service.ProveedorService;
 public class ProveedorController {
     
     @Autowired
+    @SuppressWarnings("FieldMayBeFinal")
     private ProveedorService proveedorService;
 
     public ProveedorController(ProveedorService proveedorService) {
@@ -23,21 +25,21 @@ public class ProveedorController {
     }
 
     @PostMapping("/crear-proveedor")
-    public String guardarProveedor(@ModelAttribute("nuevoProveedor") Proveedores proveedores, RedirectAttributes redirectAttributes) {
-        proveedorService.guardarProveedor(proveedores);
+    public String guardarProveedor(@ModelAttribute("nuevoProveedor") Proveedor proveedor, RedirectAttributes redirectAttributes) {
+        proveedorService.guardarProveedor(proveedor);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor guardado exitosamente!");
         return "redirect:/tendero/RegistroProveedor";
     }
 
-    @PostMapping("/actualizar")
-    public String actuaizarProveedor(@ModelAttribute Proveedores proveedor, RedirectAttributes redirectAttributes) {
+      @PostMapping("/actualizar")
+    public String actuaizarProveedor(@ModelAttribute Proveedor proveedor, RedirectAttributes redirectAttributes) {
         proveedorService.actualizarProveedor(proveedor);
-        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto actualizado exitosamente!");
+        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor actualizado exitosamente!");
         return "redirect:/tendero/RegistroProveedor";
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminarProveedor(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String eliminarProveedor(@PathVariable ObjectId id, RedirectAttributes redirectAttributes) {
         proveedorService.eliminarProveedor(id);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto eliminado exitosamente!");
         return "redirect:/tendero/RegistroProveedor";

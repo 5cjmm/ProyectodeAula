@@ -16,20 +16,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ShopMaster.Model.ProductoConProveedores;
 import com.ShopMaster.Model.Productos;
-import com.ShopMaster.Model.Proveedores;
+import com.ShopMaster.Model.Proveedor;
 import com.ShopMaster.Model.Venta;
+import com.ShopMaster.Repository.ProductoRepositoryCustom;
 import com.ShopMaster.Repository.ProveedorRepository;
 import com.ShopMaster.Service.ProductosService;
+import com.ShopMaster.Service.ProveedorService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
+private ProductoRepositoryCustom productoRepositoryCustom;
+
+@Autowired
+private ProveedorService proveedorService;
+
+    @Autowired
+    @SuppressWarnings("unused")
     private ProveedorRepository proveedorRepository;
 
     private final VentaService ventaService;
+    
     private final ProductosService productosService;
 
     public AdminController(ProductosService productosService, VentaService ventaService) {
@@ -44,13 +55,17 @@ public class AdminController {
     }
 
     @GetMapping("/Inventario")
-    public String mostrarInventario(Model model) {
-        model.addAttribute("productos", productosService.obtenerTodosLosProductos());
-        List<Proveedores> proveedores = proveedorRepository.findAll();
-        model.addAttribute("proveedores", proveedores);
+    public String listar(Model model) {
+        List<ProductoConProveedores> productos = productoRepositoryCustom.obtenerProductosConProveedores();
+        model.addAttribute("productos", productos);
+
+        // Agregar proveedor y producto nuevo para el formulario
+        model.addAttribute("proveedores", proveedorService.obtenerTodosLosProveedores());
         model.addAttribute("nuevoProducto", new Productos());
+
         return "Inventario";
     }
+
 
     @GetMapping("/InformeVentas")
         public String mostrarInformeVentas(Model model) {
@@ -61,30 +76,23 @@ public class AdminController {
     
     @GetMapping("/pdf")
     public void generarPDF(HttpServletResponse response) throws DocumentException, IOException {
-        // Obtener la lista de ventas
         List<Venta> ventas = ventaService.obtenerTodaslasVentas();
 
-        // Configurar la respuesta para descargar el archivo PDF
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"InformeVentas.pdf\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"InformeDeVentas.pdf\"");
 
-        // Crear el documento PDF
         Document document = new Document();
         PdfWriter.getInstance(document, response.getOutputStream());
 
-        // Abrir el documento PDF
         document.open();
 
-        // Crear la tabla de ventas
         PdfPTable tablaVenta = new PdfPTable(4);
 
-        // Agregar las cabeceras
         tablaVenta.addCell("Nombre");
         tablaVenta.addCell("Cantidad");
         tablaVenta.addCell("Precio");
         tablaVenta.addCell("Total");
 
-        // Llenar la tabla con las ventas
         for (Venta venta : ventas) {
             tablaVenta.addCell(venta.getNombre());
             tablaVenta.addCell(String.valueOf(venta.getCantidad()));
@@ -92,10 +100,8 @@ public class AdminController {
             tablaVenta.addCell(String.valueOf(venta.getTotal()));
         }
 
-        // Agregar la tabla al documento
         document.add(tablaVenta);
 
-        // Cerrar el documento
         document.close();
     }
     
