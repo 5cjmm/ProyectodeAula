@@ -19,10 +19,10 @@ public class ProductoRepositoryImpl implements ProductoRepositoryCustom {
     public List<ProductoConProveedores> obtenerProductosConProveedores() {
 
         LookupOperation lookup = LookupOperation.newLookup()
-            .from("proveedores")             // nombre de la colección
-            .localField("proveedorIds")     // campo en productos
-            .foreignField("_id")            // campo en proveedores
-            .as("proveedores");             // resultado como lista
+            .from("proveedores")         
+            .localField("proveedorIds")     
+            .foreignField("_id")            
+            .as("proveedores");             
 
         Aggregation aggregation = Aggregation.newAggregation(lookup);
 

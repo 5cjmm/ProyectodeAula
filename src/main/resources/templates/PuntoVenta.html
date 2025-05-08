@@ -66,7 +66,7 @@
         </div>
         
         <div class="flex justify-between">
-            <span th:text="${totalVenta}" class="text-lg font-bold dark:text-white"></span>
+            <span th:text="${totalVenta}" class="text-lg font-bold dark:text-white">Total Venta</span>
             <form th:action="@{/tendero/finalizar}" method="post">
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
         </form>

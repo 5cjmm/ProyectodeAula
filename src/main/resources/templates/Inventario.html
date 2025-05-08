@@ -38,6 +38,7 @@
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
@@ -124,14 +125,15 @@
                         </tr>
                     </tbody>
                 </table>
+            
+
+                <div class="pagination flex justify-center items-center gap-4 mt-4">
+                    <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
+                    <span id="paginaActual">1</span>
+                    <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+                </div>
             </div>
         </div>  
-    </div>
-
-    <div class="pagination flex justify-center items-center gap-4 mt-4">
-        <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-        <span id="paginaActual">1</span>
-        <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
     </div>
     
 
@@ -205,7 +207,7 @@
         mostrarPagina(paginaActual);
     }
 
-    // Mostrar la primera página al cargar
+    
     mostrarPagina(paginaActual);
 </script>
     

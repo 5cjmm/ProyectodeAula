@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopMaster - Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Blinker', sans-serif;
+            background: linear-gradient(to right, #0c35a5, #0c50bd);
+            height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-black dark:text-white">
+    
+    <nav class="w-full bg-blue-600 dark:bg-blue-900 p-4 flex justify-between items-center shadow-md rounded-lg">
+        <div class="text-white text-2xl font-bold">ShopMaster</div>
+        <div class="relative">
+            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
+                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+            </button>
+            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                <a href="Index.html" class="block px-4 py-2 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Inicio</a>
+                <a href="Login.html" class="block px-4 py-2 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Login</a>
+            </div>
+        </div>
+    </nav>
+    
+    
+    <main class="container mx-auto mt-10 px-6">
+        <div class="flex flex-col md:flex-row items-center bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
+            <img src="https://img.freepik.com/vector-gratis/supermercado-alimentos-estantes-berenjena-repollo-zanahoria-pimientos-cebollas-pan-maiz-patatas-compras-frescas-ilustracion-vectorial_1284-46271.jpg" 
+                alt="Descripción de la página" class="w-full md:w-1/2 rounded-lg shadow-lg mb-6 md:mb-0 md:mr-6">
+            <div class="md:w-1/2 text-gray-800">
+                <h1 class="text-6xl font-bold text-blue-600">¡Bienvenido a ShopMaster!</h1>
+                <p class="text-2xl mb-8">
+                    ShopMaster es la solución definitiva para la gestión minorista, diseñada para hacer que la administración de tu negocio sea más eficiente. 
+                    Nuestra plataforma te ofrece herramientas avanzadas para controlar inventarios, gestionar ventas y optimizar la experiencia de tus clientes.
+                </p>
+                <a href="Login.html" class="bg-blue-500 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-blue-600 transition">
+                    Iniciar sesión
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("menu");
+        
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
+</body>
+</html>
