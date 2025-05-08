@@ -30,13 +30,23 @@
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
                 <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
+
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+
         </div>
     </nav>
     
@@ -137,12 +147,12 @@
         let tabla = document.getElementById("tablaProveedor");
         let filas = tabla.getElementsByTagName("tr");
 
-        for (let i = 1; i < filas.length; i++) { // Omitimos la cabecera
-            let nombreProducto = filas[i].getElementsByTagName("td")[1]; // Segunda columna (Nombre)
+        for (let i = 1; i < filas.length; i++) { 
+            let nombreProducto = filas[i].getElementsByTagName("td")[1]; 
 
             if (nombreProducto) {
                 let texto = nombreProducto.textContent.toLowerCase();
-                filas[i].style.display = texto.startsWith(input) ? "" : "none"; // Filtra por primera letra
+                filas[i].style.display = texto.startsWith(input) ? "" : "none";
             }
         }
     }
@@ -175,7 +185,7 @@ function cambiarPagina(direccion) {
     mostrarPagina(paginaActual);
 }
 
-// Mostrar la primera página al cargar
+
 mostrarPagina(paginaActual);
 </script>
 

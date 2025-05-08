@@ -19,6 +19,7 @@
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
@@ -27,7 +28,12 @@
     <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Informe de Venta</h1>
     
     <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
-      
+        <form th:action="@{/admin/InformeVentas/filtrar}" method="get">
+            <label for="fecha">Filtrar por fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+            <button type="submit" class="bg-blue-400 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-500">Buscar</button>
+        </form>
+        
         <div class="overflow-x-auto bg-gray-100 dark:bg-blue-700 p-4 rounded-xl shadow-md">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -36,6 +42,7 @@
                         <th class="p-3">Cantidad</th>
                         <th class="p-3">Precio Unitario (COP)</th>
                         <th class="p-3">Total (COP)</th>
+                        <th class="p-3">Fecha</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,15 +51,21 @@
                         <td class="p-3 dark:text-white" th:text="${venta.cantidad}"></td>
                         <td class="p-3 dark:text-white" th:text="${venta.precio}"></td>
                         <td class="p-3 dark:text-white" th:text="${venta.total}"></td>
-                    
+                        <td th:text="${#dates.format(venta.fecha, 'yyyy-MM-dd')}"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         
         
         <div class="mt-6 text-center">
-            <a th:href="@{/admin/pdf}" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600" target="_blank">Imprimir Informe</a>
+           <!-- <a th:href="@{/admin/pdf}" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600" target="_blank">Imprimir Informe</a> -->
+           <!----> <form th:action="@{/admin/pdf}" method="get" target="_blank">
+                <input type="hidden" name="fecha" th:value="${#dates.format(filtroFecha, 'yyyy-MM-dd')}" />
+                <button class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600" type="submit">Generar PDF</button>
+            </form>
         </div>
+        
     </div>
     
     <script>
