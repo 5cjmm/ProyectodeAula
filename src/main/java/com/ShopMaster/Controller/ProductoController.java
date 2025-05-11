@@ -65,7 +65,7 @@ public class ProductoController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminarProducto(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String eliminarProducto(@PathVariable ObjectId id, RedirectAttributes redirectAttributes) {
         productosService.eliminarProducto(id);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto eliminado exitosamente!");
         return "redirect:/admin/Inventario";

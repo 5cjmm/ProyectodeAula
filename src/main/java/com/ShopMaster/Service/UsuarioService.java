@@ -1,5 +1,8 @@
 package com.ShopMaster.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,14 +25,37 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    public List<Usuario> obtenerTodosLosUsuarios() {
+        return usuarioRepository.findAll();
+    }
+
     public boolean existePorUsername(String username) {
         return usuarioRepository.findByUsername(username) != null;
     }
 
-    public void actualizarUsuario(Usuario usuario) {
-        if (usuarioRepository.existsById(usuario.getId())) {
-            usuarioRepository.save(usuario);
+   public void actualizarUsuario(Usuario usuario) {
+    Optional<Usuario> existenteOpt = usuarioRepository.findById(usuario.getId());
+
+    if (existenteOpt.isPresent()) {
+        Usuario existente = existenteOpt.get();
+        existente.setUsername(usuario.getUsername());
+
+        if (!usuario.getPassword().isBlank()) {
+            String encriptada = passwordEncoder.encode(usuario.getPassword());
+            existente.setPassword(encriptada);
         }
+
+        existente.setRoles(usuario.getRoles());
+
+        // Aquí puedes añadir más campos si los hay...
+
+        usuarioRepository.save(existente);
+    }
+}
+
+
+    public void eliminarUsuario(String id) {
+        usuarioRepository.deleteById(id);
     }
 }
 
