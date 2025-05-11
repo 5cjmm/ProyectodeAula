@@ -1,72 +1,121 @@
 package com.ShopMaster.Model;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Document(collection = "deudas")
 public class Deuda {
+
     @Id
     private String id;
-    private String cliente;
-    private Double montoAdeudado;
-    private Set<String> estado;
-    private Date fechaDeRegistro;
+    private String cedulaCliente;
+    private String nombreCliente;
+    private List<Productos> productos = new ArrayList<>();
+    private double total;
+    private double totalRestante;
+    private String estado; // Ej: NO PAGADA, PARCIAL, PAGADA
+    private LocalDateTime fechaVenta;
+    private List<Abono> historialAbonos = new ArrayList<>();
 
     public Deuda() {
     }
 
-
-    public Deuda(String id, String cliente, Double montoAdeudado, Set<String> estado, Date fechaDeRegistro) {
-        this.id = id;
-        this.cliente = cliente;
-        this.montoAdeudado = montoAdeudado;
-        this.estado = estado;
-        this.fechaDeRegistro = fechaDeRegistro;
+    // Constructor con parámetros principales
+    public Deuda(String cedulaCliente, String nombreCliente, List<Productos> productos,
+                 double total, LocalDateTime fechaVenta) {
+        this.cedulaCliente = cedulaCliente;
+        this.nombreCliente = nombreCliente;
+        this.productos = productos;
+        this.total = total;
+        this.totalRestante = total;
+        this.estado = "NO PAGADA";
+        this.fechaVenta = fechaVenta;
     }
 
-
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getCliente() {
-        return this.cliente;
+    public String getCedulaCliente() {
+        return cedulaCliente;
     }
 
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
+    public void setCedulaCliente(String cedulaCliente) {
+        this.cedulaCliente = cedulaCliente;
     }
 
-    public Double getMontoAdeudado() {
-        return this.montoAdeudado;
+    public String getNombreCliente() {
+        return nombreCliente;
     }
 
-    public void setMontoAdeudado(Double montoAdeudado) {
-        this.montoAdeudado = montoAdeudado;
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
-    public Set<String> getEstado() {
-        return this.estado;
+    public List<Productos> getProductos() {
+        return productos;
     }
 
-    public void setEstado(Set<String> estado) {
+    public void setProductos(List<Productos> productos) {
+        this.productos = productos;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public double getTotalRestante() {
+        return totalRestante;
+    }
+
+    public void setTotalRestante(double totalRestante) {
+        this.totalRestante = totalRestante;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
-    public Date getFechaDeRegistro() {
-        return this.fechaDeRegistro;
+    public LocalDateTime getFechaVenta() {
+        return fechaVenta;
     }
 
-    public void setFechaDeRegistro(Date fechaDeRegistro) {
-        this.fechaDeRegistro = fechaDeRegistro;
+    public void setFechaVenta(LocalDateTime fechaVenta) {
+        this.fechaVenta = fechaVenta;
     }
 
+    public List<Abono> getHistorialAbonos() {
+        return historialAbonos;
+    }
 
+    public void setHistorialAbonos(List<Abono> historialAbonos) {
+        this.historialAbonos = historialAbonos;
+    }
+
+    public void registrarAbono(double monto) {
+        this.totalRestante -= monto;
+        if (this.totalRestante <= 0) {
+            this.totalRestante = 0;
+            this.estado = "PAGADA";
+        } else {
+            this.estado = "PARCIAL";
+        }
+        this.historialAbonos.add( new Abono(monto, LocalDateTime.now()));
+    }
 }
