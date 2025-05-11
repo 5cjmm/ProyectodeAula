@@ -5,27 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Proveedores</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function llenarFormularioDesdeBoton(button) {
-            let id = button.dataset.id;
-            let nombre = button.dataset.nombre;
-            let ruc = button.dataset.ruc;
-            let direccion = button.dataset.direccion;
-            let telefono = button.dataset.telefono;
-
-            document.getElementById("edit-id").value = id;
-            document.getElementById("edit-nombre").value = nombre;
-            document.getElementById("edit-ruc").value = ruc;
-            document.getElementById("edit-direccion").value = direccion;
-            document.getElementById("edit-telefono").value = telefono;
-            document.getElementById("edit-form").style.display = "block";
-        }
-    </script>
+    
 </head>
 <body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
     
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
+    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
+        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
@@ -43,6 +28,8 @@
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
@@ -51,6 +38,21 @@
     </nav>
     
     <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Registro de Proveedores</h1>
+<div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
+    <div id="formulario-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96 z-50 hidden">
+        <h2 class="text-xl font-semibold mb-4 text-center">Actualizar Proveedores</h2>
+        <form th:action="@{/tendero/actualizar}" method="post" class="space-y-4">
+                <input type="hidden" name="id" id="edit-id">
+                <input type="text" name="nombre" id="edit-nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="text" name="ruc" id="edit-ruc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="text" name="direccion" id="edit-direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="text" name="telefono" id="edit-telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancelar</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Guardar</button>
+            </div>
+        </form>
+    </div>
     
     <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
         
@@ -93,7 +95,7 @@
                             <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
                             th:data-id="${proveedor.id}"
                             th:data-nombre="${proveedor.nombre}"
-                            th:data-identificacion="${proveedor.ruc}"
+                            th:data-ruc="${proveedor.ruc}"
                             th:data-direccion="${proveedor.direccion}"
                             th:data-telefono="${proveedor.telefono}"
                             onclick="llenarFormularioDesdeBoton(this)">
@@ -116,21 +118,6 @@
         
     </div> 
 
-    <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Editar Producto</h3>
-        <form th:action="@{/tendero/actualizar}" method="post">
-            <input type="hidden" name="id" id="edit-id">
-            <label class="block text-gray-700">Nombre:</label>
-            <input type="text" name="nombre" id="edit-nombre" class="w-full p-2 mb-3 border rounded-md" required>
-            <label class="block text-gray-700">RUC:</label>
-            <input type="text" name="ruc" id="edit-ruc" class="w-full p-2 mb-3 border rounded-md" required>
-            <label class="block text-gray-700">Direccion:</label>
-            <input type="text" name="direccion" id="edit-direccion" class="w-full p-2 mb-3 border rounded-md" required>
-            <label class="block text-gray-700">Telefono:</label>
-            <input type="text" name="telefono" id="edit-telefono" class="w-full p-2 mb-3 border rounded-md" required>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600 w-full">Actualizar</button>
-        </form>
-    </div>
     
     <script>
         const menuToggle = document.getElementById("menu-toggle");
@@ -190,8 +177,20 @@ mostrarPagina(paginaActual);
 </script>
 
 <script>
+        function cerrarModal() {
+    document.getElementById('formulario-modal').classList.add('hidden');
+    document.getElementById('modal-background').classList.add('hidden');
+  }
 
-    
-</script>
+  function llenarFormularioDesdeBoton(button) {
+    document.getElementById('edit-id').value = button.dataset.id;
+    document.getElementById('edit-nombre').value = button.dataset.nombre;
+    document.getElementById('edit-ruc').value = button.dataset.ruc;
+    document.getElementById('edit-direccion').value = button.dataset.direccion;
+    document.getElementById('edit-telefono').value = button.dataset.telefono;
+    document.getElementById('formulario-modal').classList.remove('hidden');
+    document.getElementById("modal-background").classList.remove('hidden');
+  }
+    </script>
 </body>
 </html>

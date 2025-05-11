@@ -41,7 +41,7 @@ public class ProveedorController {
     @PostMapping("/eliminar/{id}")
     public String eliminarProveedor(@PathVariable ObjectId id, RedirectAttributes redirectAttributes) {
         proveedorService.eliminarProveedor(id);
-        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Producto eliminado exitosamente!");
+        redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor eliminado exitosamente!");
         return "redirect:/tendero/RegistroProveedor";
     }
 
