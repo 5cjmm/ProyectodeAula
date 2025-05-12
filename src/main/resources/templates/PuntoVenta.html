@@ -30,7 +30,7 @@
             </button>
             <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
