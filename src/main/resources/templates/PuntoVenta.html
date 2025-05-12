@@ -1,75 +1,107 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Punto de Venta</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function actualizarPrecio() {
+            const input = document.getElementById("nombreProducto");
+            const selected = input.value;
+            const options = document.querySelectorAll("#productos option");
+            let precio = "Desconocido";
+
+            options.forEach(option => {
+                if (option.value === selected) {
+                    precio = option.dataset.precio;
+                }
+            });
+
+            document.getElementById("precioDisplay").textContent = "Precio: $" + precio;
+        }
+    </script>
 </head>
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
-    
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
-        <div class="relative">
+<body class="bg-blue-100 dark:bg-blue-900 min-h-screen p-6 flex flex-col items-center">
+    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
+     <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
+    <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
                 <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
+
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
         </div>
-    </nav>
-    
+  </nav>
+
     <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Punto de Venta</h1>
-    
+
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
-        
-        <div class="flex gap-4">
-            <form th:action="@{/tendero/agregar}" method="post">
-                <input type="nu" name="codigo" placeholder="Código del Producto" class="w-1/1 p-2 border rounded-md" id="codigoProducto">
-                <!-- <input type="text" name="cliente" placeholder="ID del Cliente" class="w-1/3 p-2 border rounded-md"> -->
-                <input type="number" name="cantidad" placeholder="Cantidad" class="w-1/1 p-2 border rounded-md" id="cantidad" required>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
+
+         <div class="flex gap-4">
+            <form th:action="@{/tendero/agregar-producto}" method="post" class="space-y-4">           <!--required-->
+                <input type="text" id="nombreProducto" placeholder="Nombre del Producto" name="nombreProducto" list="productos" onchange="actualizarPrecio()" class="w-1/1 p-2 border rounded-md">
+                    <datalist id="productos">
+                        <option th:each="p : ${todosProductos}" th:value="${p.nombre}" th:data-precio="${p.precio}"></option>
+                    </datalist>
+                <input type="number" name="cantidad" placeholder="Cantidad" min="1" required
+                        class="w-1/1 p-2 border rounded-md">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
             </form>
+
         </div>
-        
+
         <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-blue-400 dark:bg-blue-600 text-white">
                         <th class="p-3">Código</th>
-                        <th class="p-3">Descripción</th>
+                        <th class="p-3">Nombre</th>
                         <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio Unidad (COP)</th>
-                        <th class="p-3">Total (COP)</th>
+                        <th class="p-3">Precio U. (COP)</th>
+                        <th class="p-3">Subtotal</th>
                         <th class="p-3">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="producto : ${carrito}"  class="border-b dark:border-blue-600">
-                        <td th:text="${producto.codigo}" class="p-3 dark:text-white"></td>
-                        <td th:text="${producto.nombre}" class="p-3 dark:text-white"></td>
-                        <td th:text="${producto.cantidad}" class="p-3 dark:text-white"></td>
-                        <td th:text="${producto.precio}" class="p-3 dark:text-white"></td>
-                        <td th:text="${producto.total}" class="p-3 dark:text-white"></td>
+                    <tr th:each="p : ${productosSeleccionados}" class="border-b dark:border-blue-600">
+                        <td th:text="${p.codigo}" class="p-3 dark:text-white"></td>
+                        <td th:text="${p.nombre}" class="p-3 dark:text-white"></td>
+                        <td th:text="${p.cantidad}" class="p-3 dark:text-white"></td>
+                        <td th:text="${p.precioUnitario}" class="p-3 dark:text-white"></td>
+                        <td th:text="${p.cantidad * p.precioUnitario}" class="p-3 dark:text-white"></td>
                         <td class="p-3">
-                            <a th:href="@{/tendero/eliminar/{codigo}(codigo=${producto.codigo})}" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</a>
+                            <a th:href="@{'/tendero/eliminar/' + ${p.codigo}}"
+                               class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</a>
                         </td>
-                        
                     </tr>
                 </tbody>
             </table>
         </div>
-        
+
+
         <div class="flex justify-between">
-            <span th:text="${totalVenta}" class="text-lg font-bold dark:text-white">Total Venta</span>
-            <form th:action="@{/tendero/finalizar}" method="post">
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-green-600">Finalizar Venta</button>
-        </form>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">Total Venta: <span th:text="${totalVenta}">0</span></h3>
+            <form th:action="@{/tendero/guardar}" method="post">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold">Finalizar Venta</button>
+            </form>
+            <!-- Botón para registrar como deuda -->
+            <button onclick="abrirModalDeuda()" type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold">Registrar Deuda</button>
         </div>
         <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
             <p th:text="${error}"></p>
@@ -77,15 +109,51 @@
         <div th:if="${success}" class="bg-green-500 text-white p-2 rounded-md">
             <p th:text="${success}"></p>
         </div>
-    </div>
-    
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-        });
-    </script>
+        <!-- Modal: Registrar Deuda -->
+        <div id="modalDeuda" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Registrar Deuda</h2>
+                    <button onclick="cerrarModalDeuda()" class="text-red-500 text-xl">&times;</button>
+                </div>
+                <form th:action="@{/deudas/registrar}" method="post">
+                <label class="block mb-2">Cédula del Cliente</label>
+                    <input type="text" name="cedulaCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
+
+                    <label class="block mb-2">Nombre del Cliente</label>
+                    <input type="text" name="nombreCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
+
+
+                    <!-- Campos ocultos para cada producto -->
+                    <div th:each="prod, i : ${productosSeleccionados}">
+                        <input type="hidden" th:name="'productos[' + ${i.index} + '].codigo'" th:value="${prod.codigo}" />
+                        <input type="hidden" th:name="'productos[' + ${i.index} + '].nombre'" th:value="${prod.nombre}" />
+                        <input type="hidden" th:name="'productos[' + ${i.index} + '].cantidad'" th:value="${prod.cantidad}" />
+                        <input type="hidden" th:name="'productos[' + ${i.index} + '].precio'" th:value="${prod.precioUnitario}" />
+                    </div>
+
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Guardar Deuda</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 </body>
+<script>
+    function abrirModalDeuda() {
+      document.getElementById("modalDeuda").classList.remove("hidden");
+    }
+
+    function cerrarModalDeuda() {
+      document.getElementById("modalDeuda").classList.add("hidden");
+    }
+
+    const menuToggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("menu");
+
+    menuToggle.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
+    </script>
 </html>

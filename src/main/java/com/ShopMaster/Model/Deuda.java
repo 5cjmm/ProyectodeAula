@@ -14,7 +14,7 @@ public class Deuda {
     private String id;
     private String cedulaCliente;
     private String nombreCliente;
-    private List<Productos> productos = new ArrayList<>();
+    private List<ProductoVendido> productos;
     private double total;
     private double totalRestante;
     private String estado; // Ej: NO PAGADA, PARCIAL, PAGADA
@@ -25,7 +25,7 @@ public class Deuda {
     }
 
     // Constructor con parámetros principales
-    public Deuda(String cedulaCliente, String nombreCliente, List<Productos> productos,
+    public Deuda(String cedulaCliente, String nombreCliente, List<ProductoVendido> productos,
                  double total, LocalDateTime fechaVenta) {
         this.cedulaCliente = cedulaCliente;
         this.nombreCliente = nombreCliente;
@@ -60,13 +60,14 @@ public class Deuda {
         this.nombreCliente = nombreCliente;
     }
 
-    public List<Productos> getProductos() {
+    public List<ProductoVendido> getProductos() {
         return productos;
     }
 
-    public void setProductos(List<Productos> productos) {
+    public void setProductos(List<ProductoVendido> productos) {
         this.productos = productos;
     }
+
 
     public double getTotal() {
         return total;

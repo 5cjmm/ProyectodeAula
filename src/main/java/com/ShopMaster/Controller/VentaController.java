@@ -3,7 +3,6 @@ package com.ShopMaster.Controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,107 +19,113 @@ import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.ProductosRepository;
 import com.ShopMaster.Repository.VentaRepository;
+import com.ShopMaster.dto.ProductoVendido;
 
 @Controller
 @RequestMapping("/tendero")
-@SessionAttributes("carrito")
+@SessionAttributes("productosSeleccionados")
 public class VentaController {
 
     @Autowired
-    private ProductosRepository productosRepository;
+    private ProductosRepository productoRepo;
 
     @Autowired
-    private VentaRepository ventaRepository;
+    private VentaRepository ventaRepo;
 
-    @ModelAttribute("carrito")
-    public List<Venta> carrito() {
+    @ModelAttribute("productosSeleccionados")
+    public List<ProductoVendido> productosSeleccionados() {
         return new ArrayList<>();
     }
 
-    @PostMapping("/agregar")
-    public String agregarProducto(@RequestParam("codigo") String codigo, 
-                                  @RequestParam("cantidad") int cantidad, 
-                                 // @RequestParam("cliente") String cliente,
-                                  @ModelAttribute("carrito") List<Venta> carrito, 
-                                  Model model) {
-        Optional<Productos> productoOpt = productosRepository.findByCodigo(codigo);
+    // Mostrar formulario principal
+    @GetMapping("/crear")
+    public String mostrarFormulario(Model model,
+                                    @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
+        List<Productos> productos = productoRepo.findAll();
+        model.addAttribute("todosProductos", productos);
+        model.addAttribute("productosSeleccionados", seleccionados);
+        model.addAttribute("totalVenta", seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecioUnitario()).sum());
+        return "PuntoVenta";
+    }
 
-        if (!productoOpt.isPresent()) {
-            model.addAttribute("error", "El producto no existe.");
+    // Agregar producto al carrito
+    @PostMapping("/agregar-producto")
+    public String agregarProducto(@RequestParam("nombreProducto") String nombreProducto,
+                                  @RequestParam("cantidad") int cantidad,
+                                  @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
+                                  Model model) {
+
+        Productos producto = productoRepo.findByNombre(nombreProducto);
+
+        if (producto == null) {
+            model.addAttribute("error", "El Producto no existe.");
             return "PuntoVenta";
         }
 
-        Productos producto = productoOpt.get();
+        if (cantidad <= 0) {
+            model.addAttribute("error", "La cantidad debe ser mayor a cero.");
+            return "PuntoVenta";
+        }
 
         if (cantidad > producto.getCantidad()) {
-            model.addAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " unidades disponibles.");
+            model.addAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
             return "PuntoVenta";
         }
-            
-        
 
-        double total = cantidad * producto.getPrecio();
+        ProductoVendido vendido = new ProductoVendido();
+        vendido.setProductoId(producto.getId());
+        vendido.setCodigo(producto.getCodigo());
+        vendido.setNombre(producto.getNombre());
+        vendido.setCantidad(cantidad);
+        vendido.setPrecioUnitario(producto.getPrecio());
 
-       /*  if (cliente.isEmpty()) {
-            model.addAttribute("error", "Falta el ID del cliente en la venta.");
-            return "PuntoVenta";
-        } */
-     
-        Venta venta = new Venta();
-        venta.setCodigo(producto.getCodigo());
-        venta.setNombre(producto.getNombre());
-        venta.setCliente(venta.getCliente());
-        venta.setCantidad(cantidad);
-        venta.setPrecio(producto.getPrecio());
-        venta.setTotal(total);
-
-        carrito.add(venta);
-
-        
-        model.addAttribute("carrito", carrito);
-        model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
+        seleccionados.add(vendido);
 
         return "PuntoVenta";
     }
 
+    // Eliminar producto del carrito
     @GetMapping("/eliminar/{codigo}")
-    public String eliminarProducto(@PathVariable("codigo") String codigo, 
-                                @ModelAttribute("carrito") List<Venta> carrito, 
-                                Model model) {
-   carrito.removeIf(p -> p.getCodigo().equals(codigo));
-    model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
-    return "PuntoVenta";
-}
-
-    @PostMapping("/finalizar")
-    public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Model model) {
-    if (carrito.isEmpty()) {
-        model.addAttribute("error", "No hay productos en la venta.");
+    public String eliminarProducto(@PathVariable("codigo") String codigo,
+                                   @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
+        seleccionados.removeIf(p -> p.getCodigo().equals(codigo));
         return "PuntoVenta";
-
     }
 
-        for (Venta venta : carrito) {
-            Optional<Productos> productoOpt = productosRepository.findByCodigo(venta.getCodigo());
-            if (productoOpt.isPresent()) {
-                Productos producto = productoOpt.get();
-                producto.setCantidad(producto.getCantidad() - venta.getCantidad());
-                productosRepository.save(producto);
+    // Guardar venta y actualizar inventario
+    @PostMapping("/guardar")
+    public String guardarVenta(@ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
+                               Model model) {
+
+        if (seleccionados.isEmpty()) {
+            model.addAttribute("error", "No hay productos en la venta.");
+            return "PuntoVenta";
+        }
+
+        for (ProductoVendido p : seleccionados) {
+            Productos prod = productoRepo.findById(p.getProductoId()).orElse(null);
+            if (prod == null) continue;
+            if (prod.getCantidad() < p.getCantidad()) {
+                model.addAttribute("error", "Stock insuficiente para el producto: " + prod.getNombre());
+                return "PuntoVenta";
             }
-            venta.setFecha(new Date());
+
+            // Restar stock
+            prod.setCantidad(prod.getCantidad() - p.getCantidad());
+            productoRepo.save(prod);
+        }
+
+        // Crear y guardar venta
+        Venta venta = new Venta();
+        venta.setFecha(new Date());
+        venta.setTotal(seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecioUnitario()).sum());
+        venta.setProductos(new ArrayList<>(seleccionados));
+        ventaRepo.save(venta);
+
+        // Limpiar carrito
+        seleccionados.clear();
+
+        model.addAttribute("success", "Venta realizada con éxito.");
+        return "PuntoVenta";
     }
-        
-
-
-    ventaRepository.saveAll(carrito);
-
-    carrito.clear();
-    
-    model.addAttribute("carrito", carrito);
-    model.addAttribute("totalVenta", 0.0);
-    model.addAttribute("success", "Venta realizada con exito.");
-    return "PuntoVenta";
-}
-
-    
 }

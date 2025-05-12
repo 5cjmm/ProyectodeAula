@@ -9,10 +9,10 @@
 
     <style>
         .estado {
-          border-radius: 20px;
-          padding: 2px 10px;
-          color: rgb(24, 25, 36);
-          font-weight: bold;
+            border-radius: 20px;
+            padding: 2px 10px;
+            color: rgb(24, 25, 36);
+            font-weight: bold;
         }
 
         .estado.NO_PAGADA { background-color: #f78da7; }
@@ -33,22 +33,6 @@
     </button>
 </nav>
 
-<!-- Filtros -->
-<form class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 px-4">
-    <input type="text" placeholder="Cliente" class="p-2 rounded border border-gray-300" />
-
-    <select class="p-2 rounded border border-gray-300">
-        <option selected>Estado</option>
-        <option value="PAGADA">Pagada</option>
-        <option value="NO_PAGADA">No pagada</option>
-        <option value="PARCIAL">Parcial</option>
-    </select>
-
-    <input type="date" class="p-2 rounded border border-gray-300" />
-
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2">Buscar</button>
-</form>
-
 <!-- Tabla -->
 <div class="w-full px-4 overflow-auto">
     <table class="min-w-full text-sm text-left text-gray-700 bg-white rounded shadow">
@@ -65,17 +49,21 @@
         </thead>
         <tbody>
         <tr th:each="deuda : ${deudas}" class="border-t">
-            <td class="px-4 py-2" th:text="${deuda.cedula}"></td>
-            <td class="px-4 py-2" th:text="${deuda.nombre}"></td>
-            <td class="px-4 py-2" th:text="${#dates.format(deuda.fecha, 'yyyy-MM-dd')}"></td>
-            <td class="px-4 py-2" th:text="${deuda.productos}"></td>
+            <td class="px-4 py-2" th:text="${deuda.cedulaCliente}"></td>
+            <td class="px-4 py-2" th:text="${deuda.nombreCliente}"></td>
+            <td class="px-4 py-2" th:text="${#dates.format(deuda.fechaVenta, 'yyyy-MM-dd')}"></td>
+            <td class="px-4 py-2">
+                <ul>
+                    <li th:each="p : ${deuda.productos}" th:text="${p.nombre} + ' x' + ${p.cantidad}"></li>
+                </ul>
+            </td>
             <td class="px-4 py-2" th:text="${deuda.total}"></td>
             <td class="px-4 py-2">
                 <span th:text="${deuda.estado}" th:class="'estado ' + deuda.estado"></span>
             </td>
             <td class="px-4 py-2 space-x-2">
-                <button onclick="openModal('modalAbono')" class="bg-yellow-400 hover:bg-yellow-500 text-black rounded px-3 py-1">Abonar</button>
-                <button onclick="openModal('modalHistorial')" class="bg-gray-500 hover:bg-gray-600 text-white rounded px-3 py-1">Ver Historial</button>
+                <button th:attr="onclick=|openAbonoModal('${deuda.id}')|" class="bg-yellow-400 hover:bg-yellow-500 text-black rounded px-3 py-1">Abonar</button>
+                <button th:attr="onclick=|openHistorialModal('${deuda.id}')|" class="bg-gray-500 hover:bg-gray-600 text-white rounded px-3 py-1">Ver Historial</button>
             </td>
         </tr>
         </tbody>
@@ -89,9 +77,10 @@
             <h2 class="text-xl font-bold">Registrar Abono</h2>
             <button onclick="closeModal('modalAbono')" class="text-red-500 text-xl">&times;</button>
         </div>
-        <form>
+        <form id="abonoForm" method="post">
             <label class="block mb-2">Monto del abono</label>
-            <input type="number" name="montoAbono" class="w-full p-2 border border-gray-300 rounded mb-4"/>
+            <input type="number" name="montoAbono" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
+            <input type="hidden" name="monto" id="montoField" />
             <div class="flex justify-end">
                 <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
             </div>
@@ -113,27 +102,38 @@
                 <th class="px-4 py-2">Monto</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td class="px-4 py-2">2025-05-11</td>
-                <td class="px-4 py-2">$15.000</td>
-            </tr>
-            <!-- Más filas dinámicas -->
+            <tbody id="historialBody">
+            <!-- Aquí puedes llenar los abonos por Thymeleaf si se desea -->
+            <tr><td colspan="2" class="px-4 py-2 text-center">No hay datos cargados</td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- JS para modales -->
+<!-- JS para modales y envío -->
 <script>
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
+    function openAbonoModal(deudaId) {
+        document.getElementById("modalAbono").classList.remove("hidden");
+        const form = document.getElementById("abonoForm");
+        form.action = "/deudas/abonar/" + deudaId;
+    }
+
+    document.getElementById("abonoForm").addEventListener("submit", function(event) {
+        const montoInput = document.querySelector("input[name='montoAbono']");
+        const hiddenMontoField = document.getElementById("montoField");
+        hiddenMontoField.value = montoInput.value;
+    });
+
+    function openHistorialModal(deudaId) {
+        document.getElementById("modalHistorial").classList.remove("hidden");
+        // Aquí puedes agregar lógica para cargar dinámicamente el historial si deseas
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.add("hidden");
     }
 </script>
 </body>
 </html>
+
 
