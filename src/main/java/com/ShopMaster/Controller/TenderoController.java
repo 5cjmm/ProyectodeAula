@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.ShopMaster.Model.Proveedor;
 import com.ShopMaster.Service.ProveedorService;
 
@@ -23,10 +24,7 @@ public class TenderoController {
         this.proveedorService = proveedorService;
     }
 
-    @GetMapping("/Deudas")
-    public String mostrarDeudas() {
-        return "Deudas";
-    }
+    
 
     @GetMapping("/RegistroProveedor")
     public String mostrarProveedores(Model model) {

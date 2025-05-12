@@ -1,12 +1,13 @@
 package com.ShopMaster.Service;
 
-import com.ShopMaster.Model.Deuda;
-import com.ShopMaster.Repository.DeudaRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.ShopMaster.Model.Deuda;
+import com.ShopMaster.Repository.DeudaRepository;
 
 @Service
 public class DeudaService {
@@ -35,4 +36,5 @@ public class DeudaService {
         }
         return null;
     }
+
 }
