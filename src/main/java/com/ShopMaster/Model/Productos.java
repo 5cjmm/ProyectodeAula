@@ -1,6 +1,7 @@
 package com.ShopMaster.Model;
 
 import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Productos {
 
     @Id
-    private String id;
+    private ObjectId  id;
     private String codigo;
     private String nombre;
     private int cantidad;
@@ -21,7 +22,7 @@ public class Productos {
     }
 
 
-    public Productos(String id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds) {
+    public Productos(ObjectId id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -31,11 +32,11 @@ public class Productos {
     }
 
 
-    public String getId() {
+    public ObjectId getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -78,5 +79,8 @@ public class Productos {
     public void setProveedorIds(List<ObjectId> proveedorIds) {
         this.proveedorIds = proveedorIds;
     }
+
+    
+
     
 }

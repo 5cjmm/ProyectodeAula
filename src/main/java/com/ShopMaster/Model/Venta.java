@@ -1,58 +1,54 @@
 package com.ShopMaster.Model;
+import java.util.Date;
+import java.util.List;
+
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.Date;
+
+import com.ShopMaster.dto.ProductoVendido;
 
 
 @Document(collection = "ventas")
 public class Venta {
-
     @Id
-    private String id;
-    private String codigo;
-    private String cliente;
-    private String nombre;
-    private int cantidad;
-    private double precio;
-    private double total;
+    private ObjectId id;
     private Date fecha;
+    private double total;
+    private List<ProductoVendido> productos;
+    
 
-    public Venta() {}
-
-    public Venta(String codigo, String cliente, String nombre, int cantidad, double precio, double total) {
-        this.codigo = codigo;
-        this.cliente = cliente;
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.total = total;
-        this.fecha = new Date();
+    public ObjectId getId() {
+        return this.id;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
+    public Date getFecha() {
+        return this.fecha;
+    }
 
-    public String getCliente() { return cliente; }
-    public void setCliente(String cliente) { this.cliente = cliente; }
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public double getTotal() {
+        return this.total;
+    }
 
-    public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public void setTotal(double total) {
+        this.total = total;
+    }
 
-    public Double getPrecio() { return precio; }
-    public void setPrecio(Double precio) { this.precio = precio; }
+    public List<ProductoVendido> getProductos() {
+        return this.productos;
+    }
 
-    public Double getTotal() { return total; }
-    public void setTotal(Double total) { this.total = total; }
-
-    public Date getFecha() { return fecha; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
-
+    public void setProductos(List<ProductoVendido> productos) {
+        this.productos = productos;
+    }
+    
 }
-
 

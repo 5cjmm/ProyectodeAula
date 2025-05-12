@@ -2,8 +2,10 @@ package com.ShopMaster.Service;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.VentaRepository;
 
@@ -17,7 +19,7 @@ public class VentaService {
         return ventaRepository.findAll();
     }
 
-    public void eliminarVenta(String id) {
+    public void eliminarVenta(ObjectId id) {
         ventaRepository.deleteById(id);
     }
 

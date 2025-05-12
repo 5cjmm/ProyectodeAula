@@ -1,34 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestion de Usuarios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <form th:action="@{/admin/Registro}" method="post" class="form">
-        <div class="input-box">
-            <label>Correo Electrónico</label>
-            <input type="text" name="username" placeholder="Ingresa tu Correo Electrónico" required />
+<body class="bg-blue-200 min-h-screen p-6">
+
+            <!-- Fondo oscuro desenfocado -->
+<div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
+
+        <!-- Modal -->
+    <div id="formulario-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96 z-50 hidden">
+        <h2 class="text-xl font-semibold mb-4 text-center">Actualizar Usuario</h2>
+        <form th:action="@{/admin/actualizar-tendero}" method="post" class="space-y-4">
+                <input type="hidden" name="id" id="modal-id">
+<input type="text" name="username" id="modal-username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+<input type="password" name="password" id="modal-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+<input type="text" name="roles" id="modal-roles" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancelar</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+
+    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
+        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
+        <div class="relative">
+            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
+                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+            </button>
+            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
         </div>
-        <div class="input-box">
-            <label>Contraseña</label>
-            <input type="password" name="password" placeholder="Ingresa tu Contraseña" required />
-            <button type="submit">Registrar</button>
-        <div th:if="${SuccessMessage}">
-            <p th:text="${SuccessMessage}"></p>
-        </div>
-    </form>
-      
-    <form th:action="@{/admin/actualizar-tendero}" method="post">
-        <label class="block text-gray-900">Nombre:</label>
-        <input type="text" name="username" id="edit-nombre" class="w-full p-2 mb-3 border rounded-md" required>
-        <label class="block text-gray-900">Contraseña:</label>
-        <input type="number" name="password" id="edit-stock" class="w-full p-2 mb-3 border rounded-md" required>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600 w-full">Actualizar</button>
-    </form>
-        
-        
+    </nav>
+
+ 
+  <div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-xl shadow-md">
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-900">Registro Tendero</h1>
+
     
+    <form th:action="@{/admin/Registro}" method="post" class="flex flex-wrap items-center justify-center gap-4 mb-6">
+      <input type="text" name="username" placeholder="Ingresa el Nombre"
+             class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" name="password" placeholder="Ingresa tu Contraseña"
+             class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <button type="submit"
+              class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600">
+        Registrar
+      </button>
+    </form>
+
+    <h6 class="text-3xl font-bold text-center mb-8 text-gray-900">Usuarios</h2>
+   
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+      <table class="min-w-full text-center bg-blue-200 rounded-lg">
+        <thead class="bg-blue-400 text-white">
+          <tr>
+            <th class="py-3 px-4">Nombre</th>
+            <th class="py-3 px-4">Password</th>
+            <th class="py-3 px-4">Roles</th>
+            <th class="py-3 px-4">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-blue-100" th:each="usuario : ${usuarios}">
+                <td class="py-2 px-4" th:text="${usuario.username}"></td>
+                <td class="py-2 px-4" th:text="${usuario.password}"></td>
+                <td class="py-2 px-4" th:text="${usuario.roles}"></td>
+                <td class="py-2 px-4">
+                    
+<button
+  class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded-lg"
+  onclick="llenarFormularioUsuario(this)"
+  th:data-id="${usuario.id}"
+  th:data-username="${usuario.username}"
+  th:data-password="${usuario.password}"
+  th:data-roles="${usuario.roles}">
+  Actualizar
+</button>
+
+                    <form th:action="@{/admin/eliminar-tendero/{id}(id=${usuario.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="bg-red-400 hover:bg-red-500 text-white px-4 py-1 rounded-lg">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+
+   
+    <div th:if="${SuccessMessage}"  th:text="${SuccessMessage}" class="bg-green-500 text-white p-2 rounded-md"></div>
+
+    
+    <div th:if="${ErrorMessage}" class="mt-2 bg-red-500 h-4 rounded-full"></div>
+
+  </div>
+
+  <script>
+
+function llenarFormularioUsuario(button) {
+    let id = button.dataset.id;
+    let username = button.dataset.username;
+    let password = button.dataset.password;
+    let roles = button.dataset.roles;
+
+    document.getElementById("modal-id").value = id;
+    document.getElementById("modal-username").value = username;
+    document.getElementById("modal-password").value = password;
+    document.getElementById("modal-roles").value = roles;
+    
+    document.getElementById("formulario-modal").classList.remove('hidden');
+    document.getElementById("modal-background").classList.remove('hidden');
+}
+
+function cerrarModal() {
+    document.getElementById('modal-background').classList.add('hidden');
+    document.getElementById('formulario-modal').classList.add('hidden');
+}
+
+
+
+</script>
+
 </body>
+<script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("menu");
+        
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
 </html>

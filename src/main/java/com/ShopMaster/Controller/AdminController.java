@@ -6,18 +6,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ShopMaster.Model.ProductoConProveedores;
 import com.ShopMaster.Model.Productos;
@@ -31,6 +27,7 @@ import com.ShopMaster.Service.ProductosService;
 import com.ShopMaster.Service.ProveedorService;
 import com.ShopMaster.Service.UsuarioService;
 import com.ShopMaster.Service.VentaService;
+import com.ShopMaster.dto.ProductoVendido;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -98,83 +95,92 @@ private ProductoRepositoryCustom productoRepositoryCustom;
     @GetMapping("/InformeVentas")
     public String mostrarInformeVentas(Model model) {
         List<Venta> listadoVenta = ventaService.obtenerTodaslasVentas();
-        model.addAttribute("venta", listadoVenta);
+        model.addAttribute("ventas", listadoVenta);
         return "InformeVentas";
     }
     
+    @GetMapping("/Registro")
+    public String mostrarFormularioDeRegistro(Model model) {
+        model.addAttribute("usuarios", usuarioService.obtenerTodosLosUsuarios());
+        model.addAttribute("usuario", new Usuario()); 
+        return "Registro";  
+    }
+
     @GetMapping("/pdf")
-    public void generarPDF(@RequestParam(value = "fecha", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha,
-                       HttpServletResponse response) throws DocumentException, IOException {
+public void generarPDF(
+        @RequestParam(value = "fecha", required = false)
+        @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha,
+        HttpServletResponse response) throws DocumentException, IOException {
 
-        List<Venta> ventas;
+    List<Venta> ventas;
 
-        if (fecha != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(fecha);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            Date inicio = calendar.getTime();
-            calendar.add(Calendar.DATE, 1);
-            Date fin = calendar.getTime();
+    if (fecha != null) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date inicio = calendar.getTime();
+        calendar.add(Calendar.DATE, 1);
+        Date fin = calendar.getTime();
 
-            ventas = ventaRepository.findByFechaBetween(inicio, fin);
-        } else {
-            ventas = ventaService.obtenerTodaslasVentas();
-        }
+        ventas = ventaRepository.findByFechaBetween(inicio, fin);
+    } else {
+        ventas = ventaService.obtenerTodaslasVentas();
+    }
 
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"InformeDeVentas.pdf\"");
+    response.setContentType("application/pdf");
+    response.setHeader("Content-Disposition", "attachment; filename=\"InformeDeVentas.pdf\"");
 
-        Document document = new Document(PageSize.A4, 36, 36, 50, 50);
-        PdfWriter.getInstance(document, response.getOutputStream());
-        document.open();
+    Document document = new Document(PageSize.A4, 36, 36, 50, 50);
+    PdfWriter.getInstance(document, response.getOutputStream());
+    document.open();
 
-        Font tituloFont = new Font(Font.HELVETICA, 16, Font.BOLD);
-        Font encabezadoFont = new Font(Font.HELVETICA, 12, Font.BOLD);
-        Font contenidoFont = new Font(Font.HELVETICA, 11);
+    Font tituloFont = new Font(Font.HELVETICA, 16, Font.BOLD);
+    Font encabezadoFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+    Font contenidoFont = new Font(Font.HELVETICA, 11);
 
-        Paragraph titulo = new Paragraph("Informe de Ventas", tituloFont);
-        titulo.setAlignment(Element.ALIGN_CENTER);
-        titulo.setSpacingAfter(20f);
-        document.add(titulo);
+    Paragraph titulo = new Paragraph("Informe de Ventas", tituloFont);
+    titulo.setAlignment(Element.ALIGN_CENTER);
+    titulo.setSpacingAfter(20f);
+    document.add(titulo);
 
-        PdfPTable tablaVenta = new PdfPTable(5);
-        tablaVenta.setWidthPercentage(100);
-        tablaVenta.setWidths(new float[] {3, 1.2f, 1.5f, 1.8f, 2.5f});
-        tablaVenta.setSpacingBefore(10f);
+    PdfPTable tablaVenta = new PdfPTable(5);
+    tablaVenta.setWidthPercentage(100);
+    tablaVenta.setWidths(new float[] {3, 1.2f, 1.5f, 1.8f, 2.5f});
+    tablaVenta.setSpacingBefore(10f);
 
-        String[] encabezados = {"Nombre", "Cant.", "P. Unit (COP)", "Total (COP)", "Fecha"};
-        for (String enc : encabezados) {
-            PdfPCell celda = new PdfPCell(new Phrase(enc, encabezadoFont));
-            celda.setHorizontalAlignment(Element.ALIGN_CENTER);
-            celda.setBackgroundColor(Color.LIGHT_GRAY); 
-            celda.setPadding(5f);
-            tablaVenta.addCell(celda);
-        }
+    String[] encabezados = {"Nombre", "Cant.", "P. Unit (COP)", "Total (COP)", "Fecha"};
+    for (String enc : encabezados) {
+        PdfPCell celda = new PdfPCell(new Phrase(enc, encabezadoFont));
+        celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+        celda.setBackgroundColor(Color.LIGHT_GRAY);
+        celda.setPadding(5f);
+        tablaVenta.addCell(celda);
+    }
 
-    
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        int totalCantidad = 0;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    int totalCantidad = 0;
     double totalMonto = 0;
-        for (Venta venta : ventas) {
-            tablaVenta.addCell(new Phrase(venta.getNombre(), contenidoFont));
-            tablaVenta.addCell(new Phrase(String.valueOf(venta.getCantidad()), contenidoFont));
-            tablaVenta.addCell(new Phrase(String.format("%.2f", venta.getPrecio()), contenidoFont));
-            tablaVenta.addCell(new Phrase(String.format("%.2f", venta.getTotal()), contenidoFont));
+
+    for (Venta venta : ventas) {
+        List<ProductoVendido> productos = venta.getProductos(); // Asegúrate de tener el getter correcto
+
+        for (ProductoVendido producto : productos) {
+            tablaVenta.addCell(new Phrase(producto.getNombre(), contenidoFont));
+            tablaVenta.addCell(new Phrase(String.valueOf(producto.getCantidad()), contenidoFont));
+            tablaVenta.addCell(new Phrase(String.format("%.2f", producto.getPrecioUnitario()), contenidoFont));
+            double totalProducto = producto.getCantidad() * producto.getPrecioUnitario();
+            tablaVenta.addCell(new Phrase(String.format("%.2f", totalProducto), contenidoFont));
             tablaVenta.addCell(new Phrase(sdf.format(venta.getFecha()), contenidoFont));
 
-            totalCantidad += venta.getCantidad();
-        totalMonto += venta.getTotal();
-            
+            totalCantidad += producto.getCantidad();
+            totalMonto += totalProducto;
         }
+    }
 
-        // Espacio antes del resumen
     document.add(new Paragraph("\n"));
-
-    // Tabla de resumen
     Paragraph resumenTitulo = new Paragraph("Resumen de Ventas", encabezadoFont);
     resumenTitulo.setSpacingBefore(10f);
     document.add(resumenTitulo);
@@ -185,18 +191,15 @@ private ProductoRepositoryCustom productoRepositoryCustom;
     tablaResumen.setSpacingBefore(10f);
     tablaResumen.setWidths(new float[]{3f, 2f});
 
-    // Encabezados del resumen
-    PdfPCell celdaTitulo1 = new PdfPCell(new Phrase("Detalle", encabezadoFont));
-    celdaTitulo1.setBackgroundColor(Color.LIGHT_GRAY);
-    celdaTitulo1.setPadding(5f);
-    tablaResumen.addCell(celdaTitulo1);
+    tablaResumen.addCell(new PdfPCell(new Phrase("Detalle", encabezadoFont)) {{
+        setBackgroundColor(Color.LIGHT_GRAY);
+        setPadding(5f);
+    }});
+    tablaResumen.addCell(new PdfPCell(new Phrase("Valor", encabezadoFont)) {{
+        setBackgroundColor(Color.LIGHT_GRAY);
+        setPadding(5f);
+    }});
 
-    PdfPCell celdaTitulo2 = new PdfPCell(new Phrase("Valor", encabezadoFont));
-    celdaTitulo2.setBackgroundColor(Color.LIGHT_GRAY);
-    celdaTitulo2.setPadding(5f);
-    tablaResumen.addCell(celdaTitulo2);
-
-    // Valores del resumen
     tablaResumen.addCell(new Phrase("Cantidad total de productos", contenidoFont));
     tablaResumen.addCell(new Phrase(String.valueOf(totalCantidad), contenidoFont));
 
@@ -207,33 +210,19 @@ private ProductoRepositoryCustom productoRepositoryCustom;
     tablaResumen.addCell(new Phrase(String.valueOf(ventas.size()), contenidoFont));
 
     document.add(tablaResumen);
+    document.add(tablaVenta);
+    document.close();
 
-        document.add(tablaVenta);
-        document.close();
+    counterService.increment();
+}
 
-        counterService.increment();
-    }
+
 
 
     @GetMapping("/count")
     public Map<String, Long> getCount() {
         long count = counterService.getCurrentCount();
         return Map.of("count", count);
-    }
-
-    @GetMapping("/Registro")
-    public String mostrarFormularioDeRegistro(Model model) {
-        model.addAttribute("usuario", new Usuario()); 
-        return "Registro";  
-    }
-
-    
-    @PostMapping("/Registro")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
-        usuario.setRoles(Set.of("ROLE_TENDERO"));
-        usuarioService.guardarUsuario(usuario);
-        redirectAttributes.addFlashAttribute("SuccessMessage", "Usuario registrado exitosamente");
-        return "redirect:/admin/Registro";  
     }
 
     @GetMapping("/InformeVentas/filtrar")
@@ -250,7 +239,7 @@ private ProductoRepositoryCustom productoRepositoryCustom;
         Date fin = calendar.getTime();
 
         List<Venta> ventas = ventaRepository.findByFechaBetween(inicio, fin);
-        model.addAttribute("venta", ventas);
+        model.addAttribute("ventas", ventas);
         model.addAttribute("filtroFecha", fecha);
         return "InformeVentas";
 
