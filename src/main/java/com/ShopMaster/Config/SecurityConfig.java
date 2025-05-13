@@ -1,10 +1,5 @@
 package com.ShopMaster.Config;
 
-import com.ShopMaster.Repository.UsuarioRepository;
-import com.ShopMaster.Security.CustomAuthenticationSuccessHandler;
-import com.ShopMaster.Security.JwtRequestFilter;
-import com.ShopMaster.Service.CustomUserDetailsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.ShopMaster.Repository.UsuarioRepository;
+import com.ShopMaster.Security.CustomAuthenticationSuccessHandler;
+import com.ShopMaster.Security.JwtRequestFilter;
+import com.ShopMaster.Service.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
@@ -59,6 +59,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/home", "/favicon.ico", "/api/auth/**").permitAll()
+                        .requestMatchers( "/tendero/agregar-producto", 
+                        "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
+                        "/admin/crear-producto", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()

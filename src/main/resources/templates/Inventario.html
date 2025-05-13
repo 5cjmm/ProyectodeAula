@@ -6,38 +6,34 @@
     <title>Gestión de Inventario - ShopMaster</title>
     <link rel="icon" href="/img/logo-tc.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function llenarFormularioDesdeBoton(button) {
-            let id = button.dataset.id;
-            let codigo = button.dataset.codigo;
-            let nombre = button.dataset.nombre;
-            let stock = button.dataset.stock;
-            let precio = button.dataset.precio;
-            let proveedor = button.dataset.proveedor;
-
-            document.getElementById("edit-id").value = id;
-            document.getElementById("edit-codigo").value = codigo;
-            document.getElementById("edit-nombre").value = nombre;
-            document.getElementById("edit-stock").value = stock;
-            document.getElementById("edit-precio").value = precio;
-            document.getElementById("edit-proveedor").value = proveedor;
-            document.getElementById("edit-form").style.display = "block";
-        }
-    </script>
+    
 </head>
 <body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
     
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
+    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
+        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">Gestión de deudas</div>
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
@@ -45,29 +41,43 @@
 
     
     
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Gestión de Inventario</h1>
     
+    <div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
+    <div id="formulario-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96 z-50 hidden">
+        <h2 class="text-xl font-semibold mb-4 text-center">Actualizar Proveedores</h2>
+        <form th:action="@{/admin/actualizar}" method="post" class="space-y-4">
+                <input type="hidden" name="id" id="edit-id">
+                <input type="text" name="codigo" id="edit-codigo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" readonly>
+                <input type="text" name="nombre" id="edit-nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" readonly>
+                <input type="text" name="cantidad" id="edit-cantidad" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="text" name="precio" id="edit-precio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <select class="w-full p-2 mb-3 border rounded-md h-10" multiple size="7" name="proveedorIdStrs" id="edit-proveedores">
+                <option th:each="prov : ${proveedores}" th:value="${prov.id}" th:text="${prov.nombre}"></option>
+                </select>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancelar</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Guardar</button>
+            </div>
+        </form>
+    </div>
+
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex gap-6">
         
         <div class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Agregar Producto</h2>
 
-            <form th:action="@{/admin/crear-producto}" method="post">
+            <form th:action="@{/admin/crear-producto}" th:object="${nuevoProducto}" method="post">
                 <label class="block text-gray-900 dark:text-white">Código:</label>
-                <input type="text" name="codigo" class="w-full p-2 mb-3 border rounded-md" required>
-                
-                <label class="block text-gray-900 dark:text-white">Descripción:</label>
-                <input type="text" name="nombre" class="w-full p-2 mb-3 border rounded-md" required>
-                
+                <input type="text" th:field="*{codigo}" class="w-full p-2 mb-3 border rounded-md" required />
+                <label class="block text-gray-900 dark:text-white">Nombre:</label>
+                <input type="text" th:field="*{nombre}" class="w-full p-2 mb-3 border rounded-md" required />
                 <label class="block text-gray-900 dark:text-white">Cantidad:</label>
-                <input type="number" name="cantidad" class="w-full p-2 mb-3 border rounded-md" required>
-                
-                <label class="block text-gray-900 dark:text-white">Precio (COP):</label>
-                <input type="text" name="precio" class="w-full p-2 mb-3 border rounded-md" required>
-                
+                <input type="number" th:field="*{cantidad}" class="w-full p-2 mb-3 border rounded-md" required />
+                <label class="block text-gray-900 dark:text-white">Precio:</label>
+                <input type="number" th:field="*{precio}" class="w-full p-2 mb-3 border rounded-md" step="0.01" required />
                 <label class="block text-gray-900 dark:text-white">Proveedor:</label>
-                <select class="w-full p-2 mb-3 border rounded-md" id="proveedor" name="proveedor">
-                    <option value="">-- Seleccione --</option>
+                <!-- Lista de proveedores -->
+                <select class="w-full p-2 mb-3 border rounded-md h-10 " multiple size="7"  name="proveedorIdStrs">
                     <option th:each="prov : ${proveedores}" th:value="${prov.id}" th:text="${prov.nombre}"></option>
                 </select>
                 
@@ -100,18 +110,28 @@
                             <td class="p-3" th:text="${producto.nombre}"></td>
                             <td class="p-3" th:text="${producto.cantidad}"></td>
                             <td class="p-3" th:text="${producto.precio}"></td>
-                            <td class="p-3" th:text="${producto.proveedor}"></td>
-                            <td>
-                                <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
-                                th:data-id="${producto.id}"
-                                th:data-codigo="${producto.codigo}"
-                                th:data-nombre="${producto.nombre}"
-                                th:data-stock="${producto.cantidad}"
-                                th:data-precio="${producto.precio}"
-                                th:data-proveedor="${producto.proveedor}"
-                                onclick="llenarFormularioDesdeBoton(this)">
-                                Editar
-                                </button>
+                            <td class="p-3">
+                                <ul>
+                                    <li th:each="prov : ${producto.proveedores}">
+                                        <strong th:text="${prov.nombre}"></strong> – 
+                                      <!-- <span th:text="'RUC: ' + ${prov.ruc} + ', Tel: ' + ${prov.telefono}"></span> --> 
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>   <!-- Botón para editar -->
+                               <button 
+                                    class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
+                                    th:data-id="${producto.id}" 
+                                    th:data-codigo="${producto.codigo}"
+                                    th:data-nombre="${producto.nombre}"
+                                    th:data-cantidad="${producto.cantidad}"
+                                    th:data-precio="${producto.precio}" 
+                                    
+                                    onclick="llenarFormularioDesdeBoton(this)">
+                                    Editar
+                                </button> 
+                        
+                                <!-- Botón para eliminar -->
                                 <form th:action="@{/admin/eliminar/{id}(id=${producto.id})}" method="post" style="display:inline;">
                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-red-600">Eliminar</button>
                                 </form>
@@ -119,17 +139,19 @@
                         </tr>
                     </tbody>
                 </table>
+            
+
+                <div class="pagination flex justify-center items-center gap-4 mt-4">
+                    <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
+                    <span id="paginaActual">1</span>
+                    <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+                </div>
             </div>
         </div>  
     </div>
+    
 
-    <div class="pagination">
-        <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-        <span id="paginaActual">1</span>
-        <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
-    </div>
-
-        <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
+       <!-- <div id="edit-form" style="display:none;" class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Editar Producto</h3>
             <form th:action="@{/admin/actualizar}" method="post">
                 <input type="hidden" name="id" id="edit-id">
@@ -141,11 +163,9 @@
                 <input type="number" name="cantidad" id="edit-stock" class="w-full p-2 mb-3 border rounded-md" required>
                 <label class="block text-gray-900">Precio:</label>
                 <input type="text" name="precio" id="edit-precio" class="w-full p-2 mb-3 border rounded-md" required>
-                <label class="block text-gray-900">Proveedor:</label>
-                <input type="text" name="proveedor" id="edit-proveedor" class="w-full p-2 mb-3 border rounded-md" required>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600 w-full">Actualizar</button>
             </form>
-        </div>
+        </div> -->
     
     <script>
         const menuToggle = document.getElementById("menu-toggle");
@@ -163,12 +183,12 @@
             let tabla = document.getElementById("tablaProductos");
             let filas = tabla.getElementsByTagName("tr");
 
-            for (let i = 1; i < filas.length; i++) { // Omitimos la cabecera
-                let nombreProducto = filas[i].getElementsByTagName("td")[1]; // Segunda columna (Nombre)
+            for (let i = 1; i < filas.length; i++) {
+                let nombreProducto = filas[i].getElementsByTagName("td")[1]; 
 
                 if (nombreProducto) {
                     let texto = nombreProducto.textContent.toLowerCase();
-                    filas[i].style.display = texto.startsWith(input) ? "" : "none"; // Filtra por primera letra
+                    filas[i].style.display = texto.startsWith(input) ? "" : "none";
                 }
             }
         }
@@ -201,9 +221,27 @@
         mostrarPagina(paginaActual);
     }
 
-    // Mostrar la primera página al cargar
+    
     mostrarPagina(paginaActual);
+    
 </script>
     
+<script>
+    function cerrarModal() {
+    document.getElementById('formulario-modal').classList.add('hidden');
+    document.getElementById('modal-background').classList.add('hidden');
+  }
+
+  function llenarFormularioDesdeBoton(button) {
+    document.getElementById('edit-id').value = button.dataset.id;
+    document.getElementById('edit-codigo').value = button.dataset.codigo;
+    document.getElementById('edit-nombre').value = button.dataset.nombre;
+    document.getElementById('edit-cantidad').value = button.dataset.cantidad;
+    document.getElementById('edit-precio').value = button.dataset.precio;
+    document.getElementById('formulario-modal').classList.remove('hidden');
+    document.getElementById("modal-background").classList.remove('hidden');
+  }
+</script>
 </body>
 </html>
+

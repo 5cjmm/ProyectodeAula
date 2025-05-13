@@ -3,40 +3,38 @@ package com.ShopMaster.Model;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "productos")
-public class Productos {
+public class ProductoConProveedores {
 
-    @Id
-    private ObjectId  id;
+    private String id;
     private String codigo;
     private String nombre;
     private int cantidad;
     private double precio;
     private List<ObjectId> proveedorIds;
+    private List<Proveedor> proveedores;
 
 
-    public Productos() {
+    public ProductoConProveedores() {
     }
 
 
-    public Productos(ObjectId id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds) {
+    public ProductoConProveedores(String id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds, List<Proveedor> proveedores) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
         this.proveedorIds = proveedorIds;
+        this.proveedores = proveedores;
     }
 
 
-    public ObjectId getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -80,7 +78,18 @@ public class Productos {
         this.proveedorIds = proveedorIds;
     }
 
-    
+    public List<Proveedor> getProveedores() {
+        return this.proveedores;
+    }
+
+    public void setProveedores(List<Proveedor> proveedores) {
+        this.proveedores = proveedores;
+    }
 
     
+
 }
+ 
+    
+
+
