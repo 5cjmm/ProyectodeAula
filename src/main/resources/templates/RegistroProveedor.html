@@ -130,19 +130,19 @@
 
 <script>
     function filtrarPorPrimeraLetra() {
-        let input = document.getElementById("buscar").value.toLowerCase();
-        let tabla = document.getElementById("tablaProveedor");
-        let filas = tabla.getElementsByTagName("tr");
+            let input = document.getElementById("buscar").value.toLowerCase();
+            let tabla = document.getElementById("tablaProveedor");
+            let filas = tabla.getElementsByTagName("tr");
 
-        for (let i = 1; i < filas.length; i++) { 
-            let nombreProducto = filas[i].getElementsByTagName("td")[1]; 
+            for (let i = 1; i < filas.length; i++) {
+                let nombreProveedor = filas[i].getElementsByTagName("td")[0]; 
 
-            if (nombreProducto) {
-                let texto = nombreProducto.textContent.toLowerCase();
-                filas[i].style.display = texto.startsWith(input) ? "" : "none";
+                if (nombreProveedor) {
+                    let texto = nombreProveedor.textContent.toLowerCase();
+                    filas[i].style.display = texto.startsWith(input) ? "" : "none";
+                }
             }
         }
-    }
 </script>
 
 <script>
