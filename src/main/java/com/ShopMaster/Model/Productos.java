@@ -1,51 +1,86 @@
 package com.ShopMaster.Model;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.Date;
 
-@Document(collection = "productos") 
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "productos")
 public class Productos {
-    
+
     @Id
-    private String id;
-    @Indexed(unique = true)
+    private ObjectId  id;
     private String codigo;
     private String nombre;
-    private String proveedor;
     private int cantidad;
     private double precio;
-    private Date fecha;
+    private List<ObjectId> proveedorIds;
 
-    public Productos() {}
 
-    public Productos(String codigo, String nombre, String proveedor, int cantidad, Double precio, Date fecha) {
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.proveedor = proveedor;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.fecha = fecha;
+    public Productos() {
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
+    public Productos(ObjectId id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds) {
+        this.id = id;
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.proveedorIds = proveedorIds;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getProveedor() { return proveedor; }
-    public void setProveedor(String proveedor) { this.proveedor = proveedor; }
+    public ObjectId getId() {
+        return this.id;
+    }
 
-    public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
-    public Double getPrecio() { return precio; }
-    public void setPrecio(Double precio) { this.precio = precio; }
+    public String getCodigo() {
+        return this.codigo;
+    }
 
-    public Date getFecha() { return fecha; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getCantidad() {
+        return this.cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getPrecio() {
+        return this.precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public List<ObjectId> getProveedorIds() {
+        return this.proveedorIds;
+    }
+
+    public void setProveedorIds(List<ObjectId> proveedorIds) {
+        this.proveedorIds = proveedorIds;
+    }
+
+    
+
+    
 }

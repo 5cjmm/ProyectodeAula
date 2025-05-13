@@ -1,14 +1,22 @@
 package com.ShopMaster.Controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ShopMaster.Model.ProductoVendido;
 import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.ProductosRepository;
@@ -16,97 +24,132 @@ import com.ShopMaster.Repository.VentaRepository;
 
 @Controller
 @RequestMapping("/tendero")
-@SessionAttributes("carrito")
+@SessionAttributes("productosSeleccionados")
 public class VentaController {
 
     @Autowired
-    private ProductosRepository productosRepository;
+    private ProductosRepository productoRepo;
 
     @Autowired
-    private VentaRepository ventaRepository;
+    private VentaRepository ventaRepo;
 
-    @ModelAttribute("carrito")
-    public List<Venta> carrito() {
+    @ModelAttribute("productosSeleccionados")
+    public List<ProductoVendido> productosSeleccionados() {
         return new ArrayList<>();
     }
 
-    @PostMapping("/agregar")
-    public String agregarProducto(@RequestParam("codigo") String codigo, 
-                                  @RequestParam("cantidad") int cantidad, 
-                                  @ModelAttribute("carrito") List<Venta> carrito, 
-                                  Model model) {
-        Optional<Productos> productoOpt = productosRepository.findByCodigo(codigo);
+    // Mostrar formulario principal
+    @GetMapping("/PuntoVenta")
+    public String mostrarFormulario(Model model,
+                                    @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
+        List<Productos> productos = productoRepo.findByCantidadGreaterThan(0);
+        model.addAttribute("todosProductos", productos);
+        model.addAttribute("productosSeleccionados", seleccionados);
+        model.addAttribute("totalVenta", seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecio()).sum());
+        return "PuntoVenta";
+    }
 
-        if (!productoOpt.isPresent()) {
-            model.addAttribute("error", "El producto no existe.");
-            return "PuntoVenta"; // Vuelve a la vista
+    // Agregar producto al carrito
+    @PostMapping("/agregar-producto")
+public String agregarProducto(@RequestParam("nombreProducto") String nombreProducto,
+                              @RequestParam("cantidad") int cantidad,
+                              @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
+                              Model model, RedirectAttributes redirectAttributes) {
+
+    Productos producto = productoRepo.findByNombre(nombreProducto);
+
+    if (producto == null) {
+        redirectAttributes.addFlashAttribute("error", "El Producto no existe.");
+        return "redirect:/tendero/PuntoVenta";
+    }
+
+    if (cantidad <= 0) {
+        redirectAttributes.addFlashAttribute("error", "La cantidad debe ser mayor a cero.");
+        return "redirect:/tendero/PuntoVenta";
+    }
+
+    // Buscar si ya está en la lista
+    ProductoVendido existente = seleccionados.stream()
+        .filter(p -> p.getProductoId().equals(producto.getId()))
+        .findFirst()
+        .orElse(null);
+
+    if (existente != null) {
+        int nuevaCantidad = existente.getCantidad() + cantidad;
+
+        if (nuevaCantidad > producto.getCantidad()) {
+            redirectAttributes.addFlashAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
-        Productos producto = productoOpt.get();
+        // Sumar cantidades si ya existe
+        existente.setCantidad(nuevaCantidad);
 
+        redirectAttributes.addFlashAttribute("success", "Cantidad actualizada para el producto: " + producto.getNombre());
+    } else {
         if (cantidad > producto.getCantidad()) {
-            model.addAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " unidades disponibles.");
-            return "PuntoVenta";
+            redirectAttributes.addFlashAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
-        double total = cantidad * producto.getPrecio();
+        // Si no existe, lo agregas normalmente
+        ProductoVendido vendido = new ProductoVendido();
+        vendido.setProductoId(producto.getId());
+        vendido.setCodigo(producto.getCodigo());
+        vendido.setNombre(producto.getNombre());
+        vendido.setCantidad(cantidad);
+        vendido.setPrecio(producto.getPrecio());
 
-     
-        Venta venta = new Venta();
-        venta.setCodigo(producto.getCodigo());
-        venta.setNombre(producto.getNombre());
-        venta.setCliente(venta.getCliente());
-        venta.setCantidad(cantidad);
-        venta.setPrecio(producto.getPrecio());
-        venta.setTotal(total);
+        seleccionados.add(vendido);
 
-        carrito.add(venta);
-
-        
-        model.addAttribute("carrito", carrito);
-        model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
-
-        return "PuntoVenta";
+       
     }
 
-        @GetMapping("/eliminar/{codigo}")
-        public String eliminarProducto(@PathVariable("codigo") String codigo, 
-                                    @ModelAttribute("carrito") List<Venta> carrito, 
-                                    Model model) {
-        carrito.removeIf(p -> p.getCodigo() == codigo);
-        model.addAttribute("totalVenta", carrito.stream().mapToDouble(Venta::getTotal).sum());
-        return "PuntoVenta";
-    }
-
-    @PostMapping("/finalizar")
-    public String finalizarVenta(@ModelAttribute("carrito") List<Venta> carrito, Model model) {
-    if (carrito.isEmpty()) {
-        model.addAttribute("error", "No hay productos en la venta.");
-        return "PuntoVenta";
-
-    }
-
-        for (Venta venta : carrito) {
-            Optional<Productos> productoOpt = productosRepository.findByCodigo(venta.getCodigo());
-            if (productoOpt.isPresent()) {
-                Productos producto = productoOpt.get();
-                producto.setCantidad(producto.getCantidad() - venta.getCantidad());
-                productosRepository.save(producto);
-            }
-        
-    }
-        
-
-
-    ventaRepository.saveAll(carrito);
-
-    carrito.clear();
-    
-    model.addAttribute("carrito", carrito);
-    model.addAttribute("totalVenta", 0.0);
-    model.addAttribute("success", "Venta realizada con exito.");
-    return "PuntoVenta";
+    return "redirect:/tendero/PuntoVenta";
 }
 
-    
+    // Eliminar producto del carrito
+    @GetMapping("/eliminar/{codigo}")
+    public String eliminarProducto(@PathVariable("codigo") String codigo,
+                                   @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
+        seleccionados.removeIf(p -> p.getCodigo().equals(codigo));
+        return "redirect:/tendero/PuntoVenta";
+    }
+
+    // Guardar venta y actualizar inventario
+    @PostMapping("/guardar")
+    public String guardarVenta(@ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
+                               Model model, RedirectAttributes redirectAttributes) {
+
+        if (seleccionados.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No hay productos en la venta.");
+            return "redirect:/tendero/PuntoVenta";
+        }
+
+        for (ProductoVendido p : seleccionados) {
+            Productos prod = productoRepo.findById(p.getProductoId()).orElse(null);
+            if (prod == null) continue;
+            if (prod.getCantidad() < p.getCantidad()) {
+                model.addAttribute("error", "Stock insuficiente para el producto: " + prod.getNombre());
+                return "redirect:/tendero/PuntoVenta";
+            }
+
+            // Restar stock
+            prod.setCantidad(prod.getCantidad() - p.getCantidad());
+            productoRepo.save(prod);
+        }
+
+        // Crear y guardar venta
+        Venta venta = new Venta();
+        venta.setFecha(new Date());
+        venta.setTotal(seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecio()).sum());
+        venta.setProductos(new ArrayList<>(seleccionados));
+        ventaRepo.save(venta);
+
+        // Limpiar carrito
+        seleccionados.clear();
+
+        redirectAttributes.addFlashAttribute("success", "Venta realizada con éxito.");
+        return "redirect:/tendero/PuntoVenta";
+    }
 }
