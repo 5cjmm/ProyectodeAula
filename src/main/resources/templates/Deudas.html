@@ -1,69 +1,317 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Proveedores</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de deudas - ShopMaster</title>
+    <link rel="icon" href="/img/logo-tc.ico" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .estado {
+            border-radius: 20px;
+            padding: 2px 10px;
+            color: rgb(24, 25, 36);
+            font-weight: bold;
+        }
+
+        .estado.NO_PAGADA {
+            background-color: #f78da7;
+        }
+
+        .estado.PARCIAL {
+            background-color: #ffd966;
+            color: #333;
+        }
+
+        .estado.PAGADA {
+            background-color: #8de48f;
+        }
+    </style>
 </head>
+
 <body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
-    
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
+
+    <!-- Navbar -->
+    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg mb-4">
+        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full" />
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">Gestión de deudas</div>
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/tendero/Deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
+
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+
         </div>
     </nav>
+
+    <!-- Filtros -->
+    <!-- Contenedor general alineado con la tabla -->
+<div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 px-4">
+  
     
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Gestión de Deudas</h1>
-    
-    <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
-        
-        <div class="flex gap-4">
-            <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
-            <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
-        </div>
-        
-        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
-                        <th class="p-3">Cliente</th>
-                        <th class="p-3">Monto Adeudado (COP)</th>
-                        <th class="p-3">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b dark:border-blue-600">
-                        <td class="p-3">Juan Pérez</td>
-                        <td class="p-3">$250.00</td>
-                        <td class="p-3">
-                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600">Abonar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Input: Nombre Cliente -->
+    <input type="text" name="cliente" placeholder="Nombre Cliente" id="buscar" onkeyup="filtrarPorPrimeraLetra()" class="p-2 rounded border border-gray-300"/>
+
+    <!-- Select: Estado -->
+    <select id="estado" name="estado" class="p-2 rounded border border-gray-300">
+      <option value="">Estado</option>
+      <option value="PAGADA">Pagada</option>
+      <option value="NO_PAGADA">No pagada</option>
+      <option value="PARCIAL">Parcial</option>
+    </select>
+
+    <!-- Form solo con fecha y botón -->
+    <form th:action="@{/deudas/filtrar}" method="get" class="flex items-center gap-2 flex-grow">
+      <input type="date" name="fecha" class="p-2 rounded border border-gray-300"/>
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded px-20 py-2.5">Buscar</button>
+    </form>
+</div>
+
+
+    <!-- Tabla -->
+    <div class="w-full px-4 overflow-auto">
+        <div th:if="${SuccessMessage}" class="bg-green-500 text-white p-2 rounded-md">
+                    <p th:text="${SuccessMessage}"></p>
+                </div>
+        <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
+                    <p th:text="${error}"></p>
+                </div>
+        <table id="tablaDeudas" class="min-w-full text-sm text-left text-gray-700 bg-white rounded shadow">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="px-4 py-2">Cédula</th>
+                    <th class="px-4 py-2">Nombre</th>
+                    <th class="px-4 py-2">Fecha venta</th>
+                    <th class="px-4 py-2">Productos</th>
+                    <th class="px-4 py-2">Total (COP)</th>
+                    <th class="px-4 py-2">Estado</th>
+                    <th class="px-4 py-2">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="deuda : ${deudas}" class="border-t">
+                    <td class="px-4 py-2" th:text="${deuda.cedulaCliente}"></td>
+                    <td class="px-4 py-2" th:text="${deuda.nombreCliente}"></td>
+                    <td class="px-4 py-2" th:text="${#temporals.format(deuda.fechaVenta, 'yyyy-MM-dd HH:mm')}"></td>
+                    </td>
+                    <td class="px-4 py-2">
+                        <ul>
+                            <li th:each="p : ${deuda.productos}" th:text="${p.nombre} + ' x' + ${p.cantidad}"></li>
+                        </ul>
+                    </td>
+                    <td class="px-4 py-2" th:text="'$' + ${#numbers.formatDecimal(deuda.totalRestante, 1, 'COMMA', 2, 'POINT')} + ' / $' + ${#numbers.formatDecimal(deuda.total, 1, 'COMMA', 2, 'POINT')}"></td>
+                    <td class="px-4 py-2">
+                        <span th:text="${deuda.estado}" th:class="'estado ' + deuda.estado"></span>
+                    </td>
+                        <td class="px-4 py-2 space-x-2">
+                        <button th:attr="onclick=|openAbonoModal('${deuda.id}')|"
+                            class="bg-yellow-400 hover:bg-yellow-500 text-black rounded px-3 py-1">Abonar</button>
+
+                        <button th:attr="onclick=|openHistorialModal('${deuda.id}')|"
+                            class="bg-gray-500 hover:bg-gray-600 text-white rounded px-3 py-1">Ver Historial</button>
+
+                        <form th:action="@{'/deudas/eliminar/' + ${deuda.id}}" method="post" th:object="${deuda}">
+                            <button type="submit" th:disabled="${deuda.estado != 'PAGADA'}"
+                                class="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination flex justify-center items-center gap-4 mt-4">
+                    <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
+                    <span id="paginaActual">1</span>
+                    <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+                </div>
+    </div>
+
+    <!-- Modal: Abonar -->
+    <div id="modalAbono" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Registrar Abono</h2>
+                <button onclick="closeModal('modalAbono')" class="text-red-500 text-xl">&times;</button>
+            </div>
+            <form id="abonoForm" method="post">
+                <label class="block mb-2">Monto del abono</label>
+                <input type="number" name="montoAbono" class="w-full p-2 border border-gray-300 rounded mb-4"
+                    required />
+                <input type="hidden" name="monto" id="montoField" />
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
+
+    <!-- Modal: Historial de Abonos -->
+<div id="modalHistorial" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Historial de Abonos</h2>
+            <button onclick="closeModal('modalHistorial')" class="text-red-500 text-xl">&times;</button>
+        </div>
+        <table class="w-full border">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="p-2 border text-left">Fecha</th>
+                    <th class="p-2 border text-left">Monto</th>
+                </tr>
+            </thead>
+            <tbody id="historialAbonosBody">
+                <!-- Aquí se insertarán los abonos por JS -->
+            </tbody>
+        </table>
+        <div class="flex justify-end mt-4">
+            <button onclick="closeModal('modalHistorial')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+
+    <!-- JS para modales y envío -->
     <script>
+        const selectEstado = document.querySelector('select[name="estado"]');
+  const filas = document.querySelectorAll('#tablaDeudas tbody tr');
+
+  selectEstado.addEventListener('change', () => {
+    const filtro = selectEstado.value;
+
+    filas.forEach(fila => {
+      const celdaEstado = fila.querySelector('td:nth-child(6) span');
+      const estado = celdaEstado?.textContent.trim();
+
+      if (!filtro || estado === filtro) {
+        fila.style.display = '';
+      } else {
+        fila.style.display = 'none';
+      }
+    });
+  });
+
+  const filasPorPagina = 5;
+    let paginaActual = 1;
+    const tabla = document.getElementById("tablaDeudas").getElementsByTagName("tbody")[0];
+    
+
+    function mostrarPagina(pagina) {
+        let inicio = (pagina - 1) * filasPorPagina;
+        let fin = inicio + filasPorPagina;
+        
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = (i >= inicio && i < fin) ? "" : "none";
+        }
+
+        document.getElementById("paginaActual").innerText = pagina;
+    }
+
+    function cambiarPagina(direccion) {
+        let totalPaginas = Math.ceil(filas.length / filasPorPagina);
+        paginaActual += direccion;
+        
+        if (paginaActual < 1) paginaActual = 1;
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+        
+        mostrarPagina(paginaActual);
+    }
+
+    
+    mostrarPagina(paginaActual);
+
+        function filtrarPorPrimeraLetra() {
+            let input = document.getElementById("buscar").value.toLowerCase();
+            let tabla = document.getElementById("tablaDeudas");
+            let filas = tabla.getElementsByTagName("tr");
+
+            for (let i = 1; i < filas.length; i++) {
+                let nombreProveedor = filas[i].getElementsByTagName("td")[1]; 
+
+                if (nombreProveedor) {
+                    let texto = nombreProveedor.textContent.toLowerCase();
+                    filas[i].style.display = texto.startsWith(input) ? "" : "none";
+                }
+            }
+        }
+
         const menuToggle = document.getElementById("menu-toggle");
         const menu = document.getElementById("menu");
         
         menuToggle.addEventListener("click", () => {
             menu.classList.toggle("hidden");
         });
+
+        function openAbonoModal(deudaId) {
+            document.getElementById("modalAbono").classList.remove("hidden");
+            const form = document.getElementById("abonoForm");
+            form.action = "/deudas/abonar/" + deudaId;
+        }
+
+        document.getElementById("abonoForm").addEventListener("submit", function (event) {
+            const montoInput = document.querySelector("input[name='montoAbono']");
+            const hiddenMontoField = document.getElementById("montoField");
+            hiddenMontoField.value = montoInput.value;
+        });
+
+       
+            function openHistorialModal(deudaId) {
+            document.getElementById("modalHistorial").classList.remove("hidden");
+
+            const historialBody = document.getElementById("historialAbonosBody");
+            historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">Cargando...</td></tr>';
+
+            fetch(`/deudas/historial/${deudaId}`)
+                .then(response => response.json())
+                .then(data => {
+                    historialBody.innerHTML = "";
+                    if (data.length === 0) {
+                        historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">No hay abonos registrados.</td></tr>';
+                        return;
+                    }
+
+                    data.forEach(abono => {
+                        const fecha = new Date(abono.fecha).toLocaleString();
+                        const row = `
+                            <tr>
+                                <td class="p-2 border">${fecha}</td>
+                                <td class="p-2 border">$${abono.monto.toFixed(2)}</td>
+                            </tr>
+                        `;
+                        historialBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center text-red-500">Error al cargar historial.</td></tr>';
+                    console.error("Error al cargar historial:", error);
+                });
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add("hidden");
+        }
     </script>
 </body>
+
 </html>
-
-

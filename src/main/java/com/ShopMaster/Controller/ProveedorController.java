@@ -13,7 +13,7 @@ import com.ShopMaster.Model.Proveedor;
 import com.ShopMaster.Service.ProveedorService;
 
 @Controller
-@RequestMapping("/tendero")
+@RequestMapping("/admin")
 public class ProveedorController {
     
     @Autowired
@@ -28,21 +28,21 @@ public class ProveedorController {
     public String guardarProveedor(@ModelAttribute("nuevoProveedor") Proveedor proveedor, RedirectAttributes redirectAttributes) {
         proveedorService.guardarProveedor(proveedor);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor guardado exitosamente!");
-        return "redirect:/tendero/RegistroProveedor";
+        return "redirect:/admin/RegistroProveedor";
     }
 
-      @PostMapping("/actualizar")
+      @PostMapping("/actualizar-proveedor")
     public String actuaizarProveedor(@ModelAttribute Proveedor proveedor, RedirectAttributes redirectAttributes) {
         proveedorService.actualizarProveedor(proveedor);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor actualizado exitosamente!");
-        return "redirect:/tendero/RegistroProveedor";
+        return "redirect:/admin/RegistroProveedor";
     }
 
-    @PostMapping("/eliminar/{id}")
+    @PostMapping("/eliminar-proveedor/{id}")
     public String eliminarProveedor(@PathVariable ObjectId id, RedirectAttributes redirectAttributes) {
         proveedorService.eliminarProveedor(id);
         redirectAttributes.addFlashAttribute("SuccessMessage", "¡Proveedor eliminado exitosamente!");
-        return "redirect:/tendero/RegistroProveedor";
+        return "redirect:/admin/RegistroProveedor";
     }
 
 }

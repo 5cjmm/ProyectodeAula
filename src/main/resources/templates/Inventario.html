@@ -12,18 +12,28 @@
     
     <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
         <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">Gestión de deudas</div>
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
             </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
+                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
+                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
+                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
+                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+            </div>
+
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
                 <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
@@ -31,25 +41,26 @@
 
     
     
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Gestión de Inventario</h1>
-    <!--<div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
+    
+    <div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
     <div id="formulario-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96 z-50 hidden">
         <h2 class="text-xl font-semibold mb-4 text-center">Actualizar Proveedores</h2>
         <form th:action="@{/admin/actualizar}" method="post" class="space-y-4">
                 <input type="hidden" name="id" id="edit-id">
-                <input type="text" name="codigo" id="edit-codigo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <input type="text" name="nombre" id="edit-nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="text" name="codigo" id="edit-codigo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" readonly>
+                <input type="text" name="nombre" id="edit-nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" readonly>
                 <input type="text" name="cantidad" id="edit-cantidad" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
                 <input type="text" name="precio" id="edit-precio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
                 <select class="w-full p-2 mb-3 border rounded-md h-10" multiple size="7" name="proveedorIdStrs" id="edit-proveedores">
-    <option th:each="prov : ${proveedores}" th:value="${prov.id}" th:text="${prov.nombre}"></option>
-</select>
+                <option th:each="prov : ${proveedores}" th:value="${prov.id}" th:text="${prov.nombre}"></option>
+                </select>
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancelar</button>
                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Guardar</button>
             </div>
         </form>
-    </div> -->
+    </div>
+
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex gap-6">
         
         <div class="w-1/3 p-4 bg-gray-100 dark:bg-blue-700 rounded-xl shadow-md">
@@ -108,17 +119,17 @@
                                 </ul>
                             </td>
                             <td>   <!-- Botón para editar -->
-                            <!--   <button 
+                               <button 
                                     class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
                                     th:data-id="${producto.id}" 
                                     th:data-codigo="${producto.codigo}"
                                     th:data-nombre="${producto.nombre}"
                                     th:data-cantidad="${producto.cantidad}"
                                     th:data-precio="${producto.precio}" 
-                                    th:data-proveedores="${producto.proveedores}"
+                                    
                                     onclick="llenarFormularioDesdeBoton(this)">
                                     Editar
-                                </button> --> 
+                                </button> 
                         
                                 <!-- Botón para eliminar -->
                                 <form th:action="@{/admin/eliminar/{id}(id=${producto.id})}" method="post" style="display:inline;">
@@ -227,7 +238,6 @@
     document.getElementById('edit-nombre').value = button.dataset.nombre;
     document.getElementById('edit-cantidad').value = button.dataset.cantidad;
     document.getElementById('edit-precio').value = button.dataset.precio;
-    document.getElementById('edit-proveedores').value = button.dataset.proveedores;
     document.getElementById('formulario-modal').classList.remove('hidden');
     document.getElementById("modal-background").classList.remove('hidden');
   }

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ShopMaster.Model.ProductoConProveedores;
+import com.ShopMaster.Model.ProductoVendido;
 import com.ShopMaster.Model.Productos;
+import com.ShopMaster.Model.Proveedor;
 import com.ShopMaster.Model.Usuario;
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.ProductoRepositoryCustom;
@@ -27,7 +29,6 @@ import com.ShopMaster.Service.ProductosService;
 import com.ShopMaster.Service.ProveedorService;
 import com.ShopMaster.Service.UsuarioService;
 import com.ShopMaster.Service.VentaService;
-import com.ShopMaster.dto.ProductoVendido;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -89,6 +90,13 @@ private ProductoRepositoryCustom productoRepositoryCustom;
         model.addAttribute("nuevoProducto", new Productos());
 
         return "Inventario";
+    }
+
+    @GetMapping("/RegistroProveedor")
+    public String mostrarProveedores(Model model) {
+        model.addAttribute("proveedores", proveedorService.obtenerTodosLosProveedores());
+        model.addAttribute("nuevoProveedor", new Proveedor());
+        return "RegistroProveedor";
     }
 
 
@@ -170,8 +178,8 @@ public void generarPDF(
         for (ProductoVendido producto : productos) {
             tablaVenta.addCell(new Phrase(producto.getNombre(), contenidoFont));
             tablaVenta.addCell(new Phrase(String.valueOf(producto.getCantidad()), contenidoFont));
-            tablaVenta.addCell(new Phrase(String.format("%.2f", producto.getPrecioUnitario()), contenidoFont));
-            double totalProducto = producto.getCantidad() * producto.getPrecioUnitario();
+            tablaVenta.addCell(new Phrase(String.format("%.2f", producto.getPrecio()), contenidoFont));
+            double totalProducto = producto.getCantidad() * producto.getPrecio();
             tablaVenta.addCell(new Phrase(String.format("%.2f", totalProducto), contenidoFont));
             tablaVenta.addCell(new Phrase(sdf.format(venta.getFecha()), contenidoFont));
 
