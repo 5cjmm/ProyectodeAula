@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Model.Venta;
@@ -38,7 +39,7 @@ public class VentaController {
     }
 
     // Mostrar formulario principal
-    @GetMapping("/crear")
+    @GetMapping("/PuntoVenta")
     public String mostrarFormulario(Model model,
                                     @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
         List<Productos> productos = productoRepo.findAll();
@@ -53,23 +54,23 @@ public class VentaController {
     public String agregarProducto(@RequestParam("nombreProducto") String nombreProducto,
                                   @RequestParam("cantidad") int cantidad,
                                   @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
-                                  Model model) {
+                                  Model model, RedirectAttributes redirectAttributes) {
 
         Productos producto = productoRepo.findByNombre(nombreProducto);
 
         if (producto == null) {
-            model.addAttribute("error", "El Producto no existe.");
-            return "PuntoVenta";
+            redirectAttributes.addFlashAttribute("error", "El Producto no existe.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
         if (cantidad <= 0) {
-            model.addAttribute("error", "La cantidad debe ser mayor a cero.");
-            return "PuntoVenta";
+            redirectAttributes.addFlashAttribute("error", "La cantidad debe ser mayor a cero.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
         if (cantidad > producto.getCantidad()) {
-            model.addAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
-            return "PuntoVenta";
+            redirectAttributes.addFlashAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
         ProductoVendido vendido = new ProductoVendido();
@@ -81,7 +82,7 @@ public class VentaController {
 
         seleccionados.add(vendido);
 
-        return "PuntoVenta";
+        return "redirect:/tendero/PuntoVenta";
     }
 
     // Eliminar producto del carrito
@@ -89,17 +90,17 @@ public class VentaController {
     public String eliminarProducto(@PathVariable("codigo") String codigo,
                                    @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
         seleccionados.removeIf(p -> p.getCodigo().equals(codigo));
-        return "PuntoVenta";
+        return "redirect:/tendero/PuntoVenta";
     }
 
     // Guardar venta y actualizar inventario
     @PostMapping("/guardar")
     public String guardarVenta(@ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
-                               Model model) {
+                               Model model, RedirectAttributes redirectAttributes) {
 
         if (seleccionados.isEmpty()) {
-            model.addAttribute("error", "No hay productos en la venta.");
-            return "PuntoVenta";
+            redirectAttributes.addFlashAttribute("error", "No hay productos en la venta.");
+            return "redirect:/tendero/PuntoVenta";
         }
 
         for (ProductoVendido p : seleccionados) {
@@ -107,7 +108,7 @@ public class VentaController {
             if (prod == null) continue;
             if (prod.getCantidad() < p.getCantidad()) {
                 model.addAttribute("error", "Stock insuficiente para el producto: " + prod.getNombre());
-                return "PuntoVenta";
+                return "redirect:/tendero/PuntoVenta";
             }
 
             // Restar stock
@@ -125,7 +126,7 @@ public class VentaController {
         // Limpiar carrito
         seleccionados.clear();
 
-        model.addAttribute("success", "Venta realizada con éxito.");
-        return "PuntoVenta";
+        redirectAttributes.addFlashAttribute("success", "Venta realizada con éxito.");
+        return "redirect:/tendero/PuntoVenta";
     }
 }
