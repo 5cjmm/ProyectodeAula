@@ -59,7 +59,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                        .requestMatchers("/tendero/crear-proveedor", "/tendero/actualizar", "/tendero/eliminar/{id}", "/tendero/RegistroProveedor", "/tendero/agregar-producto", "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
+                        .requestMatchers( "/tendero/agregar-producto", 
+                        "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
+                        "/admin/crear-producto", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()

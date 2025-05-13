@@ -10,6 +10,7 @@
     
     <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
         <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">Informe de Venta</div>
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
@@ -20,14 +21,14 @@
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
                 <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
         </div>
     </nav>
     
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Informe de Venta</h1>
     
     <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
         
@@ -66,9 +67,9 @@
         <tr th:each="producto : ${venta.productos}" class="border-b text-gray-900 dark:text-white">
             <td class="p-3 dark:text-white" th:text="${producto.nombre}"></td>
             <td class="p-3 dark:text-white" th:text="${producto.cantidad}"></td>
-            <td class="p-3 dark:text-white" th:text="${producto.precioUnitario}"></td>
+            <td class="p-3 dark:text-white" th:text="${producto.precio}"></td>
             <td class="p-3 dark:text-white"
-                th:text="${producto.cantidad * producto.precioUnitario}"></td>
+                th:text="${producto.cantidad * producto.precio}"></td>
             <td class="p-3 dark:text-white"
                 th:text="${#dates.format(venta.fecha, 'yyyy-MM-dd')}"></td>
         </tr>

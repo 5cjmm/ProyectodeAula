@@ -1,12 +1,10 @@
 package com.ShopMaster.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +27,15 @@ public class ProductoController {
     private ProductosService productosService;
 
     @Autowired
+    @SuppressWarnings("unused")
     private ProductosRepository productosRepository;
 
     @Autowired
+    @SuppressWarnings("unused")
     ProveedorService proveedorService;
 
     @Autowired
+    @SuppressWarnings("unused")
     private ProductoRepositoryCustom productoRepositoryCustom;
 
     public ProductoController(ProductosService productosService) {
@@ -71,11 +72,11 @@ public class ProductoController {
         return "redirect:/admin/Inventario";
     }
 
-    @GetMapping("/{codigo}")
+   /*  @GetMapping("/{codigo}")
     public Optional<Productos> obtenerProducto(@PathVariable String codigo) {
         return productosRepository.findByCodigo(codigo);
     }
-
+*/
     
 
 }

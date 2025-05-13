@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ShopMaster.Model.ProductoVendido;
 import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.ProductosRepository;
 import com.ShopMaster.Repository.VentaRepository;
-import com.ShopMaster.dto.ProductoVendido;
 
 @Controller
 @RequestMapping("/tendero")
@@ -42,48 +42,71 @@ public class VentaController {
     @GetMapping("/PuntoVenta")
     public String mostrarFormulario(Model model,
                                     @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados) {
-        List<Productos> productos = productoRepo.findAll();
+        List<Productos> productos = productoRepo.findByCantidadGreaterThan(0);
         model.addAttribute("todosProductos", productos);
         model.addAttribute("productosSeleccionados", seleccionados);
-        model.addAttribute("totalVenta", seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecioUnitario()).sum());
+        model.addAttribute("totalVenta", seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecio()).sum());
         return "PuntoVenta";
     }
 
     // Agregar producto al carrito
     @PostMapping("/agregar-producto")
-    public String agregarProducto(@RequestParam("nombreProducto") String nombreProducto,
-                                  @RequestParam("cantidad") int cantidad,
-                                  @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
-                                  Model model, RedirectAttributes redirectAttributes) {
+public String agregarProducto(@RequestParam("nombreProducto") String nombreProducto,
+                              @RequestParam("cantidad") int cantidad,
+                              @ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
+                              Model model, RedirectAttributes redirectAttributes) {
 
-        Productos producto = productoRepo.findByNombre(nombreProducto);
+    Productos producto = productoRepo.findByNombre(nombreProducto);
 
-        if (producto == null) {
-            redirectAttributes.addFlashAttribute("error", "El Producto no existe.");
+    if (producto == null) {
+        redirectAttributes.addFlashAttribute("error", "El Producto no existe.");
+        return "redirect:/tendero/PuntoVenta";
+    }
+
+    if (cantidad <= 0) {
+        redirectAttributes.addFlashAttribute("error", "La cantidad debe ser mayor a cero.");
+        return "redirect:/tendero/PuntoVenta";
+    }
+
+    // Buscar si ya está en la lista
+    ProductoVendido existente = seleccionados.stream()
+        .filter(p -> p.getProductoId().equals(producto.getId()))
+        .findFirst()
+        .orElse(null);
+
+    if (existente != null) {
+        int nuevaCantidad = existente.getCantidad() + cantidad;
+
+        if (nuevaCantidad > producto.getCantidad()) {
+            redirectAttributes.addFlashAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
             return "redirect:/tendero/PuntoVenta";
         }
 
-        if (cantidad <= 0) {
-            redirectAttributes.addFlashAttribute("error", "La cantidad debe ser mayor a cero.");
-            return "redirect:/tendero/PuntoVenta";
-        }
+        // Sumar cantidades si ya existe
+        existente.setCantidad(nuevaCantidad);
 
+        redirectAttributes.addFlashAttribute("success", "Cantidad actualizada para el producto: " + producto.getNombre());
+    } else {
         if (cantidad > producto.getCantidad()) {
             redirectAttributes.addFlashAttribute("error", "Stock insuficiente. Solo hay " + producto.getCantidad() + " disponibles.");
             return "redirect:/tendero/PuntoVenta";
         }
 
+        // Si no existe, lo agregas normalmente
         ProductoVendido vendido = new ProductoVendido();
         vendido.setProductoId(producto.getId());
         vendido.setCodigo(producto.getCodigo());
         vendido.setNombre(producto.getNombre());
         vendido.setCantidad(cantidad);
-        vendido.setPrecioUnitario(producto.getPrecio());
+        vendido.setPrecio(producto.getPrecio());
 
         seleccionados.add(vendido);
 
-        return "redirect:/tendero/PuntoVenta";
+       
     }
+
+    return "redirect:/tendero/PuntoVenta";
+}
 
     // Eliminar producto del carrito
     @GetMapping("/eliminar/{codigo}")
@@ -119,7 +142,7 @@ public class VentaController {
         // Crear y guardar venta
         Venta venta = new Venta();
         venta.setFecha(new Date());
-        venta.setTotal(seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecioUnitario()).sum());
+        venta.setTotal(seleccionados.stream().mapToDouble(p -> p.getCantidad() * p.getPrecio()).sum());
         venta.setProductos(new ArrayList<>(seleccionados));
         ventaRepo.save(venta);
 

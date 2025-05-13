@@ -1,5 +1,4 @@
-package com.ShopMaster.dto;
-
+package com.ShopMaster.Model;
 
 import org.bson.types.ObjectId;
 
@@ -8,10 +7,19 @@ public class ProductoVendido {
     private String codigo;
     private String nombre;
     private int cantidad;
-    private double precioUnitario;
-    // Getters y setter
+    private double precio;
 
-    
+    public ProductoVendido() {}
+
+
+    public ProductoVendido(ObjectId productoId, String codigo, String nombre, int cantidad, double precio) {
+        this.productoId = productoId;
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.precio = precio;
+    }
+
 
     public ObjectId getProductoId() {
         return this.productoId;
@@ -45,13 +53,13 @@ public class ProductoVendido {
         this.cantidad = cantidad;
     }
 
-    public double getPrecioUnitario() {
-        return this.precioUnitario;
+    public double getPrecio() {
+        return this.precio;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
-
+    
 }
- 
+

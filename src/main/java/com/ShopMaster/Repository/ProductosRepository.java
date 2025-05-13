@@ -12,6 +12,8 @@ public interface ProductosRepository extends MongoRepository<Productos, ObjectId
     List<Productos> findByNombreContainingIgnoreCase(String nombre);
 
     Productos findByNombre(String nombreProducto);
+    List<Productos> findByCantidadGreaterThan(int cantidad);
+
 
     Optional<Productos> findByCodigo(String codigo);
 
