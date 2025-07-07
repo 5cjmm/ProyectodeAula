@@ -58,8 +58,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                        .requestMatchers( "/tendero/agregar-producto", 
+                        // Recursos estáticos y páginas públicas
+                        .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // AÑADIDO
+                        .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
+                        
+                        // Rutas protegidas
+                        .requestMatchers("/tendero/agregar-producto", 
                         "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
                         "/admin/crear-producto", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
@@ -70,12 +75,16 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login") // AÑADIDO para claridad
                         .successHandler(customAuthenticationSuccessHandler)
+                        .failureUrl("/login?error=true") // AÑADIDO manejo de errores
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login?logout=true") // CORREGIDO
+                        .invalidateHttpSession(true) // AÑADIDO
+                        .deleteCookies("JSESSIONID") // AÑADIDO
                         .permitAll()
                 );
 
