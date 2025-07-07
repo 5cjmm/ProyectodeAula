@@ -1,58 +1,246 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopMaster - Inicio</title>
+    <meta name="description" content="ShopMaster - Solución definitiva para la gestión minorista. Controla inventarios, gestiona ventas y optimiza la experiencia de tus clientes.">
+    <meta name="keywords" content="gestión minorista, inventario, ventas, retail, ShopMaster">
+    <meta name="author" content="ShopMaster">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ShopMaster - Gestión Minorista Profesional">
+    <meta property="og:description" content="La solución definitiva para la gestión de tu negocio minorista">
+    <meta property="og:image" content="/images/og-image.jpg">
+    
+    <title>ShopMaster - Gestión Minorista Profesional</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" th:href="@{/css/styles.css}" as="style">
+    <link rel="preload" th:href="@{https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap}" as="style">
+    
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Blinker', sans-serif;
-            background: linear-gradient(to right, #0c35a5, #0c50bd);
-            height: 100vh;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+
+    
 </head>
-<body class="flex flex-col h-screen bg-blue-100 dark:bg-blue-900">
-    
-    <nav class="w-full bg-blue-600 dark:bg-blue-900 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href=@{/home} class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href=@{/Login} class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Login</a>
+
+<body class="font-inter antialiased">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50">
+        Saltar al contenido principal
+    </a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <div class="navbar-container">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a th:href="@{/}" class="logo-link" aria-label="ShopMaster - Ir al inicio">
+                        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" 
+                             alt="ShopMaster Logo" 
+                             class="logo-image"
+                             width="120" 
+                             height="40"
+                             onerror="this.src='/images/logo-fallback.png'">
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" 
+                        class="mobile-menu-btn md:hidden" 
+                        type="button"
+                        aria-expanded="false" 
+                        aria-controls="mobile-menu"
+                        aria-label="Abrir menú de navegación">
+                    <span class="sr-only">Abrir menú principal</span>
+                    <svg class="menu-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <svg class="close-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <!-- Desktop Navigation -->
+                <div class="navbar-menu hidden md:flex">
+                    <a th:href="@{/}" class="nav-link nav-link-active" aria-current="page">Inicio</a>
+                    <a th:href="@{/features}" class="nav-link">Características</a>
+                    <a th:href="@{/pricing}" class="nav-link">Precios</a>
+                    <a th:href="@{/contact}" class="nav-link">Contacto</a>
+                </div>
+
+                <!-- Auth buttons -->
+                <div class="navbar-auth hidden md:flex">
+                    <a th:href="@{/login}" class="btn btn-ghost">Iniciar Sesión</a>
+                    <a th:href="@{/register}" class="btn btn-primary">Registrarse</a>
+                </div>
             </div>
-        </div>
-    </nav>
-    
-    
-    <main class="container mx-auto mt-10 px-6">
-        <div class="flex flex-col md:flex-row items-center bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
-            <img src="https://img.freepik.com/vector-gratis/supermercado-alimentos-estantes-berenjena-repollo-zanahoria-pimientos-cebollas-pan-maiz-patatas-compras-frescas-ilustracion-vectorial_1284-46271.jpg" 
-                alt="Descripción de la página" class="w-full md:w-1/2 rounded-lg shadow-lg mb-6 md:mb-0 md:mr-6">
-            <div class="md:w-1/2 text-gray-800">
-                <h1 class="text-6xl font-bold text-blue-600">¡Bienvenido a ShopMaster!</h1>
-                <p class="text-2xl mb-8">
-                    ShopMaster es la solución definitiva para la gestión minorista, diseñada para hacer que la administración de tu negocio sea más eficiente. 
-                    Nuestra plataforma te ofrece herramientas avanzadas para controlar inventarios, gestionar ventas y optimizar la experiencia de tus clientes.
-                </p>
-                <a href="Login.html" class="bg-blue-500 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-blue-600 transition">
-                    Iniciar sesión
-                </a>
+
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="mobile-menu md:hidden" role="menu">
+                <div class="mobile-menu-content">
+                    <a th:href="@{/}" class="mobile-nav-link" role="menuitem">Inicio</a>
+                    <a th:href="@{/features}" class="mobile-nav-link" role="menuitem">Características</a>
+                    <a th:href="@{/pricing}" class="mobile-nav-link" role="menuitem">Precios</a>
+                    <a th:href="@{/contact}" class="mobile-nav-link" role="menuitem">Contacto</a>
+                    <div class="mobile-auth-buttons">
+                        <a th:href="@{/login}" class="btn btn-ghost w-full">Iniciar Sesión</a>
+                        <a th:href="@{/register}" class="btn btn-primary w-full">Registrarse</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <!-- Hero Image -->
+                    <div class="hero-image-container">
+                        <img src="https://img.freepik.com/vector-gratis/supermercado-alimentos-estantes-berenjena-repollo-zanahoria-pimientos-cebollas-pan-maiz-patatas-compras-frescas-ilustracion-vectorial_1284-46271.jpg"
+                             alt="Supermercado moderno con estantes organizados de frutas y verduras frescas" 
+                             class="hero-image"
+                             loading="eager"
+                             width="600" 
+                             height="400"
+                             onerror="this.src='/images/hero-fallback.jpg'">
+                    </div>
+
+                    <!-- Hero Text -->
+                    <div class="hero-text">
+                        <h1 id="hero-title" class="hero-title">
+                            ¡Bienvenido a <span class="text-gradient">ShopMaster</span>!
+                        </h1>
+                        <p class="hero-description">
+                            ShopMaster es la solución definitiva para la gestión minorista, diseñada para hacer que la administración de tu negocio sea más eficiente. 
+                            Nuestra plataforma te ofrece herramientas avanzadas para controlar inventarios, gestionar ventas y optimizar la experiencia de tus clientes.
+                        </p>
+                        
+                        <!-- CTA Buttons -->
+                        <div class="hero-actions">
+                            <a th:href="@{/login}" class="btn btn-primary btn-lg">
+                                <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                                Iniciar Sesión
+                            </a>
+                            <a th:href="@{/demo}" class="btn btn-outline btn-lg">
+                                <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+                                </svg>
+                                Ver Demo
+                            </a>
+                        </div>
+
+                        <!-- Trust indicators -->
+                        <div class="trust-indicators">
+                            <p class="trust-text">Confiado por más de 1,000+ negocios</p>
+                            <div class="trust-stats">
+                                <div class="stat">
+                                    <span class="stat-number">99.9%</span>
+                                    <span class="stat-label">Uptime</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">Soporte</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">SSL</span>
+                                    <span class="stat-label">Seguro</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Preview Section -->
+        <section class="features-preview" aria-labelledby="features-title">
+            <div class="container">
+                <h2 id="features-title" class="section-title">¿Por qué elegir ShopMaster?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Gestión de Inventario</h3>
+                        <p class="feature-description">Control total de tu stock con alertas automáticas y reportes detallados.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H4.5m-1.5 0v.375c0 .621.504 1.125 1.125 1.125m9.75-2.25h.75A.75.75 0 0115 3h.75m0 0v.375c0 .621-.504 1.125-1.125 1.125H15m0 0v.75A.75.75 0 0114.25 6H15m-1.5-1.5v.375c0 .621.504 1.125 1.125 1.125m0 0H15" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Punto de Venta</h3>
+                        <p class="feature-description">Sistema POS intuitivo para procesar ventas rápida y eficientemente.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Reportes y Analytics</h3>
+                        <p class="feature-description">Insights detallados para tomar decisiones informadas sobre tu negocio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="ShopMaster" class="footer-logo" width="120" height="40">
+                    <p class="footer-description">La solución definitiva para la gestión minorista.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4 class="footer-title">Producto</h4>
+                        <a th:href="@{/features}" class="footer-link">Características</a>
+                        <a th:href="@{/pricing}" class="footer-link">Precios</a>
+                        <a th:href="@{/demo}" class="footer-link">Demo</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Soporte</h4>
+                        <a th:href="@{/help}" class="footer-link">Centro de Ayuda</a>
+                        <a th:href="@{/contact}" class="footer-link">Contacto</a>
+                        <a th:href="@{/status}" class="footer-link">Estado del Sistema</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/main.js}" defer></script>
     
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-        });
-    </script>
+    <!-- Loading indicator -->
+    <div id="loading-indicator" class="loading-indicator" aria-hidden="true">
+        <div class="loading-spinner"></div>
+    </div>
 </body>
 </html>
