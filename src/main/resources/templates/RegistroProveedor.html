@@ -18,43 +18,29 @@
             </button>
             <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
                 <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a id="linkDashboard" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
+                <a id="linkInforme" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
+                <a id="linkTendero" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Tenderos</a>
+                <a id="linkInventario" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
+                <a id="linkProveedores" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
+                <a id="linkDeudas" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
+                <a id="linkPuntoVenta" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
             </div>
 
         </div>
     </nav>
-    
-<div id="modal-background" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
-    <div id="formulario-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-96 z-50 hidden">
-        <h2 class="text-xl font-semibold mb-4 text-center">Actualizar Proveedores</h2>
-        <form th:action="@{/admin/actualizar-proveedor}" method="post" class="space-y-4">
-                <input type="hidden" name="id" id="edit-id">
-                <input type="text" name="nombre" id="edit-nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <input type="text" name="ruc" id="edit-ruc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <input type="text" name="direccion" id="edit-direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                <input type="text" name="telefono" id="edit-telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-            <div class="flex justify-end gap-2">
-                <button type="button" onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancelar</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Guardar</button>
-            </div>
-        </form>
-    </div>
-    
+  
     <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
         
-        <form class="grid grid-cols-2 gap-4 mb-6" th:action="@{/admin/crear-proveedor}" method="POST">
-            <input type="text" name="nombre" placeholder="Nombre" class="w-full p-2 mb-3 border rounded-md" required>
-            <input type="text" name="ruc" placeholder="RUC" class="w-full p-2 mb-3 border rounded-md" required>
-            <input type="text" name="direccion" placeholder="Dirección" class="w-full p-2 mb-3 border rounded-md" required>
-            <input type="text" name="telefono" placeholder="Teléfono" class="w-full p-2 mb-3 border rounded-md" required>
-        
+        <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+
+        <form class="grid grid-cols-2 gap-4 mb-6" id="formProveedor">
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" id="nit" name="nit" placeholder="Nit" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" id="direccion" name="direccion" placeholder="Dirección" class="w-full p-2 mb-3 border rounded-md" required>
+            <input type="text" id="telefono" name="telefono" placeholder="Teléfono" class="w-full p-2 mb-3 border rounded-md" required>
+    
             <div class="col-span-2 flex justify-center gap-4 mt-4">
                 <button type="submit" class="bg-blue-400 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-500">
                     Guardar
@@ -72,42 +58,24 @@
                 <thead>
                     <tr class="bg-blue-400 dark:bg-blue-600 text-white">
                         <th class="p-3">Nombre</th>
-                        <th class="p-3">RUC</th>
+                        <th class="p-3">Nit</th>
                         <th class="p-3">Dirección</th>
                         <th class="p-3">Teléfono</th>
                         <th class="p-3">Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="border-b dark:border-blue-600" th:each="proveedor : ${proveedores}">
-                        <td class="p-3 dark:text-white" th:text="${proveedor.nombre}"></td>
-                        <td class="p-3 dark:text-white" th:text="${proveedor.ruc}"></td>
-                        <td class="p-3 dark:text-white" th:text="${proveedor.direccion}"></td>
-                        <td class="p-3 dark:text-white" th:text="${proveedor.telefono}"></td>
-                        <td class="p-3">
-                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600"
-                            th:data-id="${proveedor.id}"
-                            th:data-nombre="${proveedor.nombre}"
-                            th:data-ruc="${proveedor.ruc}"
-                            th:data-direccion="${proveedor.direccion}"
-                            th:data-telefono="${proveedor.telefono}"
-                            onclick="llenarFormularioDesdeBoton(this)">
-                            Editar
-                            </button>
-                            <form th:action="@{/admin/eliminar-proveedor/{id}(id=${proveedor.id})}" method="post" style="display:inline;">
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-red-600">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
+                <tbody id="tablaProveedores">
                 </tbody>
             </table>
         </div>
+        <div id="alertBox" class="hidden p-3 rounded-lg mt-3 text-white font-bold"></div>
     
         <div class="pagination flex justify-center items-center gap-4 mt-4">
-            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-            <span id="paginaActual">1</span>
-            <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
-        </div>
+  <button id="btnAnterior" class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold hover:bg-yellow-600">Anterior</button>
+  <span id="paginaActual">1</span>
+  <button id="btnSiguiente" class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold hover:bg-green-600">Siguiente</button>
+</div>
+
         
     </div> 
 
@@ -139,35 +107,173 @@
 </script>
 
 <script>
-const filasPorPagina = 5;
-let paginaActual = 1;
-const tabla = document.getElementById("tablaProductos").getElementsByTagName("tbody")[0];
-const filas = tabla.getElementsByTagName("tr");
+const tiendaId = document.getElementById("tiendaId").value;
 
-function mostrarPagina(pagina) {
-    let inicio = (pagina - 1) * filasPorPagina;
-    let fin = inicio + filasPorPagina;
-    
-    for (let i = 0; i < filas.length; i++) {
-        filas[i].style.display = (i >= inicio && i < fin) ? "" : "none";
+let pagina = 0;           // 📌 Spring Data empieza en 0
+const tamanoPagina = 5;   // 📌 Proveedores por página
+let totalPaginas = 0;
+
+// 🚀 Mostrar alertas bonitas
+function mostrarAlerta(mensaje, tipo = "error") {
+  const alertBox = document.getElementById("alertBox");
+  alertBox.textContent = mensaje;
+
+  if (tipo === "error") {
+    alertBox.className = "p-3 rounded-lg mt-3 bg-red-500 text-white font-bold";
+  } else if (tipo === "success") {
+    alertBox.className = "p-3 rounded-lg mt-3 bg-green-500 text-white font-bold";
+  } else if (tipo === "warning") {
+    alertBox.className = "p-3 rounded-lg mt-3 bg-yellow-500 text-white font-bold";
+  }
+
+  alertBox.classList.remove("hidden");
+  setTimeout(() => alertBox.classList.add("hidden"), 3000);
+}
+
+// 🚀 Cargar proveedores desde backend con paginación
+async function cargarProveedores() {
+  const res = await fetch(`/api/proveedores/tienda/${tiendaId}?page=${pagina}&size=${tamanoPagina}`);
+  if (!res.ok) {
+    mostrarAlerta("❌ Error al cargar proveedores", "error");
+    return;
+  }
+
+  const data = await res.json();
+  const proveedores = data.content || data.proveedores || [];
+  totalPaginas = data.totalPages || 1;
+
+  const tbody = document.getElementById("tablaProveedores");
+  tbody.innerHTML = "";
+
+  proveedores.forEach(p => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="p-3 dark:text-white">${p.nombre}</td>
+      <td class="p-3 dark:text-white">${p.nit}</td>
+      <td class="p-3 dark:text-white">${p.direccion}</td>
+      <td class="p-3 dark:text-white">${p.telefono}</td>
+      <td class="p-3">
+        <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold hover:bg-yellow-600"
+                data-id="${p.id}" data-nombre="${p.nombre}" data-nit="${p.nit}"
+                data-telefono="${p.telefono}" data-direccion="${p.direccion}">
+          Editar
+        </button>
+        <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded-lg font-bold hover:bg-red-600"
+                data-id="${p.id}">
+          Eliminar
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("paginaActual").textContent = pagina + 1;
+}
+
+// 🚀 Botones de paginación
+document.getElementById("btnAnterior").addEventListener("click", () => {
+  if (pagina > 0) {
+    pagina--;
+    cargarProveedores();
+  }
+});
+
+document.getElementById("btnSiguiente").addEventListener("click", () => {
+  if (pagina + 1 < totalPaginas) {
+    pagina++;
+    cargarProveedores();
+  }
+});
+
+// 🚀 Delegación de eventos para Editar / Eliminar
+document.getElementById("tablaProveedores").addEventListener("click", async (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  if (btn.classList.contains("btn-edit")) {
+    const form = document.getElementById("formProveedor");
+    form.dataset.id = btn.dataset.id;
+    form.nombre.value = btn.dataset.nombre;
+    form.nit.value = btn.dataset.nit;
+    form.telefono.value = btn.dataset.telefono;
+    form.direccion.value = btn.dataset.direccion;
+    return;
+  }
+
+  if (btn.classList.contains("btn-delete")) {
+    if (!confirm("¿Seguro de eliminar este proveedor?")) return;
+
+    const id = btn.dataset.id;
+    const resp = await fetch(`/api/proveedores/eliminar/${id}?tiendaId=${encodeURIComponent(tiendaId)}`, {
+      method: "DELETE"
+    });
+
+    if (!resp.ok) {
+      const msg = await resp.text();
+      mostrarAlerta("❌ Error al eliminar: " + msg, "error");
+      return;
     }
+    mostrarAlerta("🗑️ Proveedor eliminado correctamente", "success");
+    cargarProveedores();
+  }
+});
 
-    document.getElementById("paginaActual").innerText = pagina;
-}
+// 🚀 Crear / Actualizar proveedor con validaciones
+document.getElementById("formProveedor").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-function cambiarPagina(direccion) {
-    let totalPaginas = Math.ceil(filas.length / filasPorPagina);
-    paginaActual += direccion;
-    
-    if (paginaActual < 1) paginaActual = 1;
-    if (paginaActual > totalPaginas) paginaActual = totalPaginas;
-    
-    mostrarPagina(paginaActual);
-}
+  const proveedor = {
+    nombre: this.nombre.value.trim(),
+    nit: this.nit.value.trim(),
+    telefono: this.telefono.value.trim(),
+    direccion: this.direccion.value.trim(),
+    tiendaId: tiendaId
+  };
 
+  const isEdit = !!this.dataset.id;
+  const url = isEdit 
+      ? `/api/proveedores/actualizar/${this.dataset.id}`
+      : `/api/proveedores/crear`;
+  const method = isEdit ? "PUT" : "POST";
 
-mostrarPagina(paginaActual);
+  const resp = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(proveedor)
+  });
+
+  if (!resp.ok) {
+    const msg = await resp.text();
+
+    // 🚨 Validaciones personalizadas
+    if (msg.includes("nit")) {
+      mostrarAlerta("⚠️ El NIT ya está registrado", "warning");
+    } else if (msg.includes("telefono")) {
+      mostrarAlerta("⚠️ El teléfono ya está registrado", "warning");
+    } else {
+      mostrarAlerta("❌ Error al guardar: " + msg, "error");
+    }
+    return;
+  }
+
+  this.reset();
+  delete this.dataset.id;
+  mostrarAlerta(isEdit ? "✅ Proveedor actualizado" : "✅ Proveedor creado", "success");
+  cargarProveedores();
+});
+
+// 🚀 Init
+cargarProveedores();
+document.getElementById("linkDashboard").href = `/admin/tiendas/${tiendaId}/dashboard`;
+document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;
+document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
+document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
+document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
+document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
+document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
 </script>
+
+
 
 <script>
         function cerrarModal() {

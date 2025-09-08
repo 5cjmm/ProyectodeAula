@@ -1,7 +1,6 @@
 package com.ShopMaster.Controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ShopMaster.Model.ProductoVendido;
 import com.ShopMaster.Model.Productos;
-import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Repository.ProductosRepository;
 import com.ShopMaster.Repository.VentaRepository;
 
@@ -94,7 +92,7 @@ public String agregarProducto(@RequestParam("nombreProducto") String nombreProdu
 
         // Si no existe, lo agregas normalmente
         ProductoVendido vendido = new ProductoVendido();
-        vendido.setProductoId(producto.getId());
+        //vendido.setProductoId(producto.getId());
         vendido.setCodigo(producto.getCodigo());
         vendido.setNombre(producto.getNombre());
         vendido.setCantidad(cantidad);
@@ -117,7 +115,7 @@ public String agregarProducto(@RequestParam("nombreProducto") String nombreProdu
     }
 
     // Guardar venta y actualizar inventario
-    @PostMapping("/guardar")
+ /*    @PostMapping("/guardar")
     public String guardarVenta(@ModelAttribute("productosSeleccionados") List<ProductoVendido> seleccionados,
                                Model model, RedirectAttributes redirectAttributes) {
 
@@ -151,5 +149,5 @@ public String agregarProducto(@RequestParam("nombreProducto") String nombreProdu
 
         redirectAttributes.addFlashAttribute("success", "Venta realizada con éxito.");
         return "redirect:/tendero/PuntoVenta";
-    }
+    }*/
 }

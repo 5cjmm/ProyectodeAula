@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ShopMaster.Model.Usuario;
 import com.ShopMaster.Service.UsuarioService;
@@ -29,17 +28,19 @@ public class AuthController {
     }
 
     @GetMapping("/register")
-    public String mostrarFormularioDeRegistro(Model model) {
-        model.addAttribute("usuario", new Usuario()); 
-        return "register";  
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "register"; // Vista Thymeleaf
     }
 
     @PostMapping("/register")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
         usuario.setRoles(Set.of("ROLE_ADMIN"));
-        usuarioService.guardarUsuario(usuario);
-        redirectAttributes.addFlashAttribute("SuccessMessage", "Usuario registrado exitosamente");
-        return "redirect:/register";  
+
+    usuarioService.guardarUsuario(usuario);
+
+    model.addAttribute("mensaje", "Usuario registrado correctamente");
+    return "success";
     }
         
         @GetMapping("/home")

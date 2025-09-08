@@ -9,8 +9,7 @@
 <body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
     
     <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">Dashboard - Administrador</div>
+        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
         <div class="relative">
             <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
                 <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
@@ -20,7 +19,7 @@
                 <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
                 <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
                 <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
+                <a th:href="@{/admin/RegistroTendero}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
                 <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
                 <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
                 <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
@@ -29,17 +28,16 @@
         </div>
     </nav>
     
+    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Dashboard - Administrador</h1>
     
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
         
-        <!-- Informe de Power BI embebido -->
-        <div class="w-full mt-8 rounded-xl overflow-hidden shadow-lg border border-blue-300 dark:border-blue-700">
-            <iframe title="Avance PA" width="100%" height="500"
-                src="https://app.powerbi.com/view?r=eyJrIjoiYzRhMjk1Y2MtY2NlMi00N2MxLWE4OTEtYjA0M2E1MTM3YzNlIiwidCI6IjlkMTJiZjNmLWU0ZjYtNDdhYi05MTJmLTFhMmYwZmM0OGFhNCIsImMiOjR9"
-                frameborder="0" allowFullScreen="true">
-            </iframe>
+        <div class="flex gap-4">
+            <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
+            <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
         </div>
-
+        
         
     <script>
         const menuToggle = document.getElementById("menu-toggle");
