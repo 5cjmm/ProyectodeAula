@@ -58,33 +58,31 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Recursos estáticos y páginas públicas
+                // Recursos estáticos y páginas públicas
                         .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // AÑADIDO
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
+                    "/fonts/**").permitAll() // AÑADIDO
                         .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
-                        
-                        // Rutas protegidas
-                        .requestMatchers("/tendero/agregar-producto", 
+
+                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
+                        .requestMatchers( "/tendero/agregar-producto", 
                         "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
-                        "/admin/crear-producto", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
+                        "/admin/crear-producto", "/admin/tiendas", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/login") // AÑADIDO para claridad
                         .successHandler(customAuthenticationSuccessHandler)
-                        .failureUrl("/login?error=true") // AÑADIDO manejo de errores
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true") // CORREGIDO
-                        .invalidateHttpSession(true) // AÑADIDO
-                        .deleteCookies("JSESSIONID") // AÑADIDO
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
 

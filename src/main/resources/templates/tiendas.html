@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Tiendas - ShopMaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Added complete ShopMaster design system styles */
+        /* ===== CSS CUSTOM PROPERTIES ===== */
+        :root {
+          /* Colors */
+          --color-primary: #2563eb;
+          --color-primary-dark: #1d4ed8;
+          --color-primary-light: #3b82f6;
+          --color-secondary: #64748b;
+          --color-accent: #f59e0b;
+          --color-success: #10b981;
+          --color-warning: #f59e0b;
+          --color-error: #ef4444;
+          
+          /* Neutrals */
+          --color-white: #ffffff;
+          --color-gray-50: #f8fafc;
+          --color-gray-100: #f1f5f9;
+          --color-gray-200: #e2e8f0;
+          --color-gray-300: #cbd5e1;
+          --color-gray-400: #94a3b8;
+          --color-gray-500: #64748b;
+          --color-gray-600: #475569;
+          --color-gray-700: #334155;
+          --color-gray-800: #1e293b;
+          --color-gray-900: #0f172a;
+          
+          /* Typography */
+          --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          --font-size-xs: 0.75rem;
+          --font-size-sm: 0.875rem;
+          --font-size-base: 1rem;
+          --font-size-lg: 1.125rem;
+          --font-size-xl: 1.25rem;
+          --font-size-2xl: 1.5rem;
+          --font-size-3xl: 1.875rem;
+          --font-size-4xl: 2.25rem;
+          
+          /* Spacing */
+          --spacing-xs: 0.25rem;
+          --spacing-sm: 0.5rem;
+          --spacing-md: 1rem;
+          --spacing-lg: 1.5rem;
+          --spacing-xl: 2rem;
+          --spacing-2xl: 3rem;
+          
+          /* Shadows */
+          --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+          --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+          
+          /* Border radius */
+          --radius-sm: 0.25rem;
+          --radius-md: 0.375rem;
+          --radius-lg: 0.5rem;
+          --radius-xl: 0.75rem;
+          --radius-2xl: 1rem;
+          --radius-full: 9999px;
+          
+          /* Transitions */
+          --transition-fast: 150ms ease-in-out;
+          --transition-normal: 250ms ease-in-out;
+          --transition-slow: 350ms ease-in-out;
+        }
+
+        /* ===== BASE STYLES ===== */
+        * {
+          box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          font-family: var(--font-family-base);
+          line-height: 1.6;
+          color: var(--color-gray-900);
+          background: var(--color-gray-50);
+          min-height: 100vh;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* ===== HEADER STYLES ===== */
+        .header {
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.95);
+          border-bottom: 1px solid var(--color-gray-200);
+          box-shadow: var(--shadow-sm);
+        }
+
+        .nav {
+          padding: 0;
+        }
+
+        .nav-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 1rem 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .nav-logo {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          font-size: var(--font-size-xl);
+          font-weight: 700;
+          color: var(--color-primary);
+          text-decoration: none;
+          transition: transform var(--transition-fast);
+        }
+
+        .nav-logo:hover {
+          transform: scale(1.05);
+        }
+
+        .logo-icon {
+          font-size: 1.5rem;
+        }
+
+        .nav-links {
+          display: flex;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .nav-link {
+          font-weight: 500;
+          color: var(--color-gray-700);
+          text-decoration: none;
+          padding: 0.5rem 0;
+          transition: color var(--transition-fast);
+        }
+
+        .nav-link:hover {
+          color: var(--color-primary);
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          font-weight: 600;
+          text-decoration: none;
+          border-radius: var(--radius-lg);
+          border: 2px solid transparent;
+          cursor: pointer;
+          transition: all var(--transition-fast);
+          font-size: var(--font-size-base);
+          line-height: 1;
+          font-family: inherit;
+        }
+
+        .btn:focus {
+          outline: 2px solid var(--color-primary);
+          outline-offset: 2px;
+        }
+
+        .btn-primary {
+          background: var(--color-primary);
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background: var(--color-primary-dark);
+          transform: translateY(-1px);
+          box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+          background: var(--color-gray-400);
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .btn-outline {
+          background: transparent;
+          color: var(--color-primary);
+          border-color: var(--color-primary);
+        }
+
+        .btn-outline:hover {
+          background: var(--color-primary);
+          color: white;
+        }
+
+        .btn-sm {
+          padding: 0.5rem 1rem;
+          font-size: var(--font-size-sm);
+        }
+
+        .btn-loading {
+          opacity: 0.7;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+          flex: 1;
+          padding: 2rem 0;
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+        }
+
+        .page-header {
+          text-align: center;
+          margin-bottom: 3rem;
+        }
+
+        .page-title {
+          font-size: var(--font-size-4xl);
+          font-weight: 800;
+          color: var(--color-gray-900);
+          margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+          font-size: var(--font-size-lg);
+          color: var(--color-gray-600);
+          margin: 0;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-card {
+          background: white;
+          border-radius: var(--radius-2xl);
+          padding: 2rem;
+          box-shadow: var(--shadow-lg);
+          border: 1px solid var(--color-gray-200);
+          margin-bottom: 2rem;
+        }
+
+        .form-card-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .form-card-title {
+          font-size: var(--font-size-2xl);
+          font-weight: 700;
+          color: var(--color-gray-900);
+          margin-bottom: 0.5rem;
+        }
+
+        .form-card-subtitle {
+          color: var(--color-gray-600);
+          margin: 0;
+        }
+
+        .form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+          .form-row {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .form-label {
+          font-weight: 600;
+          color: var(--color-gray-700);
+          font-size: var(--font-size-sm);
+        }
+
+        .form-input,
+        .form-select {
+          padding: 0.75rem 1rem;
+          border: 2px solid var(--color-gray-200);
+          border-radius: var(--radius-lg);
+          font-size: var(--font-size-base);
+          transition: all var(--transition-fast);
+          font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+          outline: none;
+          border-color: var(--color-primary);
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input::placeholder {
+          color: var(--color-gray-400);
+        }
+
+        /* ===== TIENDAS GRID ===== */
+        .tiendas-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+          .tiendas-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .tiendas-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        .tienda-card {
+          background: white;
+          border-radius: var(--radius-2xl);
+          padding: 1.5rem;
+          box-shadow: var(--shadow-md);
+          border: 1px solid var(--color-gray-200);
+          transition: all var(--transition-normal);
+        }
+
+        .tienda-card:hover {
+          transform: translateY(-4px);
+          box-shadow: var(--shadow-xl);
+          border-color: var(--color-primary);
+        }
+
+        .tienda-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+
+        .tienda-card-title {
+          font-size: var(--font-size-xl);
+          font-weight: 700;
+          color: var(--color-gray-900);
+          margin: 0;
+        }
+
+        .tienda-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: var(--radius-full);
+          font-size: var(--font-size-xs);
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .tienda-badge-tienda {
+          background-color: #dbeafe;
+          color: #1e40af;
+        }
+
+        .tienda-badge-papeleria {
+          background-color: #dcfce7;
+          color: #166534;
+        }
+
+        .tienda-card-content {
+          margin-bottom: 1.5rem;
+        }
+
+        .tienda-info {
+          margin: 0.75rem 0;
+          color: var(--color-gray-600);
+          font-size: var(--font-size-sm);
+          line-height: 1.5;
+        }
+
+        .tienda-info strong {
+          color: var(--color-gray-800);
+          font-weight: 600;
+        }
+
+        .tienda-card-actions {
+          display: flex;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+          background: var(--color-gray-900);
+          color: white;
+          padding: 2rem 0;
+          margin-top: 4rem;
+        }
+
+        .footer-content {
+          text-align: center;
+        }
+
+        .footer-content p {
+          margin: 0;
+          color: var(--color-gray-400);
+          font-size: var(--font-size-sm);
+        }
+
+        /* ===== NOTIFICATIONS ===== */
+        .notification {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          padding: 1rem 1.5rem;
+          border-radius: var(--radius-lg);
+          color: white;
+          font-weight: 600;
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+          box-shadow: var(--shadow-xl);
+        }
+
+        .notification-success {
+          background: var(--color-success);
+        }
+
+        .notification-error {
+          background: var(--color-error);
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+          text-align: center;
+          padding: 3rem 1rem;
+          color: var(--color-gray-500);
+        }
+
+        .empty-state-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+
+        .empty-state-title {
+          font-size: var(--font-size-xl);
+          font-weight: 600;
+          color: var(--color-gray-700);
+          margin-bottom: 0.5rem;
+        }
+
+        .empty-state-description {
+          font-size: var(--font-size-base);
+          margin: 0;
+        }
+
+        /* ===== RESPONSIVE UTILITIES ===== */
+        @media (max-width: 767px) {
+          .nav-links {
+            gap: 1rem;
+          }
+          
+          .page-title {
+            font-size: var(--font-size-3xl);
+          }
+          
+          .form-card {
+            padding: 1.5rem;
+          }
+        }
+    </style>
+</head>
+<body>
+    <!-- Updated header structure to match ShopMaster design -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <span class="logo-icon">🛍️</span>
+                    ShopMaster
+                </a>
+                <div class="nav-links">
+                   <!-- <a href="/dashboard" class="nav-link">Dashboard</a> --> 
+                    <a href="/logout" class="btn btn-outline">Cerrar Sesión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Enhanced main content structure -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Mis Tiendas</h1>
+                <p class="page-subtitle">Gestiona todas tus tiendas desde un solo lugar</p>
+            </div>
+
+            <!-- Improved tiendas grid with better responsive design -->
+            <div class="tiendas-grid" id="listaTiendas">
+                <!-- Las tiendas se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Enhanced form card design -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <h2 class="form-card-title">Crear Nueva Tienda</h2>
+                    <p class="form-card-subtitle">Agrega una nueva tienda a tu red de negocios</p>
+                </div>
+
+                <form id="formTienda" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre" class="form-label">Nombre de la tienda</label>
+                            <input type="text" id="nombre" class="form-input" placeholder="Ej: Mi Tienda Principal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" id="direccion" class="form-input" placeholder="Ej: Calle 123 #45-67" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nit" class="form-label">NIT</label>
+                            <input type="text" id="nit" class="form-input" placeholder="Ej: 123456789-0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo" class="form-label">Tipo de negocio</label>
+                            <select id="tipo" class="form-select" required>
+                                <option value="">Seleccione el tipo...</option>
+                                <option value="TIENDA">Tienda</option>
+                                <option value="PAPELERIA">Papelería</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Crear Tienda</span>
+                        <span class="btn-loading" style="display: none;">Creando...</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Updated footer design -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // 🚀 Cargar tiendas al iniciar (AJAX mantenido intacto)
+        async function cargarTiendas() {
+            try {
+                let response = await fetch("/api/tiendas");
+                let tiendas = await response.json();
+
+                let lista = document.getElementById("listaTiendas");
+                lista.innerHTML = "";
+
+                if (tiendas.length === 0) {
+                    lista.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <div class="empty-state-icon">🏪</div>
+                            <h3 class="empty-state-title">No tienes tiendas registradas</h3>
+                            <p class="empty-state-description">Crea tu primera tienda usando el formulario de abajo</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                tiendas.forEach(t => {
+                    let card = document.createElement("div");
+                    card.className = "tienda-card";
+
+                    card.innerHTML = `
+                        <div class="tienda-card-header">
+                            <h3 class="tienda-card-title">${t.nombre}</h3>
+                            <span class="tienda-badge tienda-badge-${t.tipo.toLowerCase()}">${t.tipo}</span>
+                        </div>
+                        <div class="tienda-card-content">
+                            <p class="tienda-info"><strong>Dirección:</strong> ${t.direccion}</p>
+                            <p class="tienda-info"><strong>NIT:</strong> ${t.nit}</p>
+                        </div>
+                        <div class="tienda-card-actions">
+                            <a href="/admin/tiendas/${t.id}/dashboard" class="btn btn-outline btn-sm">
+                                📦 Ver Dashboard
+                            </a>
+                        </div>
+                    `;
+
+                    lista.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error cargando tiendas:', error);
+                showNotification('Error al cargar las tiendas', 'error');
+            }
+        }
+
+        // 🚀 Crear nueva tienda con AJAX (funcionalidad mantenida intacta)
+        document.getElementById("formTienda").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+            
+            submitBtn.disabled = true;
+            submitBtn.classList.add('btn-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+
+            let tienda = {
+                nombre: document.getElementById("nombre").value,
+                direccion: document.getElementById("direccion").value,
+                nit: document.getElementById("nit").value,
+                tipo: document.getElementById("tipo").value
+            };
+
+            try {
+                let response = await fetch("/api/tiendas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(tienda)
+                });
+
+                if (response.ok) {
+                    document.getElementById("formTienda").reset();
+                    cargarTiendas(); // refrescar lista sin recargar página
+                    showNotification('Tienda creada exitosamente', 'success');
+                } else {
+                    showNotification('Error al crear tienda', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error de conexión', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-loading');
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        });
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // 🚀 Ejecutar al cargar la página (mantenido intacto)
+        cargarTiendas();
+    </script>
+</body>
+</html>

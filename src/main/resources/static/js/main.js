@@ -244,8 +244,10 @@ class ShopMasterApp {
     }
 
     // Create placeholder
-    const placeholder = this.createImagePlaceholder(img);
-    img.parentNode.replaceChild(placeholder, img);
+    const placeholder = this.createImagePlaceholder(img); 
+if (img.parentNode) {
+  img.parentNode.replaceChild(placeholder, img);
+}
   }
 
   /**

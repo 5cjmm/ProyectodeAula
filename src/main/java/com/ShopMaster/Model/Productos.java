@@ -4,41 +4,52 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "productos")
 public class Productos {
 
     @Id
-    private ObjectId  id;
+    private String id;
+
+    @Indexed(unique = true)
     private String codigo;
+
     private String nombre;
     private int cantidad;
     private double precio;
+    private String tiendaId;
     private List<ObjectId> proveedorIds;
+
+    @Transient // 👈 no se guarda en Mongo
+    private List<String> proveedorIdStrs;
 
 
     public Productos() {
     }
 
 
-    public Productos(ObjectId id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds) {
+    public Productos(String id, String codigo, String nombre, int cantidad, double precio, String tiendaId, List<ObjectId> proveedorIds) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
+        this.tiendaId = tiendaId;
         this.proveedorIds = proveedorIds;
     }
 
 
-    public ObjectId getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
+    
 
     public String getCodigo() {
         return this.codigo;
@@ -72,6 +83,15 @@ public class Productos {
         this.precio = precio;
     }
 
+    public String getTiendaId() {
+        return this.tiendaId;
+    }
+
+    public void setTiendaId(String tiendaId) {
+        this.tiendaId = tiendaId;
+    }
+
+
     public List<ObjectId> getProveedorIds() {
         return this.proveedorIds;
     }
@@ -81,6 +101,14 @@ public class Productos {
     }
 
     
+
+    public List<String> getProveedorIdStrs() {
+        return this.proveedorIdStrs;
+    }
+
+    public void setProveedorIdStrs(List<String> proveedorIdStrs) {
+        this.proveedorIdStrs = proveedorIdStrs;
+    }
 
     
 }
