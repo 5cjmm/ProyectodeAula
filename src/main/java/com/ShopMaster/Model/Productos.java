@@ -23,7 +23,7 @@ public class Productos {
     private String tiendaId;
     private List<ObjectId> proveedorIds;
 
-    @Transient // 👈 no se guarda en Mongo
+    @Transient
     private List<String> proveedorIdStrs;
 
 

@@ -11,7 +11,6 @@ public class PdfCounter {
     private String id;
     private long count;
 
-    // Constructor, getters, setters
     public PdfCounter() {}
     public PdfCounter(String id, long count) {
         this.id = id;

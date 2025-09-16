@@ -15,17 +15,20 @@ public class TiendaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    
-
     public Usuario agregarTiendaAlUsuario(String username, Tienda tienda) {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Generar un ID único para la tienda
-        tienda.setId(UUID.randomUUID().toString());
+        boolean existeNit = usuario.getTiendas().stream()
+                .anyMatch(t -> t.getNit().equalsIgnoreCase(tienda.getNit()));
 
+        if (existeNit) {
+            throw new RuntimeException("Ya existe una tienda con ese NIT en este usuario");
+        }
+
+        tienda.setId(UUID.randomUUID().toString());
         usuario.getTiendas().add(tienda);
+
         return usuarioRepository.save(usuario);
     }
 
