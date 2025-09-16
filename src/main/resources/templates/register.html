@@ -8,63 +8,52 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    
+<style>
+  /* ===== NOTIFICATIONS ===== */
+        .notification {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          padding: 1rem 1.5rem;
+          border-radius: var(--radius-lg);
+          color: white;
+          font-weight: 600;
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+          box-shadow: var(--shadow-xl);
+        }
 
-    <!-- Added hero section with modern layout -->
+        .notification-success {
+          background: var(--color-success);
+        }
+
+        .notification-error {
+          background: var(--color-error);
+        }
+</style>
+<body>
     <main>
-        <div>
-            <div>
                 <div>
                     <h1>Crear Cuenta</h1>
                     <p>Únete a ShopMaster y gestiona tu negocio de manera eficiente</p>
                 </div>
-
-                <!-- Enhanced form with modern styling and validation -->
-                <form th:action="@{/register}" th:object="${usuario}" method="post" id="registerForm">
+                <form method="post" id="registerForm">
                     <div>
                         <label for="username" >Usuario</label>
-                        <input 
-                            type="text" 
-                            id="username"
-                            th:field="*{username}" 
-                             
-                            placeholder="Ingresa tu nombre de usuario"
-                            required 
-                            autocomplete="username"
-                            aria-describedby="username-error"
-                        />
+                        <input type="text" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required autocomplete="username" aria-describedby="username-error"/>
                         <div class="error-message" id="username-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <input 
-                            type="email" 
-                            id="email"
-                            th:field="*{email}" 
-                            class="form-input" 
-                            placeholder="tu@email.com"
-                            required 
-                            autocomplete="email"
-                            aria-describedby="email-error"
-                        />
+                        <input type="email" id="email" name="email" class="form-input" placeholder="tu@email.com" required autocomplete="email" aria-describedby="email-error"/>
                         <div class="error-message" id="email-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="password" class="form-label">Contraseña</label>
                         <div class="password-input-wrapper">
-                            <input 
-                                type="password" 
-                                id="password"
-                                th:field="*{password}" 
-                                class="form-input" 
-                                placeholder="Mínimo 8 caracteres"
-                                required 
-                                autocomplete="new-password"
-                                aria-describedby="password-error"
-                            />
+                            <input type="password" id="password" name="password" class="form-input" placeholder="Mínimo 8 caracteres" required autocomplete="new-password" aria-describedby="password-error"/>
                             <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña">
                                 <span class="password-toggle-icon"></span>
                             </button>
@@ -80,46 +69,73 @@
                         </div>
                     </button>
                 </form>
-            <div id="alertBox" class="hidden p-3 rounded-lg mt-3 text-white font-bold"></div>
-
-        </div>
     </main>
 
-    <!-- Added JavaScript for form validation and UX enhancements -->
-    <script src="@{/js/main.js}"></script>
     <script>
-function mostrarAlerta(mensaje, tipo = "error") {
-  const alertBox = document.getElementById("alertBox");
-  alertBox.textContent = mensaje;
+document.getElementById("registerForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  if (tipo === "error") {
-    alertBox.className = "p-3 rounded-lg mt-3 bg-red-500 text-white font-bold";
-  } else if (tipo === "success") {
-    alertBox.className = "p-3 rounded-lg mt-3 bg-green-500 text-white font-bold";
-  } else if (tipo === "warning") {
-    alertBox.className = "p-3 rounded-lg mt-3 bg-yellow-500 text-white font-bold";
-  }
-  alertBox.classList.remove("hidden");
-  setTimeout(() => alertBox.classList.add("hidden"), 3000);
-}
+    const submitBtn = document.getElementById("submitBtn");
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoading = submitBtn.querySelector('.btn-loading');
 
-if (!resp.ok) {
-    const msg = await resp.text();
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'block';
 
-    // 🚨 Validaciones personalizadas
-    if (msg.includes("email")) {
-      mostrarAlerta("⚠️ El correo electrónico ya está registrado", "warning");
-    } else if (msg.includes("username")) {
-      mostrarAlerta("⚠️ El nombre de usuario ya está registrado", "warning");
-    } else {
-      mostrarAlerta("❌ Error al guardar: " + msg, "error");
+    let usuario = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+    };
+
+    try {
+        let response = await fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(usuario)
+        });
+
+        let msg = await response.text();
+
+        if (response.ok) {
+            showNotification(msg, "success");
+            document.getElementById("registerForm").reset();
+        } else {
+            showNotification(msg, "error");
+
+            // Si quieres mostrarlo debajo de cada input:
+            if (msg.toLowerCase().includes("username")) {
+                document.getElementById("username-error").innerText = msg;
+            }
+            if (msg.toLowerCase().includes("email")) {
+                document.getElementById("email-error").innerText = msg;
+            }
+            if (msg.toLowerCase().includes("password")) {
+                document.getElementById("password-error").innerText = msg;
+            }
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        showNotification("⚠️ Error de conexión con el servidor", "error");
+    } finally {
+        submitBtn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
     }
-    return;
-  }
+});
 
-  this.reset();
-  delete this.dataset.id;
-  mostrarAlerta(isEdit ? "✅ Usuario actualizado" : "✅ Usuario creado", "success");
-    </script>
+// Notificación flotante
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.remove(), 3000);
+}
+</script>
+
 </body>
 </html>

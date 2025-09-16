@@ -633,63 +633,75 @@
         }
 
         // 🚀 Crear nueva tienda con AJAX (funcionalidad mantenida intacta)
-        document.getElementById("formTienda").addEventListener("submit", async function(e) {
-            e.preventDefault();
+        
+    // 🚀 Crear nueva tienda con AJAX
+    document.getElementById("formTienda").addEventListener("submit", async function(e) {
+        e.preventDefault();
 
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const btnLoading = submitBtn.querySelector('.btn-loading');
-            
-            submitBtn.disabled = true;
-            submitBtn.classList.add('btn-loading');
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline';
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        
+        submitBtn.disabled = true;
+        submitBtn.classList.add('btn-loading');
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
 
-            let tienda = {
-                nombre: document.getElementById("nombre").value,
-                direccion: document.getElementById("direccion").value,
-                nit: document.getElementById("nit").value,
-                tipo: document.getElementById("tipo").value
-            };
+        let tienda = {
+            nombre: document.getElementById("nombre").value,
+            direccion: document.getElementById("direccion").value,
+            nit: document.getElementById("nit").value,
+            tipo: document.getElementById("tipo").value
+        };
 
-            try {
-                let response = await fetch("/api/tiendas", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(tienda)
-                });
+        try {
+            let response = await fetch("/api/tiendas", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(tienda)
+            });
 
-                if (response.ok) {
-                    document.getElementById("formTienda").reset();
-                    cargarTiendas(); // refrescar lista sin recargar página
-                    showNotification('Tienda creada exitosamente', 'success');
+            if (!response.ok) {
+                const msg = await response.text();
+                if (msg.includes("nit")) {
+                    showNotification("⚠️ El NIT ya está registrado", "warning");
                 } else {
-                    showNotification('Error al crear tienda', 'error');
+                    showNotification("❌ Error al guardar: " + msg, "error");
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error de conexión', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('btn-loading');
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
+                return;
             }
-        });
 
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            // ✅ Si fue exitoso
+            document.getElementById("formTienda").reset();
+            cargarTiendas();
+            showNotification('✅ Tienda creada exitosamente', 'success');
+
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('🌐 Error de conexión', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
         }
+    });
 
-        // 🚀 Ejecutar al cargar la página (mantenido intacto)
-        cargarTiendas();
-    </script>
+    // Notificación flotante
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // 🚀 Ejecutar al cargar la página
+    cargarTiendas();
+</script>
+
 </body>
 </html>
