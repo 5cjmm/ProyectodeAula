@@ -21,8 +21,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+            HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
 
         String username = authentication.getName();
         String token = jwtUtil.generateToken(username);
@@ -33,15 +33,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(60 * 60); 
+        jwtCookie.setMaxAge(60 * 60);
         response.addCookie(jwtCookie);
-
 
         for (GrantedAuthority authority : authentication.getAuthorities()) {
             String role = authority.getAuthority();
 
             if (role.equals("ROLE_ADMIN")) {
-                response.sendRedirect("/admin/Dashboard");
+                response.sendRedirect("/admin/tiendas");
                 return;
             } else if (role.equals("ROLE_TENDERO")) {
                 response.sendRedirect("/tendero/PuntoVenta");
@@ -49,8 +48,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             }
         }
 
-
         response.sendRedirect("/home");
     }
 }
-
