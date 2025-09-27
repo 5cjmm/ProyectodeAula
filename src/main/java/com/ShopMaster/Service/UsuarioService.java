@@ -19,6 +19,14 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     public void guardarUsuario(Usuario usuario) {
+        if (usuarioRepository.existsByUsername(usuario.getUsername())) {
+            throw new RuntimeException("Ya existe un usuario con ese nombre en esta tienda");
+        } /*else if (usuario.getPassword().length() < 6) {
+            throw new RuntimeException("La contraseña debe tener al menos 6 caracteres");*/
+            else if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Ya existe un usuario con ese email en esta tienda");
+        }
+
         String encriptada = passwordEncoder.encode(usuario.getPassword());
         usuario.setPassword(encriptada);
 
