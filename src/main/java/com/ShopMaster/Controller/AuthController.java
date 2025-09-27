@@ -3,12 +3,14 @@ package com.ShopMaster.Controller;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ShopMaster.Model.Usuario;
 import com.ShopMaster.Service.UsuarioService;
@@ -34,14 +36,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
-        usuario.setRoles(Set.of("ROLE_ADMIN"));
-
+@ResponseBody
+public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+    usuario.setRoles(Set.of("ROLE_ADMIN"));
     usuarioService.guardarUsuario(usuario);
+    return ResponseEntity.ok("✅ Usuario registrado correctamente");
+}
 
-    model.addAttribute("mensaje", "Usuario registrado correctamente");
-    return "success";
-    }
         
         @GetMapping("/home")
         public String homePage() {

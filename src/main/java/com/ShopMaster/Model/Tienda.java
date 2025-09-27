@@ -1,10 +1,14 @@
 package com.ShopMaster.Model;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 public class Tienda {
     private String id;
     private String nombre;
     private String direccion;
     private String tipo;
+
+    @Indexed(unique = true)
     private String nit;
 
 
