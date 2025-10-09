@@ -4,6 +4,7 @@ svg {
   vertical-align: middle;
 }
 
+
 /* Remove border from outline button */
 .btn-outline {
   border: 2px solid transparent !important;
