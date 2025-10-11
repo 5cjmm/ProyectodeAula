@@ -32,6 +32,7 @@
     <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
         
         <div class="flex gap-4">
+            <input type="hidden" id="tiendaId" th:value="${tiendaId}">
             <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
             <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
@@ -46,13 +47,15 @@
             menu.classList.toggle("hidden");
         });
 
+        const tiendaId = document.getElementById("tiendaId").value;
+
         document.getElementById("linkDashboard").href = `/admin/tiendas/${tiendaId}/dashboard`;
-document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;
-document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
-document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
-document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
-document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
-document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;   
+        document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`; 
+        document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
     </script>
     
 </body>
