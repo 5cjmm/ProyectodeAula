@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.Venta;
@@ -21,6 +23,20 @@ public class VentaService {
 
     public void eliminarVenta(ObjectId id) {
         ventaRepository.deleteById(id);
+    }
+
+   
+
+    public Venta guardarVenta(Venta venta) {
+        return ventaRepository.save(venta);
+    }
+
+    public Page<Venta> obtenerVentasPorTienda(String tiendaId, String buscar, Pageable pageable) {
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            // Buscar por productos que contengan el texto
+            return ventaRepository.findByTiendaIdAndProductosNombreContainingIgnoreCase(tiendaId, buscar, pageable);
+        }
+        return ventaRepository.findByTiendaId(tiendaId, pageable);
     }
 
 }
