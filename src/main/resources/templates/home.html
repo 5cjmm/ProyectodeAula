@@ -1,58 +1,109 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopMaster - Inicio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Blinker', sans-serif;
-            background: linear-gradient(to right, #0c35a5, #0c50bd);
-            height: 100vh;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopMaster</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style> dff
+    .bag {
+position: absolute;
+width: 750.83px;
+height: 700.79px;
+left: 346.51px;
+top: 228px;
+
+}
+  </style>
 </head>
-<body class="text-black dark:text-white">
-    
-    <nav class="w-full bg-blue-600 dark:bg-blue-900 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-white text-2xl font-bold">ShopMaster</div>
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                <a href="Index.html" class="block px-4 py-2 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Inicio</a>
-                <a href="Login.html" class="block px-4 py-2 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Login</a>
-            </div>
-        </div>
+
+<body class="bg-white overflow-x-hidden">
+  <!-- HEADER -->
+  <header class="w-full flex justify-between items-center px-6 md:px-12 py-1 shadow-sm">
+    <!-- Logo -->
+    <a th:href="@{/home}" class="flex-shrink-0">
+      <img th:src="@{/images/logo.png}" alt="Logo" data-aos="fade-up" data-aos-duration="1200"
+        class="w-[130px] sm:w-[150px] md:w-[170px] h-auto hover:opacity-80 transition-opacity duration-200" />
+    </a>
+
+    <!-- Navegación -->
+    <nav class="hidden md:flex items-center gap-x-6 text-sm md:text-base font-medium">
+      <a th:href="@{/home}" class="text-black font-semibold hover:text-blue-800" data-aos="fade-up"
+        data-aos-duration="1200">Inicio</a>
+      <a href="#" class="hover:text-blue-800" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">¿Quiénes
+        somos?</a>
+      <a href="#" class="hover:text-blue-800" data-aos="fade-up" data-aos-duration="1200"
+        data-aos-delay="200">Contacto</a>
     </nav>
-    
-    
-    <main class="container mx-auto mt-10 px-6">
-        <div class="flex flex-col md:flex-row items-center bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
-            <img src="https://img.freepik.com/vector-gratis/supermercado-alimentos-estantes-berenjena-repollo-zanahoria-pimientos-cebollas-pan-maiz-patatas-compras-frescas-ilustracion-vectorial_1284-46271.jpg" 
-                alt="Descripción de la página" class="w-full md:w-1/2 rounded-lg shadow-lg mb-6 md:mb-0 md:mr-6">
-            <div class="md:w-1/2 text-gray-800">
-                <h1 class="text-6xl font-bold text-blue-600">¡Bienvenido a ShopMaster!</h1>
-                <p class="text-2xl mb-8">
-                    ShopMaster es la solución definitiva para la gestión minorista, diseñada para hacer que la administración de tu negocio sea más eficiente. 
-                    Nuestra plataforma te ofrece herramientas avanzadas para controlar inventarios, gestionar ventas y optimizar la experiencia de tus clientes.
-                </p>
-                <a href="Login.html" class="bg-blue-500 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-blue-600 transition">
-                    Iniciar sesión
-                </a>
-            </div>
-        </div>
-    </main>
-    
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-        });
-    </script>
+
+    <!-- Botón de login -->
+    <a th:href="@{/login}" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="600"
+      class="inline-flex items-center justify-center gap-2 bg-white text-[#05314D] border border-[#042443] rounded-lg px-4 py-2 text-sm md:text-base hover:bg-gray-100 font-medium transition-colors duration-200">
+      <span>Iniciar sesión</span>
+      <svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+        <polyline points="10,17 15,12 10,7"></polyline>
+        <line x1="15" y1="12" x2="3" y2="12"></line>
+      </svg>
+    </a>
+  </header>
+
+  <!-- MAIN -->
+  <main class="relative flex flex-col md:flex-row items-center justify-between px-8 md:px-16 lg:px-20 xl:px-28 py-12 md:py-10 bg-white">
+  <!-- Texto -->
+  <div class="flex-1 text-center md:text-left md:pr-10 lg:pr-16 xl:pr-20 z-10">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-gray-800 leading-tight"
+      data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700">
+      Gestión<br>
+      inteligente <br>
+      para tu <span class="text-[#187EBE]">Tienda</span>
+    </h1>
+
+    <p data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
+      class="text-lg md:text-xl xl:text-2xl text-gray-600 mt-6 mb-8 leading-relaxed max-w-md md:max-w-lg">
+      Todo lo que necesitas para administrar<br>
+      tu tienda, en un solo sistema.
+    </p>
+
+    <a th:href="@{/register}" data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
+      class="inline-flex items-center justify-center gap-2 bg-[#187EBE] hover:bg-[#156fa6] text-white px-6 py-3 rounded-lg text-lg font-medium transition-colors duration-200">
+      <span>Registrarse</span>
+      <svg class="shrink-0" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 6 15 12 9 18"></polyline>
+      </svg>
+    </a>
+  </div>
+  <div class="relative flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
+    <img th:src="@{/images/Bolsa.svg}" alt="Ilustración ShopMaster"
+      class="w-[70vw] sm:w-[100vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-auto opacity-95 relative bottom-0"
+      data-aos="fade-left" data-aos-duration="1800" data-aos-delay="500" />
+  </div>
+</main>
+
+
+
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-gray-100 text-gray-700 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-sm md:text-base">&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
+      <div class="flex gap-x-4 mt-4 md:mt-0">
+        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Política de Privacidad</a>
+        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Términos de Servicio</a>
+        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Ayuda</a>
+  
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
 </body>
+
 </html>

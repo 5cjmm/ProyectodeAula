@@ -1,39 +1,50 @@
 package com.ShopMaster.Model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "proveedores")
 public class Proveedor {
     
     @Id
-    private ObjectId id;
+    private String id;
     private String nombre;
-    private String ruc;
+
+    @Indexed(unique = true)
+    private String nit;
+
     private String direccion;
+    
+    @Indexed(unique = true)
     private String telefono;
+
+    private String tiendaId;
+
 
     
 
     public Proveedor() {
     }
 
-    public Proveedor(ObjectId id, String nombre, String ruc, String direccion, String telefono) {
+    public Proveedor(String id, String nombre, String nit, String direccion, String telefono, String tiendaId) {
         this.id = id;
         this.nombre = nombre;
-        this.ruc = ruc;
+        this.nit = nit;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.tiendaId = tiendaId;
     }
 
-    public ObjectId getId() {
+
+    public String getId() {
         return this.id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
+    
 
     public String getNombre() {
         return this.nombre;
@@ -43,12 +54,12 @@ public class Proveedor {
         this.nombre = nombre;
     }
 
-    public String getRuc() {
-        return this.ruc;
+    public String getNit() {
+        return this.nit;
     }
 
-    public void setRuc(String ruc) {
-        this.ruc = ruc;
+    public void setNit(String nit) {
+        this.nit = nit;
     }
 
     public String getDireccion() {
@@ -65,6 +76,14 @@ public class Proveedor {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getTiendaId() {
+        return this.tiendaId;
+    }
+
+    public void setTiendaId(String tiendaId) {
+        this.tiendaId = tiendaId;
     }
 
 }
