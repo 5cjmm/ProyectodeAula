@@ -3,99 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe de Venta - ShopMaster</title>
+    <title>ShopMaster - Informe de Ventas</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
-    
-    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
-        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">Informe de Venta</div>
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/RegistroTendero}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex flex-col items-center mb-10">
+              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+                <img 
+                  th:src="@{/images/logo.png}" 
+                  alt="ShopMaster" 
+                  class="h-28 w-auto object-contain drop-shadow-md"
+                >
+              </div>
+            </div>
+            
+            <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Informe de Ventas
+                </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Gestion de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
+                </a>
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Informe de Ventas</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+                    </div>
+                </div>
+            </header>
+        
+
+      <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Filter Section -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <!-- Date Filter -->
+                <div class="flex items-center gap-4">
+                    <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Filtrar por fecha:</label>
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <input 
+                            type="date" 
+                            placeholder="dd/mm/aaaa" 
+                            class="pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white w-48"
+                        >
+                    </div>
+                    <button class="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <span class="flex items-center gap-2">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Buscar
+                        </span>
+                    </button>
+                </div>
+                
+                <!-- Generate PDF Button -->
+                <button class="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue500 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <span class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Generar PDF
+                    </span>
+                </button>
             </div>
         </div>
-    </nav>
-    
-    
-    <div class="w-full max-w-4xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6">
-        
-        <div class="flex justify-between items-center w-full">
-            <!-- Parte izquierda: Filtro y Buscar -->
-            <form th:action="@{/admin/InformeVentas/filtrar}" method="get" class="flex flex-wrap items-center gap-4 mb-6">
-                <label for="fecha" class="text-gray-900 dark:text-white text-lg font-medium">Filtrar por fecha:</label>
-                    <input type="date" id="fecha" name="fecha" required class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button type="submit"class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Buscar</button>
-            </form>
 
-        
-            <!-- Parte derecha: Generar PDF -->
-            <form th:action="@{/admin/pdf}" method="get" target="_blank">
-                <input type="hidden" name="fecha" th:value="${#dates.format(filtroFecha, 'yyyy-MM-dd')}" />
-                <button class="bg-blue-500 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600" type="submit">
-                    Generar PDF
-                </button>
-            </form>
+        <!-- Table Section -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- Table Header -->
+            <div class="bg-gradient-to-r from-blue-400 to-blue-500 px-6 py-4">
+                <div class="grid grid-cols-5 gap-4 text-white font-semibold text-sm">
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        Nombre
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                        </svg>
+                        Cantidad
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Precio Unitario (COP)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        Total (COP)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Fecha
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="bg-blue-50">
+                <!-- Sample Row -->
+                <div class="grid grid-cols-5 gap-4 px-6 py-4 border-b border-blue-100 hover:bg-blue-100 transition-colors">
+                    <div class="text-sm text-blue-900 font-medium">Arroz Diana 500g</div>
+                    <div class="text-sm text-blue-800">15</div>
+                    <div class="text-sm text-blue-800 font-semibold">$2,500</div>
+                    <div class="text-sm text-blue-900 font-bold">$37,500</div>
+                    <div class="text-sm text-blue-700">15/01/2024</div>
+                </div>
+
+                <!-- Additional Sample Rows -->
+                <div class="grid grid-cols-5 gap-4 px-6 py-4 border-b border-blue-100 hover:bg-blue-100 transition-colors">
+                    <div class="text-sm text-blue-900 font-medium">Aceite Gourmet 1L</div>
+                    <div class="text-sm text-blue-800">8</div>
+                    <div class="text-sm text-blue-800 font-semibold">$4,200</div>
+                    <div class="text-sm text-blue-900 font-bold">$33,600</div>
+                    <div class="text-sm text-blue-700">15/01/2024</div>
+                </div>
+
+                <div class="grid grid-cols-5 gap-4 px-6 py-4 border-b border-blue-100 hover:bg-blue-100 transition-colors">
+                    <div class="text-sm text-blue-900 font-medium">Pan Integral</div>
+                    <div class="text-sm text-blue-800">12</div>
+                    <div class="text-sm text-blue-800 font-semibold">$1,800</div>
+                    <div class="text-sm text-blue-900 font-bold">$21,600</div>
+                    <div class="text-sm text-blue-700">15/01/2024</div>
+                </div>
+
+                <div class="grid grid-cols-5 gap-4 px-6 py-4 hover:bg-blue-100 transition-colors">
+                    <div class="text-sm text-blue-900 font-medium">Leche Entera 1L</div>
+                    <div class="text-sm text-blue-800">20</div>
+                    <div class="text-sm text-blue-800 font-semibold">$3,100</div>
+                    <div class="text-sm text-blue-900 font-bold">$62,000</div>
+                    <div class="text-sm text-blue-700">15/01/2024</div>
+                </div>
+
+                <!-- Total Row -->
+                <div class="grid grid-cols-5 gap-4 px-6 py-4 bg-gradient-to-r from-amber-100 to-amber-200 border-t-2 border-amber-300">
+                    <div class="text-sm text-amber-900 font-bold">TOTAL VENTAS</div>
+                    <div class="text-sm text-amber-800 font-bold">55</div>
+                    <div class="text-sm text-amber-800 font-bold">-</div>
+                    <div class="text-sm text-amber-900 font-bold text-lg">$154,700</div>
+                    <div class="text-sm text-amber-700 font-bold">15/01/2024</div>
+                </div>
+            </div>
         </div>
-        
-    
-        <div class="overflow-x-auto bg-gray-100 dark:bg-blue-700 p-4 rounded-xl shadow-md">
-    <table id="tablaInforme" class="w-full text-left border-collapse">
-        <thead>
-            <tr class="bg-blue-500 text-white">
-                <th class="p-3">Nombre</th>
-                <th class="p-3">Cantidad</th>
-                <th class="p-3">Precio Unitario (COP)</th>
-                <th class="p-3">Total (COP)</th>
-                <th class="p-3">Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-    <th:block th:each="venta : ${ventas}">
-        <tr th:each="producto : ${venta.productos}" class="border-b text-gray-900 dark:text-white">
-            <td class="p-3 dark:text-white" th:text="${producto.nombre}"></td>
-            <td class="p-3 dark:text-white" th:text="${producto.cantidad}"></td>
-            <td class="p-3 dark:text-white" th:text="${producto.precio}"></td>
-            <td class="p-3 dark:text-white"
-                th:text="${producto.cantidad * producto.precio}"></td>
-            <td class="p-3 dark:text-white"
-                th:text="${#dates.format(venta.fecha, 'yyyy-MM-dd')}"></td>
-        </tr>
-    </th:block>
-</tbody>
 
-    </table>
-</div>
-
-        
-        <div class="pagination flex justify-center items-center gap-4 mt-4">
-            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-            <span id="paginaActual">1</span>
-            <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
+        <!-- Pagination -->
+        <div class="flex justify-center items-center space-x-4 mt-8">
+            <button class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                <span class="flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Anterior
+                </span>
+            </button>
+            <span class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
+                1
+            </span>
+            <button class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                <span class="flex items-center gap-2">
+                    Siguiente
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </span>
+            </button>
         </div>
-    </div>
-    
+    </main>
+
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+  const tiendaId = document.getElementById("tiendaId").value;
+
+  if (!tiendaId) {
+    console.error("⚠️ tiendaId no encontrado");
+    return;
+  }
+
+  document.getElementById("linkDashboard").href = `/admin/tiendas/${tiendaId}/dashboard`;
+  document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;
+  document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
+  document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
+  document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
+  document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
+  document.getElementById("linkTiendas").href = `/admin/tiendas`;
+});
+
         const menuToggle = document.getElementById("menu-toggle");
         const menu = document.getElementById("menu");
         
         menuToggle.addEventListener("click", () => {
             menu.classList.toggle("hidden");
         });
-    </script>
-    <script>
+
         const filasPorPagina = 5;
         let paginaActual = 1;
         const tabla = document.getElementById("tablaInforme").getElementsByTagName("tbody")[0];
@@ -124,6 +292,7 @@
     
         
         mostrarPagina(paginaActual);
+
     </script>
 </body>
 </html>

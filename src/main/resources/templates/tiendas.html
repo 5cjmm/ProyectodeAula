@@ -1,669 +1,255 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Tiendas - ShopMaster</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        /* Added complete ShopMaster design system styles */
-        /* ===== CSS CUSTOM PROPERTIES ===== */
-        :root {
-          /* Colors */
-          --color-primary: #2563eb;
-          --color-primary-dark: #1d4ed8;
-          --color-primary-light: #3b82f6;
-          --color-secondary: #64748b;
-          --color-accent: #f59e0b;
-          --color-success: #10b981;
-          --color-warning: #f59e0b;
-          --color-error: #ef4444;
-          
-          /* Neutrals */
-          --color-white: #ffffff;
-          --color-gray-50: #f8fafc;
-          --color-gray-100: #f1f5f9;
-          --color-gray-200: #e2e8f0;
-          --color-gray-300: #cbd5e1;
-          --color-gray-400: #94a3b8;
-          --color-gray-500: #64748b;
-          --color-gray-600: #475569;
-          --color-gray-700: #334155;
-          --color-gray-800: #1e293b;
-          --color-gray-900: #0f172a;
-          
-          /* Typography */
-          --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          --font-size-xs: 0.75rem;
-          --font-size-sm: 0.875rem;
-          --font-size-base: 1rem;
-          --font-size-lg: 1.125rem;
-          --font-size-xl: 1.25rem;
-          --font-size-2xl: 1.5rem;
-          --font-size-3xl: 1.875rem;
-          --font-size-4xl: 2.25rem;
-          
-          /* Spacing */
-          --spacing-xs: 0.25rem;
-          --spacing-sm: 0.5rem;
-          --spacing-md: 1rem;
-          --spacing-lg: 1.5rem;
-          --spacing-xl: 2rem;
-          --spacing-2xl: 3rem;
-          
-          /* Shadows */
-          --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-          --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-          --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-          --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-          
-          /* Border radius */
-          --radius-sm: 0.25rem;
-          --radius-md: 0.375rem;
-          --radius-lg: 0.5rem;
-          --radius-xl: 0.75rem;
-          --radius-2xl: 1rem;
-          --radius-full: 9999px;
-          
-          /* Transitions */
-          --transition-fast: 150ms ease-in-out;
-          --transition-normal: 250ms ease-in-out;
-          --transition-slow: 350ms ease-in-out;
-        }
-
-        /* ===== BASE STYLES ===== */
-        * {
-          box-sizing: border-box;
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
-
-        body {
-          font-family: var(--font-family-base);
-          line-height: 1.6;
-          color: var(--color-gray-900);
-          background: var(--color-gray-50);
-          min-height: 100vh;
-          margin: 0;
-          padding: 0;
-        }
-
-        /* ===== HEADER STYLES ===== */
-        .header {
-          position: sticky;
-          top: 0;
-          z-index: 50;
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.95);
-          border-bottom: 1px solid var(--color-gray-200);
-          box-shadow: var(--shadow-sm);
-        }
-
-        .nav {
-          padding: 0;
-        }
-
-        .nav-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 1rem 1.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .nav-logo {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          font-size: var(--font-size-xl);
-          font-weight: 700;
-          color: var(--color-primary);
-          text-decoration: none;
-          transition: transform var(--transition-fast);
-        }
-
-        .nav-logo:hover {
-          transform: scale(1.05);
-        }
-
-        .logo-icon {
-          font-size: 1.5rem;
-        }
-
-        .nav-links {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
-        }
-
-        .nav-link {
-          font-weight: 500;
-          color: var(--color-gray-700);
-          text-decoration: none;
-          padding: 0.5rem 0;
-          transition: color var(--transition-fast);
-        }
-
-        .nav-link:hover {
-          color: var(--color-primary);
-        }
-
-        /* ===== BUTTON STYLES ===== */
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.5rem;
-          font-weight: 600;
-          text-decoration: none;
-          border-radius: var(--radius-lg);
-          border: 2px solid transparent;
-          cursor: pointer;
-          transition: all var(--transition-fast);
-          font-size: var(--font-size-base);
-          line-height: 1;
-          font-family: inherit;
-        }
-
-        .btn:focus {
-          outline: 2px solid var(--color-primary);
-          outline-offset: 2px;
-        }
-
-        .btn-primary {
-          background: var(--color-primary);
-          color: white;
-        }
-
-        .btn-primary:hover {
-          background: var(--color-primary-dark);
-          transform: translateY(-1px);
-          box-shadow: var(--shadow-lg);
-        }
-
-        .btn-primary:disabled {
-          background: var(--color-gray-400);
-          cursor: not-allowed;
-          transform: none;
-        }
-
-        .btn-outline {
-          background: transparent;
-          color: var(--color-primary);
-          border-color: var(--color-primary);
-        }
-
-        .btn-outline:hover {
-          background: var(--color-primary);
-          color: white;
-        }
-
-        .btn-sm {
-          padding: 0.5rem 1rem;
-          font-size: var(--font-size-sm);
-        }
-
-        .btn-loading {
-          opacity: 0.7;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-          flex: 1;
-          padding: 2rem 0;
-        }
-
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1.5rem;
-        }
-
-        .page-header {
-          text-align: center;
-          margin-bottom: 3rem;
-        }
-
-        .page-title {
-          font-size: var(--font-size-4xl);
-          font-weight: 800;
-          color: var(--color-gray-900);
-          margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-          font-size: var(--font-size-lg);
-          color: var(--color-gray-600);
-          margin: 0;
-        }
-
-        /* ===== FORM STYLES ===== */
-        .form-card {
-          background: white;
-          border-radius: var(--radius-2xl);
-          padding: 2rem;
-          box-shadow: var(--shadow-lg);
-          border: 1px solid var(--color-gray-200);
-          margin-bottom: 2rem;
-        }
-
-        .form-card-header {
-          text-align: center;
-          margin-bottom: 2rem;
-        }
-
-        .form-card-title {
-          font-size: var(--font-size-2xl);
-          font-weight: 700;
-          color: var(--color-gray-900);
-          margin-bottom: 0.5rem;
-        }
-
-        .form-card-subtitle {
-          color: var(--color-gray-600);
-          margin: 0;
-        }
-
-        .form {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .form-row {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.5rem;
-        }
-
-        @media (min-width: 768px) {
-          .form-row {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .form-label {
-          font-weight: 600;
-          color: var(--color-gray-700);
-          font-size: var(--font-size-sm);
-        }
-
-        .form-input,
-        .form-select {
-          padding: 0.75rem 1rem;
-          border: 2px solid var(--color-gray-200);
-          border-radius: var(--radius-lg);
-          font-size: var(--font-size-base);
-          transition: all var(--transition-fast);
-          font-family: inherit;
-        }
-
-        .form-input:focus,
-        .form-select:focus {
-          outline: none;
-          border-color: var(--color-primary);
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-input::placeholder {
-          color: var(--color-gray-400);
-        }
-
-        /* ===== TIENDAS GRID ===== */
-        .tiendas-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.5rem;
-          margin-bottom: 3rem;
-        }
-
-        @media (min-width: 640px) {
-          .tiendas-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .tiendas-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        .tienda-card {
-          background: white;
-          border-radius: var(--radius-2xl);
-          padding: 1.5rem;
-          box-shadow: var(--shadow-md);
-          border: 1px solid var(--color-gray-200);
-          transition: all var(--transition-normal);
-        }
-
-        .tienda-card:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-xl);
-          border-color: var(--color-primary);
-        }
-
-        .tienda-card-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 1rem;
-        }
-
-        .tienda-card-title {
-          font-size: var(--font-size-xl);
-          font-weight: 700;
-          color: var(--color-gray-900);
-          margin: 0;
-        }
-
-        .tienda-badge {
-          padding: 0.25rem 0.75rem;
-          border-radius: var(--radius-full);
-          font-size: var(--font-size-xs);
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-
-        .tienda-badge-tienda {
-          background-color: #dbeafe;
-          color: #1e40af;
-        }
-
-        .tienda-badge-papeleria {
-          background-color: #dcfce7;
-          color: #166534;
-        }
-
-        .tienda-card-content {
-          margin-bottom: 1.5rem;
-        }
-
-        .tienda-info {
-          margin: 0.75rem 0;
-          color: var(--color-gray-600);
-          font-size: var(--font-size-sm);
-          line-height: 1.5;
-        }
-
-        .tienda-info strong {
-          color: var(--color-gray-800);
-          font-weight: 600;
-        }
-
-        .tienda-card-actions {
-          display: flex;
-          gap: 0.75rem;
-          flex-wrap: wrap;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-          background: var(--color-gray-900);
-          color: white;
-          padding: 2rem 0;
-          margin-top: 4rem;
-        }
-
-        .footer-content {
-          text-align: center;
-        }
-
-        .footer-content p {
-          margin: 0;
-          color: var(--color-gray-400);
-          font-size: var(--font-size-sm);
-        }
-
-        /* ===== NOTIFICATIONS ===== */
-        .notification {
-          position: fixed;
-          top: 1rem;
-          right: 1rem;
-          padding: 1rem 1.5rem;
-          border-radius: var(--radius-lg);
-          color: white;
-          font-weight: 600;
-          z-index: 1000;
-          animation: slideIn 0.3s ease;
-          box-shadow: var(--shadow-xl);
-        }
-
-        .notification-success {
-          background: var(--color-success);
-        }
-
-        .notification-error {
-          background: var(--color-error);
-        }
-
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-          text-align: center;
-          padding: 3rem 1rem;
-          color: var(--color-gray-500);
-        }
-
-        .empty-state-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
-        }
-
-        .empty-state-title {
-          font-size: var(--font-size-xl);
-          font-weight: 600;
-          color: var(--color-gray-700);
-          margin-bottom: 0.5rem;
-        }
-
-        .empty-state-description {
-          font-size: var(--font-size-base);
-          margin: 0;
-        }
-
-        /* ===== RESPONSIVE UTILITIES ===== */
-        @media (max-width: 767px) {
-          .nav-links {
-            gap: 1rem;
-          }
-          
-          .page-title {
-            font-size: var(--font-size-3xl);
-          }
-          
-          .form-card {
-            padding: 1.5rem;
-          }
-        }
-    </style>
+    <title>ShopMaster - Mis Tiendas</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Updated header structure to match ShopMaster design -->
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <a href="/" class="nav-logo">
-                    <span class="logo-icon">🛍️</span>
-                    ShopMaster
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+       
+        <!-- Sidebar -->
+       <!-- <aside class="w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold">ShopMaster</h2>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
                 </a>
-                <div class="nav-links">
-                   <!-- <a href="/dashboard" class="nav-link">Dashboard</a> --> 
-                    <a href="/logout" class="btn btn-outline">Cerrar Sesión</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+            </nav>
+        </aside> -->
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Gestion de Tiendas</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+                    </div>
                 </div>
+            </header>
+
+           <body class="min-h-screen bg-gray-50">
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Page Title -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Mis Tiendas</h1>
+            <p class="text-lg text-gray-600">Gestiona todas tus tiendas desde un solo lugar</p>
+        </div>
+
+        <!-- Create Store Form -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-6">
+                <h2 class="text-2xl font-bold text-white mb-2">Crear Nueva Tienda</h2>
+                <p class="text-blue-100">Agrega una nueva tienda a tu red de negocios</p>
             </div>
-        </nav>
-    </header>
 
-    <!-- Enhanced main content structure -->
-    <main class="main-content">
-        <div class="container">
-            <div class="page-header">
-                <h1 class="page-title">Mis Tiendas</h1>
-                <p class="page-subtitle">Gestiona todas tus tiendas desde un solo lugar</p>
-            </div>
-
-            <!-- Improved tiendas grid with better responsive design -->
-            <div class="tiendas-grid" id="listaTiendas">
-                <!-- Las tiendas se cargarán aquí dinámicamente -->
-            </div>
-
-            <!-- Enhanced form card design -->
-            <div class="form-card">
-                <div class="form-card-header">
-                    <h2 class="form-card-title">Crear Nueva Tienda</h2>
-                    <p class="form-card-subtitle">Agrega una nueva tienda a tu red de negocios</p>
-                </div>
-
-                <form id="formTienda" class="form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombre" class="form-label">Nombre de la tienda</label>
-                            <input type="text" id="nombre" class="form-input" placeholder="Ej: Mi Tienda Principal" required>
+            
+            <div class="p-8">
+                <form id="formTienda" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Store Name -->
+                        <div class="space-y-2">
+                            <label for="nombre" class="block text-sm font-semibold text-gray-700">
+                                Nombre de la tienda
+                            </label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <input 
+                                    type="text" 
+                                    id="nombre"
+                                    placeholder="Ej: Mi Tienda Principal"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                                >
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" id="direccion" class="form-input" placeholder="Ej: Calle 123 #45-67" required>
+
+                        <!-- Address -->
+                        <div class="space-y-2">
+                            <label for="direccion" class="block text-sm font-semibold text-gray-700">
+                                Dirección
+                            </label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <input 
+                                    type="text" 
+                                    id="direccion"
+                                    placeholder="Ej: Calle 123 #45-67"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                                >
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nit" class="form-label">NIT</label>
-                            <input type="text" id="nit" class="form-input" placeholder="Ej: 123456789-0" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- NIT -->
+                        <div class="space-y-2">
+                            <label for="nit" class="block text-sm font-semibold text-gray-700">
+                                NIT
+                            </label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <input 
+                                    type="text" 
+                                    id="nit"
+                                    placeholder="Ej: 123456789-0"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                                >
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tipo" class="form-label">Tipo de negocio</label>
-                            <select id="tipo" class="form-select" required>
-                                <option value="">Seleccione el tipo...</option>
-                                <option value="TIENDA">Tienda</option>
-                                <option value="PAPELERIA">Papelería</option>
-                            </select>
+
+                        <!-- Business Type -->
+                        <div class="space-y-2">
+                            <label for="tipo" class="block text-sm font-semibold text-gray-700">
+                                Tipo de negocio
+                            </label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <select 
+                                    id="tipo"
+                                    class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors appearance-none bg-white"
+                                >
+                                    <option value="">Seleccione el tipo...</option>
+                                    <option value="SUPERMERCADO">Supermercado</option>
+                                    <option value="TIENDA">Tienda de Barrio</option>
+                                    <option value="MINIMERCADO">Minimercado</option>
+                                    <option value="FARMACIA">Farmacia</option>
+                                    <option value="PANADERIA">Panadería</option>
+                                    <option value="CARNICERIA">Carnicería</option>
+                                    <option value="FRUTERIA">Frutería</option>
+                                    <option value="OTRO">Otro</option>
+                                </select>
+                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        <span class="btn-text">Crear Tienda</span>
-                        <span class="btn-loading" style="display: none;">Creando...</span>
-                    </button>
+                    <!-- Submit Button -->
+                    <div class="pt-6">
+                        <button 
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center space-x-2"
+                        >
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <span>Crear Tienda</span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
-    </main>
 
-    <!-- Updated footer design -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
+        <div class="mt-12 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gray-50 px-8 py-4 border-b border-gray-200 flex items-center space-x-2">
+                <svg class="h-5 w-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                </path>
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-900">Tiendas Registradas</h3>
+            </div>
+
+ 
+            <div id="listaTiendas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 transition-all">
+            </div>
+
+            <div id="emptyState" class="p-12 text-center text-gray-500 hidden">
+                <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                <p class="text-lg">No tienes tiendas registradas aún</p>
+                <p class="text-gray-400 text-sm mt-2">Crea tu primera tienda usando el formulario de arriba</p>
             </div>
         </div>
-    </footer>
 
-    <script th:src="@{/js/main.js}"></script>
-    <script>
-        // 🚀 Cargar tiendas al iniciar (AJAX mantenido intacto)
-        async function cargarTiendas() {
-            try {
-                let response = await fetch("/api/tiendas");
-                let tiendas = await response.json();
+    </div>
+    
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("formTienda");
+    const lista = document.getElementById("listaTiendas");
+    const emptyState = document.getElementById("emptyState");
 
-                let lista = document.getElementById("listaTiendas");
-                lista.innerHTML = "";
-
-                if (tiendas.length === 0) {
-                    lista.innerHTML = `
-                        <div class="empty-state" style="grid-column: 1 / -1;">
-                            <div class="empty-state-icon">🏪</div>
-                            <h3 class="empty-state-title">No tienes tiendas registradas</h3>
-                            <p class="empty-state-description">Crea tu primera tienda usando el formulario de abajo</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                tiendas.forEach(t => {
-                    let card = document.createElement("div");
-                    card.className = "tienda-card";
-
-                    card.innerHTML = `
-                        <div class="tienda-card-header">
-                            <h3 class="tienda-card-title">${t.nombre}</h3>
-                            <span class="tienda-badge tienda-badge-${t.tipo.toLowerCase()}">${t.tipo}</span>
-                        </div>
-                        <div class="tienda-card-content">
-                            <p class="tienda-info"><strong>Dirección:</strong> ${t.direccion}</p>
-                            <p class="tienda-info"><strong>NIT:</strong> ${t.nit}</p>
-                        </div>
-                        <div class="tienda-card-actions">
-                            <a href="/admin/tiendas/${t.id}/dashboard" class="btn btn-outline btn-sm">
-                                📦 Ver Dashboard
-                            </a>
-                        </div>
-                    `;
-
-                    lista.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Error cargando tiendas:', error);
-                showNotification('Error al cargar las tiendas', 'error');
-            }
-        }
-
-        // 🚀 Crear nueva tienda con AJAX (funcionalidad mantenida intacta)
-        
-    // 🚀 Crear nueva tienda con AJAX
-    document.getElementById("formTienda").addEventListener("submit", async function(e) {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const submitBtn = this.querySelector('button[type="submit"]');
+        const submitBtn = form.querySelector('button[type="submit"]');
         const btnText = submitBtn.querySelector('.btn-text');
         const btnLoading = submitBtn.querySelector('.btn-loading');
-        
-        submitBtn.disabled = true;
-        submitBtn.classList.add('btn-loading');
-        btnText.style.display = 'none';
-        btnLoading.style.display = 'inline';
 
-        let tienda = {
-            nombre: document.getElementById("nombre").value,
-            direccion: document.getElementById("direccion").value,
-            nit: document.getElementById("nit").value,
+        if (btnText && btnLoading) {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+        }
+        submitBtn.disabled = true;
+
+        const tienda = {
+            nombre: document.getElementById("nombre").value.trim(),
+            direccion: document.getElementById("direccion").value.trim(),
+            nit: document.getElementById("nit").value.trim(),
             tipo: document.getElementById("tipo").value
         };
 
         try {
-            let response = await fetch("/api/tiendas", {
+            const resp = await fetch("/api/tiendas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(tienda)
             });
 
-            if (!response.ok) {
-                const msg = await response.text();
-                if (msg.includes("nit")) {
+            const msg = await resp.text();
+
+            if (!resp.ok) {
+                if (msg.toLowerCase().includes("nit")) {
                     showNotification("⚠️ El NIT ya está registrado", "warning");
                 } else {
                     showNotification("❌ Error al guardar: " + msg, "error");
@@ -671,37 +257,92 @@
                 return;
             }
 
-            // ✅ Si fue exitoso
-            document.getElementById("formTienda").reset();
-            cargarTiendas();
-            showNotification('✅ Tienda creada exitosamente', 'success');
+            form.reset();
+            await cargarTiendas();
+            showNotification("✅ Tienda creada exitosamente", "success");
 
         } catch (error) {
-            console.error('Error:', error);
-            showNotification('🌐 Error de conexión', 'error');
+            console.error("Error de conexión:", error);
+            showNotification("🌐 Error de conexión con el servidor", "error");
         } finally {
+            if (btnText && btnLoading) {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
             submitBtn.disabled = false;
-            submitBtn.classList.remove('btn-loading');
-            btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
         }
     });
 
-    // Notificación flotante
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
+    async function cargarTiendas() {
+        try {
+            const resp = await fetch("/api/tiendas");
+            if (!resp.ok) throw new Error("Error al cargar tiendas");
+            const tiendas = await resp.json();
+
+            lista.innerHTML = "";
+
+            if (!Array.isArray(tiendas) || tiendas.length === 0) {
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            tiendas.forEach(t => {
+                const card = document.createElement("div");
+                card.className = "p-5 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition";
+                card.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1">${t.nombre}</h3>
+                    <p class="text-gray-600 text-sm mb-1">📍 ${t.direccion}</p>
+                    <p class="text-gray-600 text-sm mb-1">NIT: ${t.nit}</p>
+                    <p class="text-gray-600 text-sm mb-3">Tipo: ${t.tipo}</p>
+                    <a href="/admin/tiendas/${t.id}/dashboard" 
+                       class="inline-flex items-center text-cyan-600 hover:text-cyan-800 font-medium text-sm">
+                        📦 Ver Dashboard
+                    </a>
+                `;
+                lista.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error(error);
+            showNotification("❌ No se pudieron cargar las tiendas", "error");
+        }
+    }
+
+    function showNotification(msg, type) {
+        const colors = {
+            success: "bg-green-500",
+            error: "bg-red-500",
+            warning: "bg-yellow-500"
+        };
+
+        const notification = document.createElement("div");
+        notification.className = `
+            fixed top-5 right-5 px-5 py-3 rounded-lg text-white shadow-lg 
+            transform transition-all duration-500 opacity-0 translate-y-[-10px] z-50 
+            ${colors[type] || "bg-gray-700"}
+        `;
+        notification.textContent = msg;
+
         document.body.appendChild(notification);
-        
+
+        requestAnimationFrame(() => {
+            notification.classList.remove("opacity-0", "translate-y-[-10px]");
+            notification.classList.add("opacity-100", "translate-y-0");
+        });
+
         setTimeout(() => {
-            notification.remove();
+            notification.classList.remove("opacity-100", "translate-y-0");
+            notification.classList.add("opacity-0", "translate-y-[-10px]");
+            setTimeout(() => notification.remove(), 500);
         }, 3000);
     }
 
-    // 🚀 Ejecutar al cargar la página
     cargarTiendas();
+});
 </script>
+
 
 </body>
 </html>
