@@ -1,706 +1,535 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopMaster - Punto de Venta</title>
-    <meta name="description" content="Sistema de punto de venta para gestionar ventas y productos">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
-    
-    <!-- Stylesheets -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="stylesheet" th:href="@{/css/punto-venta.css}">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShopMaster - Punto de Venta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-50">
 
-<body class="font-inter antialiased bg-gray-50">
-    <!-- Skip to main content -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50">
-        Saltar al contenido principal
-    </a>
-
-    <!-- Header Navigation -->
-    <header class="header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Navegación principal">
-            <div class="navbar-container">
-                <!-- Logo -->
-                <div class="navbar-brand">
-                    <a th:href="@{/}" class="logo-link" aria-label="ShopMaster - Ir al inicio">
-                        <img th:src="@{/images/logo.svg}" 
-                             alt="ShopMaster Logo" 
-                             class="logo-image"
-                             width="120" 
-                             height="40"
-                             onerror="this.src='/images/logo-fallback.png'">
-                    </a>
-                </div>
-
-                <!-- Page Title -->
-                <div class="page-title">
-                    <h1>Punto de Venta</h1>
-                </div>
-
-                <!-- User Menu -->
-                <div class="user-menu-container">
-                    <button id="menu-toggle" 
-                            class="user-menu-btn" 
-                            type="button"
-                            aria-expanded="false" 
-                            aria-controls="user-menu"
-                            aria-label="Abrir menú de usuario">
-                        <svg class="menu-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
-                    </button>
-
-                    <!-- Admin Menu -->
-                    <div sec:authorize="hasAuthority('ROLE_ADMIN')" 
-                         id="user-menu" 
-                         class="user-menu hidden" 
-                         role="menu">
-                        <div class="user-menu-content">
-                            <a th:href="@{/Inicio}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                                </svg>
-                                Inicio
-                            </a>
-                            <a th:href="@{/admin/Dashboard}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
-                                </svg>
-                                Dashboard
-                            </a>
-                            <a th:href="@{/admin/InformeVentas}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                                </svg>
-                                Informe de Ventas
-                            </a>
-                            <a th:href="@{/admin/Inventario}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                                </svg>
-                                Inventario
-                            </a>
-                            <a th:href="@{/admin/Registro}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                                </svg>
-                                Gestión de Usuarios
-                            </a>
-                            <a th:href="@{/admin/RegistroProveedor}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m6.75 4.5v-3a1.5 1.5 0 011.5-1.5h3a1.5 1.5 0 011.5 1.5v3M6.75 21h4.5a1.5 1.5 0 001.5-1.5v-3a1.5 1.5 0 00-1.5-1.5h-4.5a1.5 1.5 0 00-1.5 1.5v3a1.5 1.5 0 001.5 1.5z" />
-                                </svg>
-                                Proveedores
-                            </a>
-                            <a th:href="@{/deudas}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Gestión de Deudas
-                            </a>
-                            <div class="menu-divider"></div>
-                            <a href="/logout" class="menu-item menu-item-danger" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                </svg>
-                                Cerrar Sesión
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Tendero Menu -->
-                    <div sec:authorize="hasAuthority('ROLE_TENDERO')" 
-                         id="user-menu" 
-                         class="user-menu hidden" 
-                         role="menu">
-                        <div class="user-menu-content">
-                            <a th:href="@{/Inicio}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                                </svg>
-                                Inicio
-                            </a>
-                            <a th:href="@{/deudas}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Gestión de Deudas
-                            </a>
-                            <a th:href="@{/admin/Inventario}" class="menu-item" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                                </svg>
-                                Inventario
-                            </a>
-                            <a th:href="@{/tendero/PuntoVenta}" class="menu-item menu-item-active" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                </svg>
-                                Punto de Venta
-                            </a>
-                            <div class="menu-divider"></div>
-                            <a href="/logout" class="menu-item menu-item-danger" role="menuitem">
-                                <svg class="menu-icon-small" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                </svg>
-                                Cerrar Sesión
-                            </a>
-                        </div>
-                    </div>
-                </div>
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+      <div class="flex flex-col items-center mb-10">
+              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+                <img 
+                  th:src="@{/images/logo.png}" 
+                  alt="ShopMaster" 
+                  class="h-28 w-auto object-contain drop-shadow-md"
+                >
+              </div>
             </div>
-        </nav>
-    </header>
 
-    <!-- Main Content -->
-    <main id="main-content" class="main-content" role="main">
-        <div class="pos-container">
-            <!-- Add Product Section -->
-            <section class="pos-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <svg class="section-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Agregar Producto
-                    </h2>
-                </div>
-
-                <!-- Converted form to AJAX -->
-                <form id="formAgregarProducto" class="product-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombreProducto" class="form-label">
-                                <svg class="label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"></path>
-                                </svg>
-                                Nombre del Producto
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="text" 
-                                       id="nombreProducto" 
-                                       name="nombreProducto" 
-                                       placeholder="Buscar producto..."
-                                       list="productos" 
-                                       onchange="actualizarPrecio()" 
-                                       class="form-input"
-                                       required
-                                       autocomplete="off">
-                                <datalist id="productos">
-                                    <!-- Productos cargados via AJAX -->
-                                </datalist>
-                            </div>
-                            <div id="precioDisplay" class="price-display">Precio: Selecciona un producto</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="cantidad" class="form-label">
-                                <svg class="label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
-                                </svg>
-                                Cantidad
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" 
-                                       id="cantidad"
-                                       name="cantidad" 
-                                       placeholder="1"
-                                       min="1" 
-                                       required
-                                       class="form-input">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-add">
-                                <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Agregar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Products Table Section -->
-            <section class="pos-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <svg class="section-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                        </svg>
-                        Productos Seleccionados
-                    </h2>
-                </div>
-
-                <div class="table-container">
-                    <!-- Table now populated via AJAX -->
-                    <table class="products-table">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unit.</th>
-                                <th>Subtotal</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaProductosSeleccionados">
-                            <tr class="empty-row">
-                                <td colspan="6" class="empty-cell">
-                                    <div class="empty-state">
-                                        <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                        </svg>
-                                        <p>No hay productos seleccionados</p>
-                                        <span>Agrega productos para comenzar la venta</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Total and Actions Section -->
-            <section class="pos-section">
-                <div class="total-section">
-                    <div class="total-display">
-                        <span class="total-label">Total de la Venta:</span>
-                        <!-- Total updated via AJAX -->
-                        <span class="total-amount" id="totalVenta">$0</span>
-                    </div>
-
-                    <div class="action-buttons">
-                        <!-- Converted buttons to AJAX -->
-                        <button type="button" 
-                                id="btnFinalizarVenta"
-                                class="btn btn-success btn-lg"
-                                disabled>
-                            <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Finalizar Venta
-                        </button>
-
-                        <button onclick="abrirModalDeuda()" 
-                                type="button" 
-                                id="btnRegistrarDeuda"
-                                class="btn btn-warning btn-lg"
-                                disabled>
-                            <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Registrar como Deuda
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Messages Section -->
-            <!-- Messages now shown via AJAX alerts -->
-            <div id="alertContainer" class="hidden"></div>
-        </div>
-    </main>
-
-    <!-- Modal: Registrar Deuda -->
-    <div id="modalDeuda" class="modal-overlay hidden" role="dialog" aria-labelledby="modal-title" aria-modal="true">
-        <div class="modal-container">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modal-title" class="modal-title">
-                        <svg class="modal-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Registrar Deuda
-                    </h2>
-                    <button onclick="cerrarModalDeuda()" 
-                            class="modal-close-btn"
-                            aria-label="Cerrar modal">
-                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Converted form to AJAX -->
-                <form id="formRegistrarDeuda" class="modal-form">
-                    <div class="form-group">
-                        <label for="cedulaCliente" class="form-label">
-                            <svg class="label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                            </svg>
-                            Cédula del Cliente
-                        </label>
-                        <input type="text" 
-                               id="cedulaCliente"
-                               name="cedulaCliente" 
-                               placeholder="Ingresa la cédula del cliente"
-                               class="form-input" 
-                               required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nombreCliente" class="form-label">
-                            <svg class="label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            Nombre del Cliente
-                        </label>
-                        <input type="text" 
-                               id="nombreCliente"
-                               name="nombreCliente" 
-                               placeholder="Ingresa el nombre del cliente"
-                               class="form-input" 
-                               required>
-                    </div>
-
-                    <div class="modal-actions">
-                        <button type="button" 
-                                onclick="cerrarModalDeuda()" 
-                                class="btn btn-ghost">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Guardar Deuda
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script th:src="@{/js/main.js}" defer></script>
-    <script th:src="@{/js/punto-venta.js}" defer></script>
-    <!-- Added new AJAX script for punto de venta -->
-    <script>
-        let tiendaId = null;
-        let productosSeleccionados = [];
-        let todosProductos = [];
-
-        // Inicializar aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            obtenerTiendaId();
-            cargarProductos();
-            configurarEventos();
-        });
-
-        async function obtenerTiendaId() {
-            try {
-                const response = await fetch('/api/usuario/tienda');
-                if (response.ok) {
-                    const data = await response.json();
-                    tiendaId = data.tiendaId;
-                } else {
-                    mostrarAlerta('Error al obtener información de la tienda', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error de conexión', 'error');
-            }
-        }
-
-        async function cargarProductos() {
-            if (!tiendaId) return;
-            
-            try {
-                const response = await fetch(`/api/productos/tienda/${tiendaId}?page=0&size=1000`);
-                if (response.ok) {
-                    const data = await response.json();
-                    todosProductos = data.content || data;
-                    actualizarDatalist();
-                } else {
-                    mostrarAlerta('Error al cargar productos', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error al cargar productos', 'error');
-            }
-        }
-
-        function actualizarDatalist() {
-            const datalist = document.getElementById('productos');
-            datalist.innerHTML = '';
-            
-            todosProductos.forEach(producto => {
-                const option = document.createElement('option');
-                option.value = producto.nombre;
-                option.setAttribute('data-precio', producto.precio);
-                option.setAttribute('data-codigo', producto.codigo);
-                datalist.appendChild(option);
-            });
-        }
-
-        function actualizarPrecio() {
-            const nombreInput = document.getElementById('nombreProducto');
-            const precioDisplay = document.getElementById('precioDisplay');
-            const nombreSeleccionado = nombreInput.value;
-            
-            const producto = todosProductos.find(p => p.nombre === nombreSeleccionado);
-            if (producto) {
-                precioDisplay.textContent = `Precio: $${producto.precio.toLocaleString()}`;
-            } else {
-                precioDisplay.textContent = 'Precio: Selecciona un producto';
-            }
-        }
-
-        function configurarEventos() {
-            // Formulario agregar producto
-            document.getElementById('formAgregarProducto').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                await agregarProducto();
-            });
-
-            // Botón finalizar venta
-            document.getElementById('btnFinalizarVenta').addEventListener('click', async function() {
-                await finalizarVenta();
-            });
-
-            // Formulario registrar deuda
-            document.getElementById('formRegistrarDeuda').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                await registrarDeuda();
-            });
-        }
-
-        async function agregarProducto() {
-            const nombreProducto = document.getElementById('nombreProducto').value;
-            const cantidad = parseInt(document.getElementById('cantidad').value);
-            
-            const producto = todosProductos.find(p => p.nombre === nombreProducto);
-            if (!producto) {
-                mostrarAlerta('Producto no encontrado', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/ventas/agregar-producto', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        codigo: producto.codigo,
-                        nombre: producto.nombre,
-                        precio: producto.precio,
-                        cantidad: cantidad
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    productosSeleccionados = data.productosSeleccionados;
-                    actualizarTablaProductos();
-                    actualizarTotal();
-                    limpiarFormulario();
-                    mostrarAlerta('Producto agregado correctamente', 'success');
-                } else {
-                    const error = await response.text();
-                    mostrarAlerta(error || 'Error al agregar producto', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error de conexión', 'error');
-            }
-        }
-
-        async function eliminarProducto(codigo) {
-            if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
-
-            try {
-                const response = await fetch(`/api/ventas/eliminar-producto/${codigo}`, {
-                    method: 'DELETE'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    productosSeleccionados = data.productosSeleccionados;
-                    actualizarTablaProductos();
-                    actualizarTotal();
-                    mostrarAlerta('Producto eliminado correctamente', 'success');
-                } else {
-                    mostrarAlerta('Error al eliminar producto', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error de conexión', 'error');
-            }
-        }
-
-        async function finalizarVenta() {
-            if (productosSeleccionados.length === 0) {
-                mostrarAlerta('No hay productos seleccionados', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/ventas/finalizar', {
-                    method: 'POST'
-                });
-
-                if (response.ok) {
-                    productosSeleccionados = [];
-                    actualizarTablaProductos();
-                    actualizarTotal();
-                    mostrarAlerta('Venta finalizada correctamente', 'success');
-                } else {
-                    mostrarAlerta('Error al finalizar venta', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error de conexión', 'error');
-            }
-        }
-
-        async function registrarDeuda() {
-            const cedulaCliente = document.getElementById('cedulaCliente').value;
-            const nombreCliente = document.getElementById('nombreCliente').value;
-
-            if (productosSeleccionados.length === 0) {
-                mostrarAlerta('No hay productos seleccionados', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/deudas/registrar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        cedulaCliente: cedulaCliente,
-                        nombreCliente: nombreCliente,
-                        productos: productosSeleccionados
-                    })
-                });
-
-                if (response.ok) {
-                    productosSeleccionados = [];
-                    actualizarTablaProductos();
-                    actualizarTotal();
-                    cerrarModalDeuda();
-                    mostrarAlerta('Deuda registrada correctamente', 'success');
-                } else {
-                    const error = await response.text();
-                    mostrarAlerta(error || 'Error al registrar deuda', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error de conexión', 'error');
-            }
-        }
-
-        function actualizarTablaProductos() {
-            const tbody = document.getElementById('tablaProductosSeleccionados');
-            
-            if (productosSeleccionados.length === 0) {
-                tbody.innerHTML = `
-                    <tr class="empty-row">
-                        <td colspan="6" class="empty-cell">
-                            <div class="empty-state">
-                                <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                </svg>
-                                <p>No hay productos seleccionados</p>
-                                <span>Agrega productos para comenzar la venta</span>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                tbody.innerHTML = productosSeleccionados.map(producto => `
-                    <tr class="table-row">
-                        <td class="table-cell">${producto.codigo}</td>
-                        <td class="table-cell font-medium">${producto.nombre}</td>
-                        <td class="table-cell text-center">${producto.cantidad}</td>
-                        <td class="table-cell text-right">
-                            <span class="price-text">$${producto.precio.toLocaleString()}</span>
-                        </td>
-                        <td class="table-cell text-right font-semibold">
-                            <span class="price-text">$${(producto.cantidad * producto.precio).toLocaleString()}</span>
-                        </td>
-                        <td class="table-cell">
-                            <button onclick="eliminarProducto('${producto.codigo}')"
-                                   class="btn btn-danger btn-sm">
-                                <svg class="btn-icon-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                </svg>
-                                Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Actualizar estado de botones
-            const hayProductos = productosSeleccionados.length > 0;
-            document.getElementById('btnFinalizarVenta').disabled = !hayProductos;
-            document.getElementById('btnRegistrarDeuda').disabled = !hayProductos;
-        }
-
-        function actualizarTotal() {
-            const total = productosSeleccionados.reduce((sum, producto) => 
-                sum + (producto.cantidad * producto.precio), 0
-            );
-            document.getElementById('totalVenta').textContent = `$${total.toLocaleString()}`;
-        }
-
-        function limpiarFormulario() {
-            document.getElementById('nombreProducto').value = '';
-            document.getElementById('cantidad').value = '';
-            document.getElementById('precioDisplay').textContent = 'Precio: Selecciona un producto';
-        }
-
-        function abrirModalDeuda() {
-            if (productosSeleccionados.length === 0) {
-                mostrarAlerta('No hay productos seleccionados', 'error');
-                return;
-            }
-            document.getElementById('modalDeuda').classList.remove('hidden');
-        }
-
-        function cerrarModalDeuda() {
-            document.getElementById('modalDeuda').classList.add('hidden');
-            document.getElementById('formRegistrarDeuda').reset();
-        }
-
-        function mostrarAlerta(mensaje, tipo) {
-            const alertContainer = document.getElementById('alertContainer');
-            const alertClass = tipo === 'success' ? 'alert-success' : 'alert-error';
-            const iconPath = tipo === 'success' 
-                ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-                : 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
-
-            alertContainer.innerHTML = `
-                <div class="alert ${alertClass}" role="alert">
-                    <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${iconPath}"></path>
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}" value="">
+      <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                     </svg>
-                    <span>${mensaje}</span>
+                    Dashboard
+                </a>
+                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Informe de Ventas
+                </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Gestion de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
+                </a>
+            </nav>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+                    </div>
                 </div>
-            `;
-            
-            alertContainer.classList.remove('hidden');
-            
-            setTimeout(() => {
-                alertContainer.classList.add('hidden');
-            }, 5000);
+            </header>
+      <!-- Body -->
+      <main class="w-full max-w-none px-8 py-8">
+        <div class="max-w-[1400px] mx-auto">
+
+          <!-- Top: buscar + acciones -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
+              <div class="flex items-center gap-3">
+                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
+                  class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
+                <button id="refrescarProducts" class="ml-2 px-3 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">Refrescar</button>
+              </div>
+
+              <!-- Productos disponibles -->
+              <div class="mt-4">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 text-sm text-gray-700">
+                      <tr>
+                        <th class="px-4 py-3 text-left">Código</th>
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Stock</th>
+                        <th class="px-4 py-3 text-left">Precio</th>
+                        <th class="px-4 py-3 text-left">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsBody" class="text-sm">
+                      <!-- llenado por JS -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="emptyProducts" class="text-center py-8 text-gray-500 hidden">
+                  <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 10h4l3 10 4-18 3 8h4"></path>
+                  </svg>
+                  No hay productos disponibles.
+                </div>
+              </div>
+            </div>
+
+            <!-- Carrito -->
+            <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+              <h3 class="text-lg font-semibold mb-3">Carrito</h3>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead class="text-sm text-gray-700 bg-gray-50">
+                    <tr>
+                      <th class="px-3 py-2 text-left">Código</th>
+                      <th class="px-3 py-2 text-left">Nombre</th>
+                      <th class="px-3 py-2 text-left">Cant.</th>
+                      <th class="px-3 py-2 text-left">Precio U.</th>
+                      <th class="px-3 py-2 text-left">Subtotal</th>
+                      <th class="px-3 py-2 text-left">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cartBody" class="text-sm">
+                    <!-- filas del carrito -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4 border-t pt-4">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="text-sm text-gray-600">Subtotal</div>
+                  <div id="subtotalDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                  <div class="text-sm text-gray-600">IVA (0%)</div>
+                  <div id="ivaDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="text-sm text-gray-700 font-semibold">Total</div>
+                  <div id="totalDisplay" class="text-2xl font-bold text-cyan-700">COP 0</div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 gap-3">
+                  <button id="btnRegisterSale" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
+                    Registrar Venta
+                  </button>
+                  <button id="btnRegisterDebt" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
+                    Registrar como Deuda
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Historial rapido / últimos items (opcional) -->
+          <div class="bg-white rounded-xl shadow-lg p-4">
+            <h4 class="font-semibold mb-2">Últimas ventas (resumen)</h4>
+            <div id="recentSales" class="text-sm text-gray-600">Cargando...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal deuda -->
+  <div id="modalDebt" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Registrar Deuda</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-sm font-medium">Nombre del cliente</label>
+          <input id="debtNombre" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Cédula / Documento</label>
+          <input id="debtCedula" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Abono inicial (opcional)</label>
+          <input id="debtAbono" type="number" min="0" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="0">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-5">
+        <button id="cancelDebt" class="px-4 py-2 rounded border">Cancelar</button>
+        <button id="confirmDebt" class="px-4 py-2 bg-yellow-500 text-white rounded">Registrar Deuda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+  (function(){
+    // helpers
+    function fmtCOP(n){ return new Intl.NumberFormat('es-CO',{style:'currency', currency:'COP', maximumFractionDigits:0}).format(n); }
+    function showNotification(msg, type='info'){
+      const colors = { success:'bg-green-600', error:'bg-red-600', warning:'bg-yellow-500', info:'bg-blue-600' };
+      const d = document.createElement('div');
+      d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type]||colors.info}`;
+      d.textContent = msg;
+      document.body.appendChild(d);
+      setTimeout(()=> { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(()=> d.remove(),300); }, 3000);
+    }
+
+    // DOM
+    const tiendaId = document.getElementById('tiendaId').value;
+    const productsBody = document.getElementById('productsBody');
+    const emptyProducts = document.getElementById('emptyProducts');
+    const buscar = document.getElementById('buscarProducts');
+    const refrescarBtn = document.getElementById('refrescarProducts');
+
+    const cartBody = document.getElementById('cartBody');
+    const subtotalDisplay = document.getElementById('subtotalDisplay');
+    const totalDisplay = document.getElementById('totalDisplay');
+
+    const btnRegisterSale = document.getElementById('btnRegisterSale');
+    const btnRegisterDebt = document.getElementById('btnRegisterDebt');
+
+    const modalDebt = document.getElementById('modalDebt');
+    const cancelDebt = document.getElementById('cancelDebt');
+    const confirmDebt = document.getElementById('confirmDebt');
+    const debtNombre = document.getElementById('debtNombre');
+    const debtCedula = document.getElementById('debtCedula');
+    const debtAbono = document.getElementById('debtAbono');
+
+    // state
+    let products = []; // productos disponibles
+    let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
+
+    // load products (use large size for POS)
+    async function loadProducts(){
+      try{
+        productsBody.innerHTML = '';
+        const res = await fetch(`/api/productos/tienda/${tiendaId}?page=0&size=1000`);
+        if(!res.ok){
+          const txt = await res.text().catch(()=> 'Error');
+          showNotification('❌ '+txt, 'error');
+          return;
         }
-    </script>
+        const data = await res.json();
+        products = data.content || data || [];
+        if(!products.length){
+          emptyProducts.classList.remove('hidden');
+          return;
+        } else emptyProducts.classList.add('hidden');
+
+        products.forEach(p=>{
+          const tr = document.createElement('tr');
+          tr.className = 'border-b';
+          tr.innerHTML = `
+            <td class="px-4 py-3">${p.codigo}</td>
+            <td class="px-4 py-3">${p.nombre}</td>
+            <td class="px-4 py-3">${p.cantidad}</td>
+            <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
+            <td class="px-4 py-3">
+              <button class="add-to-cart px-3 py-1 bg-cyan-600 text-white rounded" data-id="${p.id}">Añadir</button>
+            </td>`;
+          productsBody.appendChild(tr);
+        });
+      }catch(err){
+        console.error(err);
+        showNotification('❌ Error al cargar productos', 'error');
+      }
+    }
+
+    // search
+    buscar.addEventListener('input', ()=> {
+      const q = buscar.value.trim().toLowerCase();
+      Array.from(productsBody.querySelectorAll('tr')).forEach(row=>{
+        const codigo = row.cells[0].textContent.toLowerCase();
+        const nombre = row.cells[1].textContent.toLowerCase();
+        row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+      });
+    });
+
+    refrescarBtn.addEventListener('click', ()=> loadProducts());
+
+    // add to cart (delegation)
+    productsBody.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button.add-to-cart');
+      if(!btn) return;
+      const id = btn.dataset.id;
+      const prod = products.find(x => x.id === id);
+      if(!prod) return showNotification('Producto no encontrado','error');
+      if(prod.cantidad <= 0) return showNotification('Stock insuficiente','warning');
+
+      const existing = cart.find(c => c.productoId === id);
+      if(existing){
+        if(existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock','warning');
+        existing.cantidad += 1;
+        existing.subtotal = existing.cantidad * existing.precioUnitario;
+      } else {
+        cart.push({
+          productoId: prod.id,
+          codigo: prod.codigo,
+          nombre: prod.nombre,
+          cantidad: 1,
+          precioUnitario: prod.precio,
+          subtotal: prod.precio
+        });
+      }
+      renderCart();
+    });
+
+    // render cart
+    function renderCart(){
+      cartBody.innerHTML = '';
+      if(cart.length === 0){
+        cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+      } else {
+        cart.forEach((c, idx)=>{
+          const tr = document.createElement('tr');
+          tr.className = 'border-b';
+          tr.innerHTML = `
+            <td class="px-3 py-2">${c.codigo}</td>
+            <td class="px-3 py-2">${c.nombre}</td>
+            <td class="px-3 py-2">
+              <input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}">
+            </td>
+            <td class="px-3 py-2">${fmtCOP(c.precioUnitario)}</td>
+            <td class="px-3 py-2 subtotal-cell">${fmtCOP(c.subtotal)}</td>
+            <td class="px-3 py-2">
+              <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
+            </td>`;
+          cartBody.appendChild(tr);
+        });
+      }
+      recalcTotals();
+    }
+
+    // handle cart interactions
+    cartBody.addEventListener('input', (e)=>{
+      const input = e.target.closest('input.cantidad-input');
+      if(!input) return;
+      const idx = Number(input.dataset.idx);
+      const val = Math.max(1, parseInt(input.value || '1'));
+      const item = cart[idx];
+      const prod = products.find(p=>p.id===item.productoId);
+      if(val > prod.cantidad){
+        showNotification('No hay suficiente stock', 'warning');
+        input.value = item.cantidad;
+        return;
+      }
+      item.cantidad = val;
+      item.subtotal = item.cantidad * item.precioUnitario;
+      renderCart();
+    });
+
+    cartBody.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button.remove-item');
+      if(!btn) return;
+      const idx = Number(btn.dataset.idx);
+      cart.splice(idx,1);
+      renderCart();
+    });
+
+    // totals
+    function recalcTotals(){
+      const subtotal = cart.reduce((s,i)=>s + (i.subtotal || 0), 0);
+      const iva = 0; // si luego aplicas IVA, cámbialo
+      const total = subtotal + iva;
+      subtotalDisplay.textContent = fmtCOP(subtotal);
+      document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
+      totalDisplay.textContent = fmtCOP(total);
+    }
+
+    // prepare payload: map cart -> ProductoVendido
+    function buildProductosVendido(){
+      return cart.map(i => ({
+        productoId: i.productoId,
+        codigo: i.codigo,
+        nombre: i.nombre,
+        cantidad: i.cantidad,
+        precioUnitario: i.precioUnitario,
+        subtotal: i.subtotal
+      }));
+    }
+
+    // register sale
+    btnRegisterSale.addEventListener('click', async ()=>{
+      if(cart.length===0) return showNotification('Carrito vacío','warning');
+
+      const venta = {
+        tiendaId: tiendaId,
+        productos: buildProductosVendido()
+      };
+
+      try{
+        const res = await fetch('/api/ventas/crear', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(venta)
+        });
+        const msg = await res.text();
+        if(!res.ok){
+          showNotification(msg || 'Error al registrar venta','error');
+          return;
+        }
+        showNotification('✅ Venta registrada', 'success');
+        cart = [];
+        renderCart();
+        loadProducts(); // recargar stock
+      }catch(err){
+        console.error(err);
+        showNotification('❌ Error de conexión', 'error');
+      }
+    });
+
+    // register debt (open modal)
+    btnRegisterDebt.addEventListener('click', ()=>{
+      if(cart.length===0) return showNotification('Carrito vacío','warning');
+      debtNombre.value = '';
+      debtCedula.value = '';
+      debtAbono.value = '';
+      modalDebt.classList.remove('hidden');
+      modalDebt.style.display = 'flex';
+    });
+
+    cancelDebt.addEventListener('click', ()=>{
+      modalDebt.classList.add('hidden');
+      modalDebt.style.display = 'none';
+    });
+
+    // confirm debt
+    confirmDebt.addEventListener('click', async ()=>{
+      const nombre = debtNombre.value.trim();
+      const cedula = debtCedula.value.trim();
+      const abono = parseFloat(debtAbono.value || 0);
+
+      if(!nombre || !cedula){ return showNotification('Nombre y cédula requeridos','warning'); }
+
+      const deuda = {
+        tiendaId: tiendaId,
+        nombreCliente: nombre,
+        cedulaCliente: cedula,
+        productos: buildProductosVendido(),
+        total: cart.reduce((s,i)=>s + i.subtotal, 0),
+        totalRestante: cart.reduce((s,i)=>s + i.subtotal, 0)
+      };
+
+      // si hay abono, aplicarlo: push a historialAbonos
+      if(abono > 0){
+        deuda.totalRestante = deuda.total - abono;
+        deuda.historialAbonos = [{ monto: abono, fecha: new Date().toISOString() }];
+      }
+
+      try{
+        const res = await fetch('/api/deudas/crear', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(deuda)
+        });
+        const msg = await res.text();
+        if(!res.ok){
+          showNotification(msg || 'Error al crear deuda','error');
+          return;
+        }
+        showNotification('✅ Deuda registrada', 'success');
+        cart = [];
+        renderCart();
+        modalDebt.classList.add('hidden');
+        modalDebt.style.display = 'none';
+        loadProducts();
+      }catch(err){
+        console.error(err);
+        showNotification('❌ Error de conexión','error');
+      }
+    });
+
+    async function loadRecentSales(){
+      try{
+        const res = await fetch(`/api/ventas/tienda/${tiendaId}?page=0&size=5`);
+        if(!res.ok) return;
+        const data = await res.json();
+        const items = data.content || [];
+        const cont = document.getElementById('recentSales');
+        if(!items.length){ cont.textContent = 'Sin ventas recientes'; return; }
+        cont.innerHTML = items.map(v=>{
+          const t = new Date(v.fecha).toLocaleString();
+          return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(v.total)} <span class="text-xs text-gray-500">(${t})</span></div></div>`;
+        }).join('');
+      }catch(e){ console.warn(e); }
+    }
+
+    function initLinks(){
+      const idEl = document.getElementById('tiendaId');
+      const tid = idEl ? idEl.value : null;
+      if(!tid) return;
+      document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
+      document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
+      document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
+      document.getElementById("linkDeudas").href = `/admin/tiendas/${tid}/deudas`;
+      document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tid}/puntoventa`;
+      document.getElementById("linkInforme").href = `/admin/tiendas/${tid}/informe`;
+      document.getElementById("linkTendero").href = `/admin/tiendas/${tid}/tendero`;
+      document.getElementById("linkTiendas").href = `/admin/tiendas`;
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      loadProducts();
+      renderCart();
+      loadRecentSales();
+      initLinks();
+    });
+
+  })();
+  </script>
 </body>
 </html>

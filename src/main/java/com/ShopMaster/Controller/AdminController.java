@@ -1,4 +1,4 @@
-package com.ShopMaster.Controller;
+/*package com.ShopMaster.Controller;
 import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -72,7 +72,7 @@ private ProductoRepositoryCustom productoRepositoryCustom;
 
     
 
-  /*   @GetMapping("/Inventario")
+   @GetMapping("/Inventario")
     public String listar(Model model) {
         List<ProductoConProveedores> productos = productoRepositoryCustom.obtenerProductosConProveedores();
         model.addAttribute("productos", productos);
@@ -103,7 +103,7 @@ private ProductoRepositoryCustom productoRepositoryCustom;
         model.addAttribute("usuarios", usuarioService.obtenerTodosLosUsuarios());
         model.addAttribute("usuario", new Usuario()); 
         return "RegistroTendero";  
-    } */
+    } 
 
     @GetMapping("/pdf")
 public void generarPDF(
@@ -163,7 +163,7 @@ public void generarPDF(
             int totalCantidad = 0;
             double totalMonto = 0;
             
-          /*   for (Venta venta : ventas) {
+            for (Venta venta : ventas) {
                 List<ProductoVendido> productos = venta.getProductos(); // Asegúrate de tener el getter correcto
                 
                 for (ProductoVendido producto : productos) {
@@ -177,8 +177,8 @@ public void generarPDF(
                     totalCantidad += producto.getCantidad();
                     totalMonto += totalProducto;
                 }
-            }*/
-            
+            }
+        
             document.add(new Paragraph("\n"));
             Paragraph resumenTitulo = new Paragraph("Resumen de Ventas", encabezadoFont);
             resumenTitulo.setSpacingBefore(10f);
@@ -223,8 +223,8 @@ public void generarPDF(
         long count = counterService.getCurrentCount();
         return Map.of("count", count);
     }
-
-   /* @GetMapping("/InformeVentas/filtrar")
+ 
+    @GetMapping("/InformeVentas/filtrar")
     public String filtrarPorFecha(@RequestParam("fecha") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha, Model model) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha);
@@ -240,8 +240,9 @@ public void generarPDF(
         List<Venta> ventas = ventaRepository.findByFechaBetween(inicio, fin);
         model.addAttribute("ventas", ventas);
         model.addAttribute("filtroFecha", fecha);
-        return "InformeVentas";*/
+        return "InformeVentas";
 
     }
 
     
+*/
