@@ -6,27 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ShopMaster.Model.Usuario;
-
-import jakarta.servlet.http.HttpSession;
-
 @Controller
-@RequestMapping("/admin/tiendas")
-public class TiendaViewController {
-
-    @GetMapping
-    public String showTiendasPage(HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        model.addAttribute("usuario", usuario); // se pasa a tiendas.html
-        return "tiendas"; // busca templates/tiendas.html
-    }
-
-    @GetMapping("/{id}/dashboard")
-    public String verDashboard(@PathVariable String id, Model model) {
-        model.addAttribute("tiendaId", id);
-        return "Dashboard";
-    }
-
+@RequestMapping("/tendero/tiendas")
+public class TenderoViewController {
     @GetMapping("/{id}/inventario")
     public String verInventario(@PathVariable String id, Model model) {
         model.addAttribute("tiendaId", id); // se pasa a Inventario.html
@@ -49,18 +31,5 @@ public class TiendaViewController {
     public String verPuntoVenta(@PathVariable String id, Model model) {
         model.addAttribute("tiendaId", id); // se pasa a PuntoVenta.html
         return "PuntoVenta"; // templates/PuntoVenta.html
-    }
-
-    @GetMapping("/{id}/informe")
-    public String verInforme(@PathVariable String id, Model model) {
-        model.addAttribute("tiendaId", id); // se pasa a Informe.html
-        return "InformeVentas"; // templates/Informe.html
-    }
-
-    @GetMapping("/{id}/tendero")
-    public String verTendero(@PathVariable String id, Model model) {
-        model.addAttribute("tiendaId", id); // se pasa a Tendero.html
-        return "RegistroTendero"; // templates/Tendero.html
-
     }
 }

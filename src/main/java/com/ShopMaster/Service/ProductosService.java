@@ -40,17 +40,29 @@ public class ProductosService {
 
     // Actualizar producto asegurando que pertenece a la tienda
     public Productos actualizarProducto(String id, Productos producto) {
-        Productos existente = productosRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    Productos existente = productosRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        if (productosRepository.existsByCodigoAndTiendaIdAndIdNot(producto.getCodigo(), producto.getTiendaId(), producto.getId())) {
-            throw new RuntimeException("El Código ya está en uso por otro producto en esta tienda");
-        }
+    // 🧩 Validar código duplicado solo si pertenece a otro producto en la misma tienda
+    boolean codigoDuplicado = productosRepository
+        .existsByCodigoAndTiendaIdAndIdNot(producto.getCodigo(), existente.getTiendaId(), id);
 
-        producto.setId(id);
-        producto.setTiendaId(existente.getTiendaId());
-        return productosRepository.save(producto);
+    if (codigoDuplicado) {
+        throw new RuntimeException("El código ya está registrado 🚫");
     }
+
+    // 🧠 Mantener la tienda original
+    producto.setId(id);
+    producto.setTiendaId(existente.getTiendaId());
+
+    // 🧩 Si no se envían proveedores nuevos, mantener los actuales
+    if (producto.getProveedorIds() == null || producto.getProveedorIds().isEmpty()) {
+        producto.setProveedorIds(existente.getProveedorIds());
+    }
+
+    return productosRepository.save(producto);
+}
+
 
     // Eliminar producto asegurando que pertenece a la tienda
     public void eliminarProducto(String id, String tiendaId) {

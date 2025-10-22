@@ -2,9 +2,16 @@
 <html lang="es">
 
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestión de Usuarios</title>
+=======
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShopMaster - Gestión de Tenderos</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+>>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -59,6 +66,7 @@
     }
   </style>
 </head>
+<<<<<<< HEAD
 
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
   <div id="modal-background"
@@ -334,6 +342,370 @@
       document.getElementById('modal-background').classList.add('hidden');
       document.getElementById('formulario-modal').classList.add('hidden');
     }
+=======
+<body class="bg-gray-50">
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar (mantén tu sidebar real; aquí está reducido para demo) -->
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex flex-col items-center mb-10">
+              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+                <img 
+                  th:src="@{/images/logo.png}" 
+                  alt="ShopMaster" 
+                  class="h-28 w-auto object-contain drop-shadow-md"
+                >
+              </div>
+            </div>
+
+            
+            <input type="hidden" id="tiendaId" th:value="${tiendaId}" >
+            <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Informe de Ventas
+                </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Gestion de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
+                </a>
+                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Cerrar sesión
+                </a>
+                
+
+            </nav>
+        </aside>
+
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Gestion de Tenderos</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+                    </div>
+                </div>
+            </header>
+
+      <main class="w-full max-w-none px-8 py-8">
+        <div class="max-w-[1200px] mx-auto space-y-6">
+
+          <!-- Formulario Crear / Editar -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <h2 class="text-lg font-semibold mb-4">Registrar / Editar Tendero</h2>
+
+            <form id="formTendero" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input id="username" name="username" type="text" required
+                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input id="email" name="email" type="email" required
+                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input id="password" name="password" type="password" placeholder="Mínimo 6 caracteres"
+                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+                <p class="text-xs text-gray-400 mt-1">Si editas y dejas en blanco, la contraseña no cambiará.</p>
+              </div>
+
+              <div class="md:col-span-2 flex gap-3 justify-end mt-2">
+                <button type="reset" id="btnReset" class="px-4 py-2 rounded border">Limpiar</button>
+                <button type="submit" id="btnSave" class="px-4 py-2 bg-cyan-600 text-white rounded">Guardar Tendero</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tabla y buscador -->
+          <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold">Tenderos de la tienda</h3>
+              <div class="flex items-center gap-3">
+                <input id="buscar" type="text" placeholder="Buscar por nombre o username"
+                       class="px-3 py-2 border rounded-md" />
+                <button id="btnRefresh" class="px-3 py-2 bg-gray-100 rounded-md">Refrescar</button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table id="tablaTenderos" class="min-w-full text-sm">
+                <thead class="bg-gray-100 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-2 text-left">Nombre</th>
+                    <th class="px-4 py-2 text-left">Email</th>
+                    <th class="px-4 py-2 text-left">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- contenido por JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div id="emptyTenderos" class="text-center py-8 text-gray-500 hidden">
+              No hay tenderos registrados para esta tienda.
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    // helpers
+    function showNotification(msg, type='info'){
+      const colors = { success:'bg-green-600', error:'bg-red-600', warning:'bg-yellow-500', info:'bg-blue-600' };
+      const d = document.createElement('div');
+      d.className = `fixed top-5 right-5 px-4 py-2 rounded text-white z-50 ${colors[type]||colors.info}`;
+      d.textContent = msg;
+      document.body.appendChild(d);
+      setTimeout(()=> { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(()=> d.remove(),300); }, 3000);
+    }
+
+    // DOM
+    const tiendaIdEl = document.getElementById('tiendaId');
+    const tiendaId = tiendaIdEl ? tiendaIdEl.value : null;
+    const tablaBody = document.querySelector('#tablaTenderos tbody');
+    const emptyEl = document.getElementById('emptyTenderos');
+    const buscarInput = document.getElementById('buscar');
+    const btnRefresh = document.getElementById('btnRefresh');
+
+    const form = document.getElementById('formTendero');
+    const usernameEl = document.getElementById('username');
+    const emailEl = document.getElementById('email');
+    const passwordEl = document.getElementById('password');
+    const btnReset = document.getElementById('btnReset');
+    const btnSave = document.getElementById('btnSave');
+
+    let tenderos = []; // listado en memoria
+    let editId = null;  // si estamos editando
+
+    if(!tiendaId){
+      console.error('tiendaId no encontrado en DOM (#tiendaId)');
+      showNotification('⚠️ tiendaId no encontrado. Algunas funciones no estarán disponibles', 'warning');
+    }
+
+    // cargar tenderos
+    async function cargarTenderos(){
+      try{
+        tablaBody.innerHTML = '';
+        if(!tiendaId) return;
+        const res = await fetch(`/api/tenderos/tienda/${tiendaId}`);
+        if(!res.ok){
+          const txt = await res.text().catch(()=> 'Error al obtener tenderos');
+          showNotification(txt, 'error');
+          return;
+        }
+        tenderos = await res.json();
+        if(!Array.isArray(tenderos) || tenderos.length === 0){
+          emptyEl.classList.remove('hidden');
+          return;
+        } else emptyEl.classList.add('hidden');
+
+        tenderos.forEach(t => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b';
+          tr.innerHTML = `
+            <td class="px-4 py-3">${escapeHtml(t.username || '')}</td>
+            <td class="px-4 py-3">${escapeHtml(t.email || '')}</td>
+            <td class="px-4 py-3">
+              <button class="btn-edit px-3 py-1 bg-yellow-400 text-white rounded mr-2" data-id="${t.id}">Editar</button>
+              <button class="btn-delete px-3 py-1 bg-red-500 text-white rounded" data-id="${t.id}">Eliminar</button>
+            </td>`;
+          tablaBody.appendChild(tr);
+        });
+      }catch(err){
+        console.error(err);
+        showNotification('❌ Error al cargar tenderos', 'error');
+      }
+    }
+
+    // escape básico para evitar inyección en innerHTML
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#39;');
+    }
+
+    // buscar (filtrado en cliente)
+    buscarInput.addEventListener('input', ()=>{
+      const q = buscarInput.value.trim().toLowerCase();
+      Array.from(tablaBody.querySelectorAll('tr')).forEach(row=>{
+        const username = row.cells[0].textContent.toLowerCase();
+        const nombre = row.cells[1].textContent.toLowerCase();
+        row.style.display = (username.includes(q) || nombre.includes(q)) ? '' : 'none';
+      });
+    });
+
+    btnRefresh.addEventListener('click', ()=> cargarTenderos());
+
+    // manejar clicks en la tabla
+    tablaBody.addEventListener('click', async (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const id = btn.dataset.id;
+      if(btn.classList.contains('btn-edit')){
+        const t = tenderos.find(x => x.id === id);
+        if(!t) return showNotification('Tendero no encontrado', 'error');
+        // cargar al formulario
+        editId = t.id;
+        usernameEl.value = t.username || '';
+        emailEl.value = t.email || '';
+        passwordEl.value = ''; // no mostrar contraseña
+        showNotification('✏️ Editando tendero', 'info');
+        return;
+      }
+      if(btn.classList.contains('btn-delete')){
+        if(!confirm('¿Eliminar este tendero?')) return;
+        try{
+          const resp = await fetch(`/api/tenderos/eliminar/${id}`, { method: 'DELETE' });
+          const txt = await resp.text().catch(()=> '');
+          if(!resp.ok){
+            showNotification(txt || 'Error al eliminar', 'error');
+            return;
+          }
+          showNotification('🗑️ Tendero eliminado', 'success');
+          cargarTenderos();
+        }catch(err){
+          console.error(err);
+          showNotification('❌ Error al eliminar tendero', 'error');
+        }
+      }
+    });
+
+    // crear / actualizar tendero
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      const payload = {
+        username: usernameEl.value.trim(),
+        email: emailEl.value.trim(),
+        // include password only when provided (backend should ignore blank on update)
+        password: passwordEl.value ? passwordEl.value : undefined,
+      };
+
+      // validation minimal
+      if(!payload.username || !payload.email){
+        return showNotification('Username y email son obligatorios', 'warning');
+      }
+
+      try{
+        let url, method;
+        if(editId){
+          url = `/api/tenderos/actualizar/${editId}`;
+          method = 'PUT';
+          // If password is undefined, remove the field to avoid sending "password":undefined in JSON
+          if(payload.password === undefined) delete payload.password;
+        } else {
+          url = `/api/tenderos/crear?tiendaId=${encodeURIComponent(tiendaId)}`;
+          method = 'POST';
+        }
+
+        const resp = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const txt = await resp.text().catch(()=> '');
+
+        if(!resp.ok){
+          showNotification(txt || 'Error al guardar tendero', 'error');
+          return;
+        }
+
+        showNotification(editId ? '✅ Tendero actualizado' : '✅ Tendero creado', 'success');
+        form.reset();
+        editId = null;
+        cargarTenderos();
+      }catch(err){
+        console.error(err);
+        showNotification('❌ Error de conexión', 'error');
+      }
+    });
+
+    // reset handler cancels edit mode
+    btnReset.addEventListener('click', (e)=>{
+      editId = null;
+    });
+
+    // init links and load
+    function initLinks(){
+      const tid = tiendaId;
+      if(!tid) return;
+      document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
+      document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
+      document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
+      ocument.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
+  document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
+  document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
+  document.getElementById("linkTiendas").href = `/admin/tiendas`;
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      initLinks();
+      cargarTenderos();
+    });
+
+  })();
+  </script>
+>>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
 
     document.getElementById('modal-background').addEventListener('click', cerrarModal);
 
@@ -353,5 +725,9 @@
     });
   </script>
 </body>
+<<<<<<< HEAD
 
 </html>
+=======
+</html>
+>>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96

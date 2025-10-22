@@ -24,6 +24,9 @@ public class Tienda {
         this.nit = nit;
     }
 
+    public Tienda(String id) {
+        this.id = id;
+    }
 
     public String getId() {
         return this.id;

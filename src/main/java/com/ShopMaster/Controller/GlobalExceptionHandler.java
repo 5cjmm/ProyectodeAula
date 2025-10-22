@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 🚫 Errores de índice único (MongoDB)
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<String> handleDuplicateKeyException(DuplicateKeyException ex) {
-        String msg = ex.getMessage().toLowerCase(); // normalizamos a minúsculas
+        String msg = ex.getMessage().toLowerCase();
 
         if (msg.contains("nit")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El NIT ya está registrado 🚫");
@@ -29,12 +28,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo duplicado 🚫");
     }
 
-    // ⚠️ Errores de validación lógica lanzados con RuntimeException
-    @ExceptionHandler(RuntimeException.class)
+    /*@ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         String msg = ex.getMessage();
 
-        // Detectar palabras clave de forma parecida al DuplicateKey
         if (msg.toLowerCase().contains("nit")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El NIT ya está registrado 🚫");
         }
@@ -52,9 +49,8 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("⚠️ " + msg);
-    }
+    }*/
 
-    // 🚨 Errores no controlados
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         ex.printStackTrace(); // log en consola
