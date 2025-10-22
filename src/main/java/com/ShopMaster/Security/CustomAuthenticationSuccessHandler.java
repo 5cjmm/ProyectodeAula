@@ -45,7 +45,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 response.sendRedirect("/admin/tiendas");
                 return;
             } else if (role.equals("ROLE_TENDERO")) {
-                response.sendRedirect("/tendero/PuntoVenta");
+                response.sendRedirect("/admin/tiendas/{id}/inventario");
                 return;
             }
         }

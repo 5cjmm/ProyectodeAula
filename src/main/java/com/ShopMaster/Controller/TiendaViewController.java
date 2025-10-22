@@ -6,13 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ShopMaster.Model.Usuario;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/admin/tiendas")
 public class TiendaViewController {
 
     @GetMapping
-    public String showTiendasPage() {
-        // No necesitas enviar nada aquí, la vista usará AJAX para traer los datos
+    public String showTiendasPage(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        model.addAttribute("usuario", usuario); // se pasa a tiendas.html
         return "tiendas"; // busca templates/tiendas.html
     }
 

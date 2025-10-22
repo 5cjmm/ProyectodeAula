@@ -1,5 +1,6 @@
 package com.ShopMaster.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -12,4 +13,5 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     Optional<Usuario> findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+    List<Usuario> findByRolesContainingAndTiendasId(String rol, String tiendaId);
 }

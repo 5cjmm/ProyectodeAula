@@ -1,14 +1,11 @@
 package com.ShopMaster.Repository;
 import java.util.List;
-import java.util.Optional;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.ShopMaster.Model.Productos;
-import com.ShopMaster.Model.Proveedor;
 
 public interface ProductosRepository extends MongoRepository<Productos, String> {
     List<Productos> findByTiendaId(String tiendaId);
@@ -20,7 +17,8 @@ public interface ProductosRepository extends MongoRepository<Productos, String> 
     boolean existsByCodigoAndTiendaId(String codigo, String tiendaId);
 
     boolean existsByCodigoAndTiendaIdAndIdNot(String codigo, String tiendaId, String id);
-    Optional<Productos> findByCodigo(String codigo);
+    Productos findByCodigo(String codigo);
     Page<Productos> findByTiendaId(String tiendaId, Pageable pageable);
+    List<Productos> findByTiendaIdAndCantidadGreaterThan(String tiendaId, int i);
 
 }
