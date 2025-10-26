@@ -32,4 +32,5 @@ public class TenderoViewController {
         model.addAttribute("tiendaId", id); // se pasa a PuntoVenta.html
         return "PuntoVenta"; // templates/PuntoVenta.html
     }
+    
 }

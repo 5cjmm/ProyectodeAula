@@ -320,12 +320,8 @@
 
         function showNotification(msg, type) {
             const n = document.createElement("div");
-<<<<<<< HEAD
-            n.className = `notification ${type === "error" ? "notification-error" : ""}`;
-=======
             n.classList.add("notification");
             if (type === "error") n.classList.add("notification-error");
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
             n.textContent = msg;
             document.body.appendChild(n);
             setTimeout(() => n.remove(), 3000);

@@ -2,16 +2,10 @@
 <html lang="es">
 
 <head>
-<<<<<<< HEAD
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Usuarios</title>
-=======
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ShopMaster - Gestión de Tenderos</title>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -66,371 +60,106 @@
     }
   </style>
 </head>
-<<<<<<< HEAD
 
-<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-  <div id="modal-background"
-    class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm hidden z-40 transition-all duration-300"></div>
-  <div id="formulario-modal"
-    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md z-50 hidden">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold text-slate-800">Actualizar Usuario</h2>
-      <button onclick="cerrarModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-    </div>
-
-    <form th:action="@{/admin/actualizar-tendero}" method="post" class="space-y-5">
-      <input type="hidden" name="id" id="modal-id">
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Nombre de Usuario</label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i data-lucide="user" class="w-5 h-5 text-slate-400"></i>
-          </div>
-          <input type="text" name="username" id="modal-username"
-            class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i data-lucide="lock" class="w-5 h-5 text-slate-400"></i>
-          </div>
-          <input type="password" name="password" id="modal-password"
-            class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Roles</label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i data-lucide="shield" class="w-5 h-5 text-slate-400"></i>
-          </div>
-          <input type="text" name="roles" id="modal-roles"
-            class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-        </div>
-      </div>
-
-      <div class="flex gap-3 pt-4">
-        <button type="button" onclick="cerrarModal()"
-          class="flex-1 px-6 py-3 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors">
-          Cancelar
-        </button>
-        <button type="submit"
-          class="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30">
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
-  <nav class="w-full bg-white shadow-md border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-4">
-        <img src="/images/logo-nav.png" alt="Logo" class="h-10 w-auto" />
-        <div class="h-8 w-px bg-slate-300"></div>
-        <h1 class="text-slate-800 text-xl font-bold">Gestión de Usuarios</h1>
-      </div>
-
-      <div class="relative">
-        <button id="menu-toggle"
-          class="flex items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
-          <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-        <div id="menu"
-          class="hidden absolute right-0 mt-2 w-64 bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 menu-slide">
-          <a th:href="@{/Inicio}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="home" class="w-5 h-5"></i>
-            <span>Inicio</span>
-          </a>
-          <a th:href="@{/admin/Dashboard}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-            <span>Dashboard</span>
-          </a>
-          <a th:href="@{/admin/InformeVentas}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
-            <span>Informe de Venta</span>
-          </a>
-          <a th:href="@{/admin/Inventario}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="package" class="w-5 h-5"></i>
-            <span>Inventario</span>
-          </a>
-          <a th:href="@{/admin/Registro}"
-            class="flex items-center gap-3 px-4 py-3 text-indigo-600 bg-indigo-50 font-medium">
-            <i data-lucide="users" class="w-5 h-5"></i>
-            <span>Gestión de Usuarios</span>
-          </a>
-          <a th:href="@{/deudas}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="credit-card" class="w-5 h-5"></i>
-            <span>Gestionar Deudas</span>
-          </a>
-          <a th:href="@{/tendero/PuntoVenta}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-            <span>Punto de Venta</span>
-          </a>
-          <a th:href="@{/admin/RegistroProveedor}"
-            class="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-            <i data-lucide="truck" class="w-5 h-5"></i>
-            <span>Proveedores</span>
-          </a>
-          <div class="border-t border-slate-200"></div>
-          <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
-            <i data-lucide="log-out" class="w-5 h-5"></i>
-            <span>Cerrar sesión</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="max-w-6xl mx-auto mt-8 px-6 pb-12">
-
-    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="p-3 bg-indigo-100 rounded-lg">
-          <i data-lucide="user-plus" class="w-6 h-6 text-indigo-600"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-slate-800">Registrar Nuevo Usuario</h2>
-      </div>
-
-      <form th:action="@{/admin/Registro}" method="post" class="flex flex-wrap items-end gap-4">
-        <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-slate-700 mb-2">Nombre de Usuario</label>
-          <input type="text" name="username" placeholder="Ingresa el nombre"
-            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            required>
-        </div>
-
-        <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
-          <input type="password" name="password" placeholder="Ingresa la contraseña"
-            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            required>
-        </div>
-
-        <button type="submit"
-          class="px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30 flex items-center gap-2">
-          <i data-lucide="plus" class="w-5 h-5"></i>
-          Registrar
-        </button>
-      </form>
-    </div>
-
-    <div th:if="${SuccessMessage}"
-      class="mb-6 bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-xl flex items-center gap-3">
-      <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
-      <span th:text="${SuccessMessage}"></span>
-    </div>
-
-    <div th:if="${ErrorMessage}"
-      class="mb-6 bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl flex items-center gap-3">
-      <i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>
-      <span>Ha ocurrido un error. Por favor, intenta nuevamente.</span>
-    </div>
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-      <div class="px-8 py-6 border-b border-slate-200">
-        <div class="flex items-center gap-3">
-          <div class="p-3 bg-slate-100 rounded-lg">
-            <i data-lucide="users" class="w-6 h-6 text-slate-600"></i>
-          </div>
-          <h2 class="text-2xl font-bold text-slate-800">Lista de Usuarios</h2>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead class="bg-slate-50 border-b border-slate-200">
-            <tr>
-              <th class="py-4 px-6 text-left text-sm font-semibold text-slate-700">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="user" class="w-4 h-4"></i>
-                  Nombre
-                </div>
-              </th>
-              <th class="py-4 px-6 text-left text-sm font-semibold text-slate-700">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="lock" class="w-4 h-4"></i>
-                  Contraseña
-                </div>
-              </th>
-              <th class="py-4 px-6 text-left text-sm font-semibold text-slate-700">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="shield" class="w-4 h-4"></i>
-                  Roles
-                </div>
-              </th>
-              <th class="py-4 px-6 text-center text-sm font-semibold text-slate-700">
-                <div class="flex items-center justify-center gap-2">
-                  <i data-lucide="settings" class="w-4 h-4"></i>
-                  Acciones
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-            <tr class="table-row bg-white" th:each="usuario : ${usuarios}">
-              <td class="py-4 px-6 text-slate-800 font-medium" th:text="${usuario.username}"></td>
-              <td class="py-4 px-6 text-slate-600 font-mono text-sm" th:text="${usuario.password}"></td>
-              <td class="py-4 px-6">
-                <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700"
-                  th:text="${usuario.roles}"></span>
-              </td>
-              <td class="py-4 px-6">
-                <div class="flex items-center justify-center gap-2">
-                  <button
-                    class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
-                    onclick="llenarFormularioUsuario(this)" th:data-id="${usuario.id}"
-                    th:data-username="${usuario.username}" th:data-password="${usuario.password}"
-                    th:data-roles="${usuario.roles}">
-                    <i data-lucide="edit" class="w-4 h-4"></i>
-                    Actualizar
-                  </button>
-
-                  <form th:action="@{/admin/eliminar-tendero/{id}(id=${usuario.id})}" method="post"
-                    style="display:inline;">
-                    <button type="submit"
-                      class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
-                      Eliminar
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    lucide.createIcons();
-
-    function llenarFormularioUsuario(button) {
-      let id = button.dataset.id;
-      let username = button.dataset.username;
-      let password = button.dataset.password;
-      let roles = button.dataset.roles;
-
-      document.getElementById("modal-id").value = id;
-      document.getElementById("modal-username").value = username;
-      document.getElementById("modal-password").value = password;
-      document.getElementById("modal-roles").value = roles;
-
-      const modal = document.getElementById("formulario-modal");
-      const background = document.getElementById("modal-background");
-
-      modal.classList.remove('hidden');
-      background.classList.remove('hidden');
-      modal.classList.add('modal-enter');
-
-      setTimeout(() => lucide.createIcons(), 10);
-    }
-
-    function cerrarModal() {
-      document.getElementById('modal-background').classList.add('hidden');
-      document.getElementById('formulario-modal').classList.add('hidden');
-    }
-=======
 <body class="bg-gray-50">
 
   <div class="flex min-h-screen">
     <!-- Sidebar (mantén tu sidebar real; aquí está reducido para demo) -->
     <aside class="w-64 bg-white border-r border-gray-200 p-6">
-            <div class="flex flex-col items-center mb-10">
-              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-                <img 
-                  th:src="@{/images/logo.png}" 
-                  alt="ShopMaster" 
-                  class="h-28 w-auto object-contain drop-shadow-md"
-                >
-              </div>
-            </div>
+      <div class="flex flex-col items-center mb-10">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
 
-            
-            <input type="hidden" id="tiendaId" th:value="${tiendaId}" >
-            <nav class="space-y-2">
-                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Dashboard
-                </a>
-                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                    </svg>
-                    Inventario
-                </a>
-                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
-                    </svg>
-                    Proveedores
-                </a>
-                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Deudas
-                </a>
-                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Punto de Venta
-                </a>
-                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Informe de Ventas
-                </a>
-                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Gestion de Tenderos
-                </a>
-                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Tiendas
-                </a>
-                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Cerrar sesión
-                </a>
-                
 
-            </nav>
-        </aside>
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <nav class="space-y-2">
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Dashboard
+        </a>
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Inventario
+        </a>
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+          </svg>
+          Proveedores
+        </a>
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Deudas
+        </a>
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Punto de Venta
+        </a>
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+          </svg>
+          Predicción
+        </a>
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Gestion de Tenderos
+        </a>
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Tiendas
+        </a>
+        <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Cerrar sesión
+        </a>
+
+
+      </nav>
+    </aside>
 
     <div class="flex-1 flex flex-col">
       <!-- Header -->
       <header class="bg-white border-b border-gray-200 shadow-sm">
-                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <h1 class="text-xl font-semibold text-gray-800">Gestion de Tenderos</h1>
-                    <div class="flex items-center gap-3">
-                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span class="text-sm font-medium text-gray-700">Administrador</span>
-                    </div>
-                </div>
-            </header>
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Gestion de Tenderos</h1>
+          <div class="flex items-center gap-3">
+            <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+            <span class="text-sm font-medium text-gray-700">Administrador</span>
+          </div>
+        </div>
+      </header>
 
       <main class="w-full max-w-none px-8 py-8">
         <div class="max-w-[1200px] mx-auto space-y-6">
@@ -443,25 +172,26 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700">Nombre</label>
                 <input id="username" name="username" type="text" required
-                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+                  class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700">Email</label>
                 <input id="email" name="email" type="email" required
-                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+                  class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700">Contraseña</label>
                 <input id="password" name="password" type="password" placeholder="Mínimo 6 caracteres"
-                       class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
+                  class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" />
                 <p class="text-xs text-gray-400 mt-1">Si editas y dejas en blanco, la contraseña no cambiará.</p>
               </div>
 
               <div class="md:col-span-2 flex gap-3 justify-end mt-2">
                 <button type="reset" id="btnReset" class="px-4 py-2 rounded border">Limpiar</button>
-                <button type="submit" id="btnSave" class="px-4 py-2 bg-cyan-600 text-white rounded">Guardar Tendero</button>
+                <button type="submit" id="btnSave" class="px-4 py-2 bg-cyan-600 text-white rounded">Guardar
+                  Tendero</button>
               </div>
             </form>
           </div>
@@ -472,7 +202,7 @@
               <h3 class="text-lg font-semibold">Tenderos de la tienda</h3>
               <div class="flex items-center gap-3">
                 <input id="buscar" type="text" placeholder="Buscar por nombre o username"
-                       class="px-3 py-2 border rounded-md" />
+                  class="px-3 py-2 border rounded-md" />
                 <button id="btnRefresh" class="px-3 py-2 bg-gray-100 rounded-md">Refrescar</button>
               </div>
             </div>
@@ -503,231 +233,238 @@
   </div>
 
   <script>
-  (function(){
-    // helpers
-    function showNotification(msg, type='info'){
-      const colors = { success:'bg-green-600', error:'bg-red-600', warning:'bg-yellow-500', info:'bg-blue-600' };
-      const d = document.createElement('div');
-      d.className = `fixed top-5 right-5 px-4 py-2 rounded text-white z-50 ${colors[type]||colors.info}`;
-      d.textContent = msg;
-      document.body.appendChild(d);
-      setTimeout(()=> { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(()=> d.remove(),300); }, 3000);
-    }
+    (function () {
+      // helpers
+      function showNotification(msg, type = 'info') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
+        const d = document.createElement('div');
+        d.className = `fixed top-5 right-5 px-4 py-2 rounded text-white z-50 ${colors[type] || colors.info}`;
+        d.textContent = msg;
+        document.body.appendChild(d);
+        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+      }
 
-    // DOM
-    const tiendaIdEl = document.getElementById('tiendaId');
-    const tiendaId = tiendaIdEl ? tiendaIdEl.value : null;
-    const tablaBody = document.querySelector('#tablaTenderos tbody');
-    const emptyEl = document.getElementById('emptyTenderos');
-    const buscarInput = document.getElementById('buscar');
-    const btnRefresh = document.getElementById('btnRefresh');
+      // DOM
+      const tiendaIdEl = document.getElementById('tiendaId');
+      const tiendaId = tiendaIdEl ? tiendaIdEl.value : null;
+      const tablaBody = document.querySelector('#tablaTenderos tbody');
+      const emptyEl = document.getElementById('emptyTenderos');
+      const buscarInput = document.getElementById('buscar');
+      const btnRefresh = document.getElementById('btnRefresh');
 
-    const form = document.getElementById('formTendero');
-    const usernameEl = document.getElementById('username');
-    const emailEl = document.getElementById('email');
-    const passwordEl = document.getElementById('password');
-    const btnReset = document.getElementById('btnReset');
-    const btnSave = document.getElementById('btnSave');
+      const form = document.getElementById('formTendero');
+      const usernameEl = document.getElementById('username');
+      const emailEl = document.getElementById('email');
+      const passwordEl = document.getElementById('password');
+      const btnReset = document.getElementById('btnReset');
+      const btnSave = document.getElementById('btnSave');
 
-    let tenderos = []; // listado en memoria
-    let editId = null;  // si estamos editando
+      let tenderos = []; // listado en memoria
+      let editId = null;  // si estamos editando
 
-    if(!tiendaId){
-      console.error('tiendaId no encontrado en DOM (#tiendaId)');
-      showNotification('⚠️ tiendaId no encontrado. Algunas funciones no estarán disponibles', 'warning');
-    }
+      if (!tiendaId) {
+        console.error('tiendaId no encontrado en DOM (#tiendaId)');
+        showNotification('⚠️ tiendaId no encontrado. Algunas funciones no estarán disponibles', 'warning');
+      }
 
-    // cargar tenderos
-    async function cargarTenderos(){
-      try{
-        tablaBody.innerHTML = '';
-        if(!tiendaId) return;
-        const res = await fetch(`/api/tenderos/tienda/${tiendaId}`);
-        if(!res.ok){
-          const txt = await res.text().catch(()=> 'Error al obtener tenderos');
-          showNotification(txt, 'error');
-          return;
-        }
-        tenderos = await res.json();
-        if(!Array.isArray(tenderos) || tenderos.length === 0){
-          emptyEl.classList.remove('hidden');
-          return;
-        } else emptyEl.classList.add('hidden');
+      // cargar tenderos
+      async function cargarTenderos() {
+        try {
+          tablaBody.innerHTML = '';
+          if (!tiendaId) return;
+          const res = await fetch(`/api/tenderos/tienda/${tiendaId}`);
+          if (!res.ok) {
+            const txt = await res.text().catch(() => 'Error al obtener tenderos');
+            showNotification(txt, 'error');
+            return;
+          }
+          tenderos = await res.json();
+          if (!Array.isArray(tenderos) || tenderos.length === 0) {
+            emptyEl.classList.remove('hidden');
+            return;
+          } else emptyEl.classList.add('hidden');
 
-        tenderos.forEach(t => {
-          const tr = document.createElement('tr');
-          tr.className = 'border-b';
-          tr.innerHTML = `
+          tenderos.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
             <td class="px-4 py-3">${escapeHtml(t.username || '')}</td>
             <td class="px-4 py-3">${escapeHtml(t.email || '')}</td>
             <td class="px-4 py-3">
               <button class="btn-edit px-3 py-1 bg-yellow-400 text-white rounded mr-2" data-id="${t.id}">Editar</button>
               <button class="btn-delete px-3 py-1 bg-red-500 text-white rounded" data-id="${t.id}">Eliminar</button>
             </td>`;
-          tablaBody.appendChild(tr);
-        });
-      }catch(err){
-        console.error(err);
-        showNotification('❌ Error al cargar tenderos', 'error');
-      }
-    }
-
-    // escape básico para evitar inyección en innerHTML
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'",'&#39;');
-    }
-
-    // buscar (filtrado en cliente)
-    buscarInput.addEventListener('input', ()=>{
-      const q = buscarInput.value.trim().toLowerCase();
-      Array.from(tablaBody.querySelectorAll('tr')).forEach(row=>{
-        const username = row.cells[0].textContent.toLowerCase();
-        const nombre = row.cells[1].textContent.toLowerCase();
-        row.style.display = (username.includes(q) || nombre.includes(q)) ? '' : 'none';
-      });
-    });
-
-    btnRefresh.addEventListener('click', ()=> cargarTenderos());
-
-    // manejar clicks en la tabla
-    tablaBody.addEventListener('click', async (e)=>{
-      const btn = e.target.closest('button');
-      if(!btn) return;
-      const id = btn.dataset.id;
-      if(btn.classList.contains('btn-edit')){
-        const t = tenderos.find(x => x.id === id);
-        if(!t) return showNotification('Tendero no encontrado', 'error');
-        // cargar al formulario
-        editId = t.id;
-        usernameEl.value = t.username || '';
-        emailEl.value = t.email || '';
-        passwordEl.value = ''; // no mostrar contraseña
-        showNotification('✏️ Editando tendero', 'info');
-        return;
-      }
-      if(btn.classList.contains('btn-delete')){
-        if(!confirm('¿Eliminar este tendero?')) return;
-        try{
-          const resp = await fetch(`/api/tenderos/eliminar/${id}`, { method: 'DELETE' });
-          const txt = await resp.text().catch(()=> '');
-          if(!resp.ok){
-            showNotification(txt || 'Error al eliminar', 'error');
-            return;
-          }
-          showNotification('🗑️ Tendero eliminado', 'success');
-          cargarTenderos();
-        }catch(err){
+            tablaBody.appendChild(tr);
+          });
+        } catch (err) {
           console.error(err);
-          showNotification('❌ Error al eliminar tendero', 'error');
+          showNotification('❌ Error al cargar tenderos', 'error');
         }
       }
-    });
 
-    // crear / actualizar tendero
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      const payload = {
-        username: usernameEl.value.trim(),
-        email: emailEl.value.trim(),
-        // include password only when provided (backend should ignore blank on update)
-        password: passwordEl.value ? passwordEl.value : undefined,
-      };
-
-      // validation minimal
-      if(!payload.username || !payload.email){
-        return showNotification('Username y email son obligatorios', 'warning');
+      // escape básico para evitar inyección en innerHTML
+      function escapeHtml(str) {
+        return String(str)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
       }
 
-      try{
-        let url, method;
-        if(editId){
-          url = `/api/tenderos/actualizar/${editId}`;
-          method = 'PUT';
-          // If password is undefined, remove the field to avoid sending "password":undefined in JSON
-          if(payload.password === undefined) delete payload.password;
-        } else {
-          url = `/api/tenderos/crear?tiendaId=${encodeURIComponent(tiendaId)}`;
-          method = 'POST';
-        }
-
-        const resp = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+      // buscar (filtrado en cliente)
+      buscarInput.addEventListener('input', () => {
+        const q = buscarInput.value.trim().toLowerCase();
+        Array.from(tablaBody.querySelectorAll('tr')).forEach(row => {
+          const username = row.cells[0].textContent.toLowerCase();
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = (username.includes(q) || nombre.includes(q)) ? '' : 'none';
         });
+      });
 
-        const txt = await resp.text().catch(()=> '');
+      btnRefresh.addEventListener('click', () => cargarTenderos());
 
-        if(!resp.ok){
-          showNotification(txt || 'Error al guardar tendero', 'error');
+      // manejar clicks en la tabla
+      tablaBody.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        if (btn.classList.contains('btn-edit')) {
+          const t = tenderos.find(x => x.id === id);
+          if (!t) return showNotification('Tendero no encontrado', 'error');
+          // cargar al formulario
+          editId = t.id;
+          usernameEl.value = t.username || '';
+          emailEl.value = t.email || '';
+          passwordEl.value = ''; // no mostrar contraseña
+          showNotification('✏️ Editando tendero', 'info');
           return;
         }
+        if (btn.classList.contains('btn-delete')) {
+          if (!confirm('¿Eliminar este tendero?')) return;
+          try {
+            const resp = await fetch(`/api/tenderos/eliminar/${id}`, { method: 'DELETE' });
+            const txt = await resp.text().catch(() => '');
+            if (!resp.ok) {
+              showNotification(txt || 'Error al eliminar', 'error');
+              return;
+            }
+            showNotification('🗑️ Tendero eliminado', 'success');
+            cargarTenderos();
+          } catch (err) {
+            console.error(err);
+            showNotification('❌ Error al eliminar tendero', 'error');
+          }
+        }
+      });
 
-        showNotification(editId ? '✅ Tendero actualizado' : '✅ Tendero creado', 'success');
-        form.reset();
+      // crear / actualizar tendero
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+          username: usernameEl.value.trim(),
+          email: emailEl.value.trim(),
+          // include password only when provided (backend should ignore blank on update)
+          password: passwordEl.value ? passwordEl.value : undefined,
+        };
+
+        // validation minimal
+        if (!payload.username || !payload.email) {
+          return showNotification('Username y email son obligatorios', 'warning');
+        }
+
+        try {
+          let url, method;
+          if (editId) {
+            url = `/api/tenderos/actualizar/${editId}`;
+            method = 'PUT';
+            // If password is undefined, remove the field to avoid sending "password":undefined in JSON
+            if (payload.password === undefined) delete payload.password;
+          } else {
+            url = `/api/tenderos/crear?tiendaId=${encodeURIComponent(tiendaId)}`;
+            method = 'POST';
+          }
+
+          const resp = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const txt = await resp.text().catch(() => '');
+
+          if (!resp.ok) {
+            showNotification(txt || 'Error al guardar tendero', 'error');
+            return;
+          }
+
+          showNotification(editId ? '✅ Tendero actualizado' : '✅ Tendero creado', 'success');
+          form.reset();
+          editId = null;
+          cargarTenderos();
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      // reset handler cancels edit mode
+      btnReset.addEventListener('click', (e) => {
         editId = null;
+      });
+
+      // init links and load
+      function initLinks() {
+        const tid = tiendaId;
+        if (!tid) return;
+        document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
+        document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
+        document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
+        document.getElementById("linkDeudas").href = `/admin/tiendas/${tid}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tid}/puntoventa`;
+        document.getElementById("linkInforme").href = `/admin/tiendas/${tid}/informe`;
+        document.getElementById("linkPrediccion").href = `/admin/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkTendero").href = `/admin/tiendas/${tid}/tendero`;
+        document.getElementById("linkTiendas").href = `/admin/tiendas`;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initLinks();
         cargarTenderos();
-      }catch(err){
-        console.error(err);
-        showNotification('❌ Error de conexión', 'error');
-      }
-    });
+      });
 
-    // reset handler cancels edit mode
-    btnReset.addEventListener('click', (e)=>{
-      editId = null;
-    });
-
-    // init links and load
-    function initLinks(){
-      const tid = tiendaId;
-      if(!tid) return;
-      document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
-      document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
-      document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
-      ocument.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
-  document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
-  document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
-  document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
-  document.getElementById("linkTiendas").href = `/admin/tiendas`;
-    }
-
-    document.addEventListener('DOMContentLoaded', ()=>{
-      initLinks();
-      cargarTenderos();
-    });
-
-  })();
+    })();
   </script>
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
 
-    document.getElementById('modal-background').addEventListener('click', cerrarModal);
-
-    const menuToggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-
-    menuToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      menu.classList.toggle("hidden");
-      lucide.createIcons();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
-        menu.classList.add("hidden");
+  <script>
+    (function () {
+      // safe attach for modal click if the element and function exist
+      const modalBg = document.getElementById('modal-background');
+      if (modalBg && typeof cerrarModal === 'function') {
+        modalBg.addEventListener('click', cerrarModal);
       }
-    });
+
+      const menuToggle = document.getElementById("menu-toggle");
+      const menu = document.getElementById("menu");
+
+      if (menuToggle && menu) {
+        menuToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          menu.classList.toggle("hidden");
+          if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+          }
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
+            menu.classList.add("hidden");
+          }
+        });
+      }
+    })();
   </script>
 </body>
-<<<<<<< HEAD
 
 </html>
-=======
-</html>
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
