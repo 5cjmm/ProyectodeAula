@@ -1,117 +1,110 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<<<<<<< HEAD
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-    <title>ShopMaster - Punto de Venta</title>
-    <meta name="description" content="Sistema de punto de venta para gestionar ventas y productos">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
-    
-    <!-- Stylesheets -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="stylesheet" th:href="@{/css/punto-venta.css}">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
-=======
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ShopMaster - Punto de Venta</title>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
 </head>
+
 <body class="bg-gray-50">
 
   <div class="flex min-h-screen">
     <aside class="w-64 bg-white border-r border-gray-200 p-6">
       <div class="flex flex-col items-center mb-10">
-              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-                <img 
-                  th:src="@{/images/logo.png}" 
-                  alt="ShopMaster" 
-                  class="h-28 w-auto object-contain drop-shadow-md"
-                >
-              </div>
-            </div>
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
 
       <input type="hidden" id="tiendaId" th:value="${tiendaId}" value="">
       <nav class="space-y-2">
-                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Dashboard
-                </a>
-                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                    </svg>
-                    Inventario
-                </a>
-                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
-                    </svg>
-                    Proveedores
-                </a>
-                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Deudas
-                </a>
-                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Punto de Venta
-                </a>
-                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Informe de Ventas
-                </a>
-                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                    Gestion de Tenderos
-                </a>
-                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Tiendas
-                </a>
-                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Cerrar sesión
-                </a>
-            </nav>
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Dashboard
+        </a>
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Inventario
+        </a>
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+          </svg>
+          Proveedores
+        </a>
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Deudas
+        </a>
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Punto de Venta
+        </a>
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Gestion de Tenderos
+        </a>
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Tiendas
+        </a>
+        <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Cerrar sesión
+        </a>
+      </nav>
     </aside>
 
     <!-- Main content -->
     <div class="flex-1 flex flex-col">
       <!-- Header -->
-            <header class="bg-white border-b border-gray-200 shadow-sm">
-                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
-                    <div class="flex items-center gap-3">
-                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span class="text-sm font-medium text-gray-700">Administrador</span>
-                    </div>
-                </div>
-            </header>
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
+          <div class="flex items-center gap-3">
+            <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+            <span class="text-sm font-medium text-gray-700">Administrador</span>
+          </div>
+        </div>
+      </header>
       <!-- Body -->
       <main class="w-full max-w-none px-8 py-8">
         <div class="max-w-[1400px] mx-auto">
@@ -121,11 +114,13 @@
             <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
               <div class="flex items-center gap-3">
                 <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
                   class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
-                <button id="refrescarProducts" class="ml-2 px-3 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">Refrescar</button>
+                <button id="refrescarProducts"
+                  class="ml-2 px-3 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">Refrescar</button>
               </div>
 
               <!-- Productos disponibles -->
@@ -148,11 +143,27 @@
                 </div>
 
                 <div id="emptyProducts" class="text-center py-8 text-gray-500 hidden">
-                  <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 10h4l3 10 4-18 3 8h4"></path>
+                  <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4l3 10 4-18 3 8h4">
+                    </path>
                   </svg>
                   No hay productos disponibles.
+                </div>
+
+                <!-- Paginación -->
+                <div class="flex justify-center items-center space-x-4 bg-gray-50 py-4 border-t border-gray-200 mt-4">
+                  <button onclick="cambiarPaginaProducts(-1)"
+                    class="px-4 py-2 bg-amber-500 text-white border border-amber-500 rounded hover:bg-amber-600">
+                    Anterior
+                  </button>
+                  <span id="paginaActualProducts" class="px-4 py-2 bg-gray-100 rounded-lg font-semibold text-gray-700">
+                    1
+                  </span>
+                  <button onclick="cambiarPaginaProducts(1)"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                    Siguiente
+                  </button>
                 </div>
               </div>
             </div>
@@ -194,10 +205,12 @@
                 </div>
 
                 <div class="mt-4 grid grid-cols-1 gap-3">
-                  <button id="btnRegisterSale" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
+                  <button id="btnRegisterSale"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
                     Registrar Venta
                   </button>
-                  <button id="btnRegisterDebt" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
+                  <button id="btnRegisterDebt"
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
                     Registrar como Deuda
                   </button>
                 </div>
@@ -230,7 +243,8 @@
         </div>
         <div>
           <label class="text-sm font-medium">Abono inicial (opcional)</label>
-          <input id="debtAbono" type="number" min="0" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="0">
+          <input id="debtAbono" type="number" min="0" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md"
+            placeholder="0">
         </div>
       </div>
 
@@ -243,64 +257,73 @@
 
   <!-- SCRIPT -->
   <script>
-  (function(){
-    // helpers
-    function fmtCOP(n){ return new Intl.NumberFormat('es-CO',{style:'currency', currency:'COP', maximumFractionDigits:0}).format(n); }
-    function showNotification(msg, type='info'){
-      const colors = { success:'bg-green-600', error:'bg-red-600', warning:'bg-yellow-500', info:'bg-blue-600' };
-      const d = document.createElement('div');
-      d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type]||colors.info}`;
-      d.textContent = msg;
-      document.body.appendChild(d);
-      setTimeout(()=> { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(()=> d.remove(),300); }, 3000);
-    }
+    (function () {
+      // helpers
+      function fmtCOP(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n); }
+      function showNotification(msg, type = 'info') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
+        const d = document.createElement('div');
+        d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
+        d.textContent = msg;
+        document.body.appendChild(d);
+        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+      }
 
-    // DOM
-    const tiendaId = document.getElementById('tiendaId').value;
-    const productsBody = document.getElementById('productsBody');
-    const emptyProducts = document.getElementById('emptyProducts');
-    const buscar = document.getElementById('buscarProducts');
-    const refrescarBtn = document.getElementById('refrescarProducts');
+      // DOM
+      const tiendaId = document.getElementById('tiendaId').value;
+      const productsBody = document.getElementById('productsBody');
+      const emptyProducts = document.getElementById('emptyProducts');
+      const buscar = document.getElementById('buscarProducts');
+      const refrescarBtn = document.getElementById('refrescarProducts');
 
-    const cartBody = document.getElementById('cartBody');
-    const subtotalDisplay = document.getElementById('subtotalDisplay');
-    const totalDisplay = document.getElementById('totalDisplay');
+      const cartBody = document.getElementById('cartBody');
+      const subtotalDisplay = document.getElementById('subtotalDisplay');
+      const totalDisplay = document.getElementById('totalDisplay');
 
-    const btnRegisterSale = document.getElementById('btnRegisterSale');
-    const btnRegisterDebt = document.getElementById('btnRegisterDebt');
+      const btnRegisterSale = document.getElementById('btnRegisterSale');
+      const btnRegisterDebt = document.getElementById('btnRegisterDebt');
 
-    const modalDebt = document.getElementById('modalDebt');
-    const cancelDebt = document.getElementById('cancelDebt');
-    const confirmDebt = document.getElementById('confirmDebt');
-    const debtNombre = document.getElementById('debtNombre');
-    const debtCedula = document.getElementById('debtCedula');
-    const debtAbono = document.getElementById('debtAbono');
+      const modalDebt = document.getElementById('modalDebt');
+      const cancelDebt = document.getElementById('cancelDebt');
+      const confirmDebt = document.getElementById('confirmDebt');
+      const debtNombre = document.getElementById('debtNombre');
+      const debtCedula = document.getElementById('debtCedula');
+      const debtAbono = document.getElementById('debtAbono');
 
-    // state
-    let products = []; // productos disponibles
-    let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
+      // state
+      let products = []; // productos disponibles (página actual)
+      let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
 
-    // load products (use large size for POS)
-    async function loadProducts(){
-      try{
-        productsBody.innerHTML = '';
-        const res = await fetch(`/api/productos/tienda/${tiendaId}?page=0&size=1000`);
-        if(!res.ok){
-          const txt = await res.text().catch(()=> 'Error');
-          showNotification('❌ '+txt, 'error');
-          return;
-        }
-        const data = await res.json();
-        products = data.content || data || [];
-        if(!products.length){
-          emptyProducts.classList.remove('hidden');
-          return;
-        } else emptyProducts.classList.add('hidden');
+      // paginación
+      let paginaProducts = 0;
+      const tamanoPaginaProducts = 10; // items por página
+      let totalPaginasProducts = 1;
 
-        products.forEach(p=>{
-          const tr = document.createElement('tr');
-          tr.className = 'border-b';
-          tr.innerHTML = `
+      // load products (paginated)
+      async function loadProducts() {
+        try {
+          productsBody.innerHTML = '';
+          const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${paginaProducts}&size=${tamanoPaginaProducts}`);
+          if (!res.ok) {
+            const txt = await res.text().catch(() => 'Error');
+            showNotification('❌ ' + txt, 'error');
+            return;
+          }
+          const data = await res.json();
+          // soporta respuesta paginada (content + totalPages) o lista plana
+          products = data.content || data || [];
+          totalPaginasProducts = data.totalPages || 1;
+
+          if (!products.length) {
+            emptyProducts.classList.remove('hidden');
+            document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+            return;
+          } else emptyProducts.classList.add('hidden');
+
+          products.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
             <td class="px-4 py-3">${p.codigo}</td>
             <td class="px-4 py-3">${p.nombre}</td>
             <td class="px-4 py-3">${p.cantidad}</td>
@@ -308,63 +331,73 @@
             <td class="px-4 py-3">
               <button class="add-to-cart px-3 py-1 bg-cyan-600 text-white rounded" data-id="${p.id}">Añadir</button>
             </td>`;
-          productsBody.appendChild(tr);
-        });
-      }catch(err){
-        console.error(err);
-        showNotification('❌ Error al cargar productos', 'error');
-      }
-    }
+            productsBody.appendChild(tr);
+          });
 
-    // search
-    buscar.addEventListener('input', ()=> {
-      const q = buscar.value.trim().toLowerCase();
-      Array.from(productsBody.querySelectorAll('tr')).forEach(row=>{
-        const codigo = row.cells[0].textContent.toLowerCase();
-        const nombre = row.cells[1].textContent.toLowerCase();
-        row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+          // actualizar paginador
+          document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error al cargar productos', 'error');
+        }
+      }
+
+      // search
+      buscar.addEventListener('input', () => {
+        const q = buscar.value.trim().toLowerCase();
+        Array.from(productsBody.querySelectorAll('tr')).forEach(row => {
+          const codigo = row.cells[0].textContent.toLowerCase();
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+        });
       });
-    });
 
-    refrescarBtn.addEventListener('click', ()=> loadProducts());
+      refrescarBtn.addEventListener('click', () => loadProducts());
 
-    // add to cart (delegation)
-    productsBody.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button.add-to-cart');
-      if(!btn) return;
-      const id = btn.dataset.id;
-      const prod = products.find(x => x.id === id);
-      if(!prod) return showNotification('Producto no encontrado','error');
-      if(prod.cantidad <= 0) return showNotification('Stock insuficiente','warning');
-
-      const existing = cart.find(c => c.productoId === id);
-      if(existing){
-        if(existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock','warning');
-        existing.cantidad += 1;
-        existing.subtotal = existing.cantidad * existing.precioUnitario;
-      } else {
-        cart.push({
-          productoId: prod.id,
-          codigo: prod.codigo,
-          nombre: prod.nombre,
-          cantidad: 1,
-          precioUnitario: prod.precio,
-          subtotal: prod.precio
-        });
+      // paginación productos
+      window.cambiarPaginaProducts = function (direccion) {
+        if (direccion === -1 && paginaProducts > 0) paginaProducts--;
+        if (direccion === 1 && paginaProducts + 1 < totalPaginasProducts) paginaProducts++;
+        loadProducts();
       }
-      renderCart();
-    });
 
-    // render cart
-    function renderCart(){
-      cartBody.innerHTML = '';
-      if(cart.length === 0){
-        cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
-      } else {
-        cart.forEach((c, idx)=>{
-          const tr = document.createElement('tr');
-          tr.className = 'border-b';
-          tr.innerHTML = `
+      // add to cart (delegation)
+      productsBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.add-to-cart');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const prod = products.find(x => x.id === id);
+        if (!prod) return showNotification('Producto no encontrado', 'error');
+        if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
+
+        const existing = cart.find(c => c.productoId === id);
+        if (existing) {
+          if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
+          existing.cantidad += 1;
+          existing.subtotal = existing.cantidad * existing.precioUnitario;
+        } else {
+          cart.push({
+            productoId: prod.id,
+            codigo: prod.codigo,
+            nombre: prod.nombre,
+            cantidad: 1,
+            precioUnitario: prod.precio,
+            subtotal: prod.precio
+          });
+        }
+        renderCart();
+      });
+
+      // render cart
+      function renderCart() {
+        cartBody.innerHTML = '';
+        if (cart.length === 0) {
+          cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+        } else {
+          cart.forEach((c, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
             <td class="px-3 py-2">${c.codigo}</td>
             <td class="px-3 py-2">${c.nombre}</td>
             <td class="px-3 py-2">
@@ -375,188 +408,190 @@
             <td class="px-3 py-2">
               <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
             </td>`;
-          cartBody.appendChild(tr);
-        });
+            cartBody.appendChild(tr);
+          });
+        }
+        recalcTotals();
       }
-      recalcTotals();
-    }
 
-    // handle cart interactions
-    cartBody.addEventListener('input', (e)=>{
-      const input = e.target.closest('input.cantidad-input');
-      if(!input) return;
-      const idx = Number(input.dataset.idx);
-      const val = Math.max(1, parseInt(input.value || '1'));
-      const item = cart[idx];
-      const prod = products.find(p=>p.id===item.productoId);
-      if(val > prod.cantidad){
-        showNotification('No hay suficiente stock', 'warning');
-        input.value = item.cantidad;
-        return;
-      }
-      item.cantidad = val;
-      item.subtotal = item.cantidad * item.precioUnitario;
-      renderCart();
-    });
-
-    cartBody.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button.remove-item');
-      if(!btn) return;
-      const idx = Number(btn.dataset.idx);
-      cart.splice(idx,1);
-      renderCart();
-    });
-
-    // totals
-    function recalcTotals(){
-      const subtotal = cart.reduce((s,i)=>s + (i.subtotal || 0), 0);
-      const iva = 0; // si luego aplicas IVA, cámbialo
-      const total = subtotal + iva;
-      subtotalDisplay.textContent = fmtCOP(subtotal);
-      document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
-      totalDisplay.textContent = fmtCOP(total);
-    }
-
-    // prepare payload: map cart -> ProductoVendido
-    function buildProductosVendido(){
-      return cart.map(i => ({
-        productoId: i.productoId,
-        codigo: i.codigo,
-        nombre: i.nombre,
-        cantidad: i.cantidad,
-        precioUnitario: i.precioUnitario,
-        subtotal: i.subtotal
-      }));
-    }
-
-    // register sale
-    btnRegisterSale.addEventListener('click', async ()=>{
-      if(cart.length===0) return showNotification('Carrito vacío','warning');
-
-      const venta = {
-        tiendaId: tiendaId,
-        productos: buildProductosVendido()
-      };
-
-      try{
-        const res = await fetch('/api/ventas/crear', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(venta)
-        });
-        const msg = await res.text();
-        if(!res.ok){
-          showNotification(msg || 'Error al registrar venta','error');
+      // handle cart interactions
+      cartBody.addEventListener('input', (e) => {
+        const input = e.target.closest('input.cantidad-input');
+        if (!input) return;
+        const idx = Number(input.dataset.idx);
+        const val = Math.max(1, parseInt(input.value || '1'));
+        const item = cart[idx];
+        const prod = products.find(p => p.id === item.productoId);
+        if (val > prod.cantidad) {
+          showNotification('No hay suficiente stock', 'warning');
+          input.value = item.cantidad;
           return;
         }
-        showNotification('✅ Venta registrada', 'success');
-        cart = [];
+        item.cantidad = val;
+        item.subtotal = item.cantidad * item.precioUnitario;
         renderCart();
-        loadProducts(); // recargar stock
-      }catch(err){
-        console.error(err);
-        showNotification('❌ Error de conexión', 'error');
-      }
-    });
+      });
 
-    // register debt (open modal)
-    btnRegisterDebt.addEventListener('click', ()=>{
-      if(cart.length===0) return showNotification('Carrito vacío','warning');
-      debtNombre.value = '';
-      debtCedula.value = '';
-      debtAbono.value = '';
-      modalDebt.classList.remove('hidden');
-      modalDebt.style.display = 'flex';
-    });
+      cartBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.remove-item');
+        if (!btn) return;
+        const idx = Number(btn.dataset.idx);
+        cart.splice(idx, 1);
+        renderCart();
+      });
 
-    cancelDebt.addEventListener('click', ()=>{
-      modalDebt.classList.add('hidden');
-      modalDebt.style.display = 'none';
-    });
-
-    // confirm debt
-    confirmDebt.addEventListener('click', async ()=>{
-      const nombre = debtNombre.value.trim();
-      const cedula = debtCedula.value.trim();
-      const abono = parseFloat(debtAbono.value || 0);
-
-      if(!nombre || !cedula){ return showNotification('Nombre y cédula requeridos','warning'); }
-
-      const deuda = {
-        tiendaId: tiendaId,
-        nombreCliente: nombre,
-        cedulaCliente: cedula,
-        productos: buildProductosVendido(),
-        total: cart.reduce((s,i)=>s + i.subtotal, 0),
-        totalRestante: cart.reduce((s,i)=>s + i.subtotal, 0)
-      };
-
-      // si hay abono, aplicarlo: push a historialAbonos
-      if(abono > 0){
-        deuda.totalRestante = deuda.total - abono;
-        deuda.historialAbonos = [{ monto: abono, fecha: new Date().toISOString() }];
+      // totals
+      function recalcTotals() {
+        const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
+        const iva = 0; // si luego aplicas IVA, cámbialo
+        const total = subtotal + iva;
+        subtotalDisplay.textContent = fmtCOP(subtotal);
+        document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
+        totalDisplay.textContent = fmtCOP(total);
       }
 
-      try{
-        const res = await fetch('/api/deudas/crear', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(deuda)
-        });
-        const msg = await res.text();
-        if(!res.ok){
-          showNotification(msg || 'Error al crear deuda','error');
-          return;
+      // prepare payload: map cart -> ProductoVendido
+      function buildProductosVendido() {
+        return cart.map(i => ({
+          productoId: i.productoId,
+          codigo: i.codigo,
+          nombre: i.nombre,
+          cantidad: i.cantidad,
+          precioUnitario: i.precioUnitario,
+          subtotal: i.subtotal
+        }));
+      }
+
+      // register sale
+      btnRegisterSale.addEventListener('click', async () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+
+        const venta = {
+          tiendaId: tiendaId,
+          productos: buildProductosVendido()
+        };
+
+        try {
+          const res = await fetch('/api/ventas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(venta)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al registrar venta', 'error');
+            return;
+          }
+          showNotification('✅ Venta registrada', 'success');
+          cart = [];
+          renderCart();
+          loadProducts(); // recargar stock
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
         }
-        showNotification('✅ Deuda registrada', 'success');
-        cart = [];
-        renderCart();
+      });
+
+      // register debt (open modal)
+      btnRegisterDebt.addEventListener('click', () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+        debtNombre.value = '';
+        debtCedula.value = '';
+        debtAbono.value = '';
+        modalDebt.classList.remove('hidden');
+        modalDebt.style.display = 'flex';
+      });
+
+      cancelDebt.addEventListener('click', () => {
         modalDebt.classList.add('hidden');
         modalDebt.style.display = 'none';
-        loadProducts();
-      }catch(err){
-        console.error(err);
-        showNotification('❌ Error de conexión','error');
+      });
+
+      // confirm debt
+      confirmDebt.addEventListener('click', async () => {
+        const nombre = debtNombre.value.trim();
+        const cedula = debtCedula.value.trim();
+        const abono = parseFloat(debtAbono.value || 0);
+
+        if (!nombre || !cedula) { return showNotification('Nombre y cédula requeridos', 'warning'); }
+
+        const deuda = {
+          tiendaId: tiendaId,
+          nombreCliente: nombre,
+          cedulaCliente: cedula,
+          productos: buildProductosVendido(),
+          total: cart.reduce((s, i) => s + i.subtotal, 0),
+          totalRestante: cart.reduce((s, i) => s + i.subtotal, 0)
+        };
+
+        // si hay abono, aplicarlo: push a historialAbonos
+        if (abono > 0) {
+          deuda.totalRestante = deuda.total - abono;
+          deuda.historialAbonos = [{ monto: abono, fecha: new Date().toISOString() }];
+        }
+
+        try {
+          const res = await fetch('/api/deudas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(deuda)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al crear deuda', 'error');
+            return;
+          }
+          showNotification('✅ Deuda registrada', 'success');
+          cart = [];
+          renderCart();
+          modalDebt.classList.add('hidden');
+          modalDebt.style.display = 'none';
+          loadProducts();
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      async function loadRecentSales() {
+        try {
+          const res = await fetch(`/api/ventas/tienda/${tiendaId}?page=0&size=5`);
+          if (!res.ok) return;
+          const data = await res.json();
+          const items = data.content || [];
+          const cont = document.getElementById('recentSales');
+          if (!items.length) { cont.textContent = 'Sin ventas recientes'; return; }
+          cont.innerHTML = items.map(v => {
+            const t = new Date(v.fecha).toLocaleString();
+            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(v.total)} <span class="text-xs text-gray-500">(${t})</span></div></div>`;
+          }).join('');
+        } catch (e) { console.warn(e); }
       }
-    });
 
-    async function loadRecentSales(){
-      try{
-        const res = await fetch(`/api/ventas/tienda/${tiendaId}?page=0&size=5`);
-        if(!res.ok) return;
-        const data = await res.json();
-        const items = data.content || [];
-        const cont = document.getElementById('recentSales');
-        if(!items.length){ cont.textContent = 'Sin ventas recientes'; return; }
-        cont.innerHTML = items.map(v=>{
-          const t = new Date(v.fecha).toLocaleString();
-          return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(v.total)} <span class="text-xs text-gray-500">(${t})</span></div></div>`;
-        }).join('');
-      }catch(e){ console.warn(e); }
-    }
+      function initLinks() {
+        const idEl = document.getElementById('tiendaId');
+        const tid = idEl ? idEl.value : null;
+        if (!tid) return;
+        document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
+        document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
+        document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
+        document.getElementById("linkDeudas").href = `/admin/tiendas/${tid}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tid}/puntoventa`;
+        document.getElementById("linkInforme").href = `/admin/tiendas/${tid}/informe`;
+        document.getElementById("linkPrediccion").href = `/admin/tiendas/${tid}/prediccion`;
+        document.getElementById("linkTendero").href = `/admin/tiendas/${tid}/tendero`;
+        document.getElementById("linkTiendas").href = `/admin/tiendas`;
+      }
 
-    function initLinks(){
-      const idEl = document.getElementById('tiendaId');
-      const tid = idEl ? idEl.value : null;
-      if(!tid) return;
-      document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
-      document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
-      document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
-      document.getElementById("linkDeudas").href = `/admin/tiendas/${tid}/deudas`;
-      document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tid}/puntoventa`;
-      document.getElementById("linkInforme").href = `/admin/tiendas/${tid}/informe`;
-      document.getElementById("linkTendero").href = `/admin/tiendas/${tid}/tendero`;
-      document.getElementById("linkTiendas").href = `/admin/tiendas`;
-    }
+      document.addEventListener('DOMContentLoaded', () => {
+        loadProducts();
+        renderCart();
+        loadRecentSales();
+        initLinks();
+      });
 
-    document.addEventListener('DOMContentLoaded', ()=>{
-      loadProducts();
-      renderCart();
-      loadRecentSales();
-      initLinks();
-    });
-
-  })();
+    })();
   </script>
 </body>
+
 </html>

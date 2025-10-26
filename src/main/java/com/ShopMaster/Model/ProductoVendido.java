@@ -29,4 +29,9 @@ public class ProductoVendido {
         pv.setSubtotal(precio * cantidad);
         return pv;
     }
+
+    // Compatibilidad: algunos controladores llaman a getPrecio()
+    public double getPrecio() {
+        return this.precioUnitario;
+    }
 }

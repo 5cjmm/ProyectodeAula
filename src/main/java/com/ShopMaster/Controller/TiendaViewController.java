@@ -63,4 +63,10 @@ public class TiendaViewController {
         return "RegistroTendero"; // templates/Tendero.html
 
     }
+
+    @GetMapping({"/{id}/prediccion", "/tendero/tiendas/{id}/prediccion"})
+    public String verPrediccion(@PathVariable String id, Model model) {
+        model.addAttribute("tiendaId", id); // se pasa a Prediccion.html
+        return "Prediccion"; // templates/Prediccion.html
+    }
 }

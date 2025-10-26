@@ -54,6 +54,16 @@ public class DeudaService {
         return deudaRepository.findByTiendaId(tiendaId, pageable);
     }
 
+    // Nuevo: obtener todas las deudas para la vista
+    public java.util.List<Deuda> obtenerTodasLasDeudas() {
+        return deudaRepository.findAll();
+    }
+
+    // Nuevo: obtener deuda por id (devuelve Optional para que el controlador lo maneje)
+    public java.util.Optional<Deuda> obtenerDeudaPorId(String id) {
+        return deudaRepository.findById(id);
+    }
+
     public Deuda registrarAbono(String deudaId, Abono abono) {
         Deuda deuda = deudaRepository.findById(deudaId)
                 .orElseThrow(() -> new RuntimeException("Deuda no encontrada"));
@@ -69,6 +79,14 @@ public class DeudaService {
         }
 
         return deudaRepository.save(deuda);
+    }
+
+    // Sobrecarga usada por el controlador que pasa sólo un monto (double)
+    public Deuda registrarAbono(String deudaId, double monto) {
+        Abono abono = new Abono();
+        abono.setMonto(monto);
+        abono.setFecha(LocalDateTime.now());
+        return registrarAbono(deudaId, abono);
     }
 
     public void eliminarDeuda(String id) {

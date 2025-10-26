@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>Gestión de Inventario - ShopMaster</title>
-=======
     <title>ShopMaster - Inventario</title>
->>>>>>> eea158bfdcf2e2d89330f437b8d79b82cfb45b96
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -62,6 +58,12 @@
                     </svg>
                     Informe de Ventas
                 </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
                 <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
@@ -132,11 +134,12 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                                 </div>
 
-                                <div class="space-y-2">
-                                    <label class="text-sm font-medium text-gray-700">Precio:</label>
-                                    <input type="number" name="precio" id="precio" placeholder="0.00" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                </div>
+                <div class="space-y-2">
+                  <label class="text-sm font-medium text-gray-700">Precio:</label>
+                  <!-- Cambiado a text para aceptar coma o punto como separador decimal -->
+                  <input type="text" inputmode="decimal" name="precio" id="precio" placeholder="0,00" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
 
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium text-gray-700">Proveedor:</label>
@@ -249,6 +252,33 @@ function showNotification(message, type = "info") {
   }, 3000);
 }
 
+// Convierte una cadena con coma o punto decimal a número (acepta formatos como "1.234,56" o "1234.56" o "1234,56")
+function parsePrecio(str) {
+  if (str === null || str === undefined) return NaN;
+  const s = String(str).trim();
+  if (s === '') return NaN;
+  // Si viene con separador de miles '.' y decimal ',', normalizamos
+  // Ej: 1.234,56 -> 1234.56
+  let normalized = s;
+  // Si hay coma y punto, asumimos que el punto es separador de miles
+  if (s.indexOf(',') > -1 && s.indexOf('.') > -1) {
+    normalized = s.replaceAll('.', '').replace(',', '.');
+  } else if (s.indexOf(',') > -1 && s.indexOf('.') === -1) {
+    // Solo coma -> reemplazar por punto
+    normalized = s.replace(',', '.');
+  }
+  // Quitar espacios
+  normalized = normalized.replace(/\s+/g, '');
+  const n = parseFloat(normalized);
+  return isNaN(n) ? NaN : n;
+}
+
+// Formatea número a string con separador de miles y coma decimal (estilo colombiano)
+function formatPrecio(num) {
+  if (num === null || num === undefined || isNaN(num)) return '';
+  return num.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 async function cargarProveedoresSelect(selectId = "proveedorId") {
   const select = document.getElementById(selectId);
   if (!select) return;
@@ -313,7 +343,7 @@ async function cargarProductos() {
         <td class="p-3">${p.codigo}</td>
         <td class="p-3">${p.nombre}</td>
         <td class="p-3">${p.cantidad}</td>
-        <td class="p-3">$${p.precio}</td>
+        <td class="p-3">$${formatPrecio(p.precio)}</td>
         <td class="p-3">${provs}</td>
         <td class="p-3 flex gap-2">
           <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
@@ -360,7 +390,8 @@ document.getElementById("tablaProductos").addEventListener("click", async (e) =>
     form.codigo.value = btn.dataset.codigo;
     form.nombre.value = btn.dataset.nombre;
     form.cantidad.value = btn.dataset.cantidad;
-    form.precio.value = btn.dataset.precio;
+    // Mostrar precio formateado (usa comma decimal)
+    form.precio.value = formatPrecio(parseFloat(btn.dataset.precio));
     showNotification("✏️ Editando producto...", "info");
     return;
   }
@@ -385,14 +416,21 @@ document.getElementById("formProducto").addEventListener("submit", async functio
   e.preventDefault();
 
   const selectedProveedores = Array.from(document.getElementById("proveedorId").selectedOptions).map(o => o.value);
-  const producto = {
-    codigo: this.codigo.value.trim(),
-    nombre: this.nombre.value.trim(),
-    cantidad: parseInt(this.cantidad.value),
-    precio: parseFloat(this.precio.value),
-    proveedorIdStrs: selectedProveedores,
-    tiendaId: tiendaId
-  };
+    const rawPrecio = this.precio.value;
+    const precioNum = parsePrecio(rawPrecio);
+    if (isNaN(precioNum)) {
+      showNotification('⚠️ Precio inválido', 'warning');
+      return;
+    }
+
+    const producto = {
+      codigo: this.codigo.value.trim(),
+      nombre: this.nombre.value.trim(),
+      cantidad: parseInt(this.cantidad.value) || 0,
+      precio: precioNum,
+      proveedorIdStrs: selectedProveedores,
+      tiendaId: tiendaId
+    };
 
   const isEdit = !!this.dataset.id;
   const url = isEdit ? `/api/productos/${this.dataset.id}` : `/api/productos`;
@@ -446,6 +484,7 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
   document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
   document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkPrediccion").href = `/admin/tiendas/${tiendaId}/prediccion`;
   document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
   document.getElementById("linkTiendas").href = `/admin/tiendas`;
 });
