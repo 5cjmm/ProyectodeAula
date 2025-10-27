@@ -21,12 +21,8 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void guardarUsuario(Usuario usuario) {
-        if (usuarioRepository.existsByUsername(usuario.getUsername())) {
-            throw new RuntimeException("Ya existe un usuario con ese nombre");
-        } /*else if (usuario.getPassword().length() < 6) {
-            throw new RuntimeException("La contraseña debe tener al menos 6 caracteres");*/
-            else if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+    public void guardarUsuario(Usuario usuario) { 
+            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
             throw new RuntimeException("Ya existe un usuario con ese email");
         }
 
@@ -40,9 +36,9 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public boolean existePorUsername(String username) {
+    /*public boolean existePorUsername(String username) {
         return usuarioRepository.findByUsername(username) != null;
-    }
+    }*/
 
    public void actualizarUsuario(Usuario usuario) {
     Optional<Usuario> existenteOpt = usuarioRepository.findById(usuario.getId());
@@ -51,14 +47,18 @@ public class UsuarioService {
         Usuario existente = existenteOpt.get();
         existente.setUsername(usuario.getUsername());
 
-        if (!usuario.getPassword().isBlank()) {
+       if (usuario.getPassword() != null && !usuario.getPassword().isBlank()) {
             String encriptada = passwordEncoder.encode(usuario.getPassword());
             existente.setPassword(encriptada);
         }
 
+        // No permitir cambiar roles si no eres admin (opcional)
+        if (usuario.getRoles() != null && !usuario.getRoles().isEmpty()) {
+            existente.setRoles(usuario.getRoles());
+        }
+
         existente.setRoles(usuario.getRoles());
 
-        // Aquí puedes añadir más campos si los hay...
 
         usuarioRepository.save(existente);
     }
@@ -71,9 +71,7 @@ public class UsuarioService {
 
     // 🔹 Registrar tendero
     public Usuario registrarTendero(Usuario tendero, String tiendaId) {
-        if (usuarioRepository.existsByUsername(tendero.getUsername())) {
-            throw new RuntimeException("El nombre de usuario ya está en uso");
-        }
+    
         if (usuarioRepository.existsByEmail(tendero.getEmail())) {
             throw new RuntimeException("El correo ya está en uso");
         }

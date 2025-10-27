@@ -1,5 +1,6 @@
 package com.ShopMaster.Controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ import com.ShopMaster.Model.Usuario;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/admin/tiendas")
+@RequestMapping("/tiendas")
 public class TiendaViewController {
 
     @GetMapping
@@ -46,8 +47,9 @@ public class TiendaViewController {
     }
 
     @GetMapping("/{id}/puntoventa")
-    public String verPuntoVenta(@PathVariable String id, Model model) {
-        model.addAttribute("tiendaId", id); // se pasa a PuntoVenta.html
+    public String verPuntoVenta(@PathVariable String id, Authentication authentication, Model model) {
+        model.addAttribute("tiendaId", id);
+        model.addAttribute("rolUsuario", authentication.getAuthorities().iterator().next().getAuthority());
         return "PuntoVenta"; // templates/PuntoVenta.html
     }
 
@@ -62,5 +64,11 @@ public class TiendaViewController {
         model.addAttribute("tiendaId", id); // se pasa a Tendero.html
         return "RegistroTendero"; // templates/Tendero.html
 
+    }
+
+    @GetMapping("/{id}/perfil")
+    public String verPerfil(@PathVariable String id, Model model) {
+        model.addAttribute("tiendaId", id);
+        return "Perfil";
     }
 }

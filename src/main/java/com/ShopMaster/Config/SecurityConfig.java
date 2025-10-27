@@ -65,11 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
 
                         .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                       /*  .requestMatchers( "/tendero/agregar-producto", 
-                        "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
-                        "/admin/crear-producto", "/admin/tiendas", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")*/
-                    //    .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
+                        .requestMatchers("/tiendas/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
                         .requestMatchers("/api/**").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
