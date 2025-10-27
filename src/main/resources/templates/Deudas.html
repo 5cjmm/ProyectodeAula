@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de deudas - ShopMaster</title>
-    <link rel="icon" href="/img/logo-tc.ico" type="image/x-icon" />
+    <title>ShopMaster - Gestión deudas</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -31,174 +30,284 @@
     </style>
 </head>
 
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
+<body class="bg-gray-50">
+<div class="flex min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg mb-4">
-        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo"
-            class="w-25 h-10 rounded-full" />
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">Gestión de deudas</div>
-        <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-    </nav>
-
-    <!-- Filtros -->
-    <form action="/deudas" method="get" class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 px-4">
-    <input type="text" name="cliente" placeholder="Nombre Cliente" class="p-2 rounded border border-gray-300" />
-    
-    <select name="estado" class="p-2 rounded border border-gray-300">
-        <option value="">Estado</option>
-        <option value="PAGADA">Pagada</option>
-        <option value="NO_PAGADA">No pagada</option>
-        <option value="PARCIAL">Parcial</option>
-    </select>
-    
-    <input type="date" name="fecha" class="p-2 rounded border border-gray-300" />
-    
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2">Buscar</button>
-    </form>
-
-
-    <!-- Tabla -->
-    <div class="w-full px-4 overflow-auto">
-        <table class="min-w-full text-sm text-left text-gray-700 bg-white rounded shadow">
-            <thead class="bg-gray-800 text-white">
-                <tr>
-                    <th class="px-4 py-2">Cédula</th>
-                    <th class="px-4 py-2">Nombre</th>
-                    <th class="px-4 py-2">Fecha venta</th>
-                    <th class="px-4 py-2">Productos</th>
-                    <th class="px-4 py-2">Total (COP)</th>
-                    <th class="px-4 py-2">Estado</th>
-                    <th class="px-4 py-2">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="deuda : ${deudas}" class="border-t">
-                    <td class="px-4 py-2" th:text="${deuda.cedulaCliente}"></td>
-                    <td class="px-4 py-2" th:text="${deuda.nombreCliente}"></td>
-                    <td class="px-4 py-2" th:text="${#temporals.format(deuda.fechaVenta, 'yyyy-MM-dd HH:mm')}"></td>
-                    ></td>
-                    <td class="px-4 py-2">
-                        <ul>
-                            <li th:each="p : ${deuda.productos}" th:text="${p.nombre} + ' x' + ${p.cantidad}"></li>
-                        </ul>
-                    </td>
-                    <td class="px-4 py-2" th:text="'$' + ${#numbers.formatDecimal(deuda.totalRestante, 1, 'COMMA', 2, 'POINT')} + ' / $' + ${#numbers.formatDecimal(deuda.total, 1, 'COMMA', 2, 'POINT')}"></td>
-                    <td class="px-4 py-2">
-                        <span th:text="${deuda.estado}" th:class="'estado ' + deuda.estado"></span>
-                    </td>
-                    <td class="px-4 py-2 space-x-2">
-                        <button th:attr="onclick=|openAbonoModal('${deuda.id}')|"
-                            class="bg-yellow-400 hover:bg-yellow-500 text-black rounded px-3 py-1">Abonar</button>
-                        <button th:attr="onclick=|openHistorialModal('${deuda.id}')|"
-                            class="bg-gray-500 hover:bg-gray-600 text-white rounded px-3 py-1">Ver Historial</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Modal: Abonar -->
-    <div id="modalAbono" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Registrar Abono</h2>
-                <button onclick="closeModal('modalAbono')" class="text-red-500 text-xl">&times;</button>
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-gray-200 p-6">
+    <div class="flex flex-col items-center mb-10">
+              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+                <img 
+                  th:src="@{/images/logo.png}" 
+                  alt="ShopMaster" 
+                  class="h-28 w-auto object-contain drop-shadow-md"
+                >
+              </div>
             </div>
-            <form id="abonoForm" method="post">
-                <label class="block mb-2">Monto del abono</label>
-                <input type="number" name="montoAbono" class="w-full p-2 border border-gray-300 rounded mb-4"
-                    required />
-                <input type="hidden" name="monto" id="montoField" />
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Modal: Historial de Abonos -->
-<div id="modalHistorial" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg w-full max-w-lg">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Historial de Abonos</h2>
-            <button onclick="closeModal('modalHistorial')" class="text-red-500 text-xl">&times;</button>
+    <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+    <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Informe de Ventas
+                </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Gestion de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
+                </a>
+                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Cerrar sesión
+                </a>
+            </nav>
+    </aside>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold text-gray-800">Gestión de Deudas</h1>
+        <div class="flex items-center gap-3">
+          <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+          <span class="text-sm font-medium text-gray-700">Administrador</span>
         </div>
-        <table class="w-full border">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-2 border text-left">Fecha</th>
-                    <th class="p-2 border text-left">Monto</th>
-                </tr>
-            </thead>
-            <tbody id="historialAbonosBody">
-                <!-- Aquí se insertarán los abonos por JS -->
-            </tbody>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="max-w-7xl mx-auto w-full px-6 py-8">
+
+      <!-- Filtros -->
+      <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6 flex flex-wrap gap-4 items-center">
+        <input id="buscarCliente" type="text" placeholder="Buscar cliente o cédula..."
+               class="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:ring-2 focus:ring-blue-500">
+        <select id="filtroEstado" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          <option value="">Todos los estados</option>
+          <option value="NO PAGADA">No pagada</option>
+          <option value="PARCIAL">Parcial</option>
+          <option value="PAGADA">Pagada</option>
+        </select>
+        <input id="fechaInicio" type="date" class="px-4 py-2 border border-gray-300 rounded-lg">
+        <input id="fechaFin" type="date" class="px-4 py-2 border border-gray-300 rounded-lg">
+        <button onclick="filtrarDeudas()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Filtrar</button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <table class="min-w-full bg-blue-50 text-blue-900">
+          <thead class="bg-blue-500 text-white text-sm">
+            <tr>
+              <th class="px-6 py-3 text-left">Cliente</th>
+              <th class="px-6 py-3 text-left">Cédula</th>
+              <th class="px-6 py-3 text-left">Total</th>
+              <th class="px-6 py-3 text-left">Restante</th>
+              <th class="px-6 py-3 text-left">Estado</th>
+              <th class="px-6 py-3 text-left">Fecha</th>
+              <th class="px-6 py-3 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaDeudas" class="text-sm"></tbody>
         </table>
-        <div class="flex justify-end mt-4">
-            <button onclick="closeModal('modalHistorial')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Cerrar</button>
+
+        <div id="emptyDeudas" class="text-center py-10 text-gray-500 hidden">
+          <p>No hay deudas registradas aún</p>
         </div>
-    </div>
+
+        <div class="flex justify-center items-center space-x-4 bg-gray-50 py-4 border-t border-gray-200">
+          <button onclick="cambiarPagina(-1)" class="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600">Anterior</button>
+          <span id="paginaActual" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700">1</span>
+          <button onclick="cambiarPagina(1)" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Siguiente</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
 </div>
 
+<!-- Modal Abono -->
+<div id="modalAbono" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-96">
+    <h3 class="text-lg font-semibold mb-4 text-gray-800">Registrar Abono</h3>
+    <input id="montoAbono" type="number" placeholder="Monto del abono" min="0"
+           class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 mb-4">
+    <div class="flex justify-end gap-3">
+      <button onclick="cerrarModalAbono()" class="px-4 py-2 border border-gray-300 rounded-lg">Cancelar</button>
+      <button onclick="confirmarAbono()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Registrar</button>
+    </div>
+  </div>
+</div>
 
-    <!-- JS para modales y envío -->
-    <script>
-        function openAbonoModal(deudaId) {
-            document.getElementById("modalAbono").classList.remove("hidden");
-            const form = document.getElementById("abonoForm");
-            form.action = "/deudas/abonar/" + deudaId;
-        }
+<script>
+const tiendaId = document.getElementById("tiendaId").value;
+let pagina = 0, totalPaginas = 0, deudaSeleccionada = null;
 
-        document.getElementById("abonoForm").addEventListener("submit", function (event) {
-            const montoInput = document.querySelector("input[name='montoAbono']");
-            const hiddenMontoField = document.getElementById("montoField");
-            hiddenMontoField.value = montoInput.value;
-        });
+// 🔹 Notificación
+function showNotification(msg, type="info"){
+  const div=document.createElement("div");
+  div.className=`fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${
+    type==="success"?"bg-green-600":type==="error"?"bg-red-600":"bg-blue-600"
+  }`;
+  div.textContent=msg;
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),3000);
+}
 
-       
-            function openHistorialModal(deudaId) {
-            document.getElementById("modalHistorial").classList.remove("hidden");
+// 🔹 Cargar Deudas
+async function cargarDeudas(){
+  try{
+    const res = await fetch(`/api/deudas/tienda/${tiendaId}?page=${pagina}&size=5`);
+    if(!res.ok) throw new Error("Error al obtener deudas");
+    const data = await res.json();
+    const deudas = data.content || [];
+    totalPaginas = data.totalPages || 1;
 
-            const historialBody = document.getElementById("historialAbonosBody");
-            historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">Cargando...</td></tr>';
+    const tbody=document.getElementById("tablaDeudas");
+    tbody.innerHTML="";
+    if(deudas.length===0){
+      document.getElementById("emptyDeudas").classList.remove("hidden");
+      return;
+    }
+    document.getElementById("emptyDeudas").classList.add("hidden");
 
-            fetch(`/deudas/historial/${deudaId}`)
-                .then(response => response.json())
-                .then(data => {
-                    historialBody.innerHTML = "";
-                    if (data.length === 0) {
-                        historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">No hay abonos registrados.</td></tr>';
-                        return;
-                    }
+    deudas.forEach(d=>{
+      const tr=document.createElement("tr");
+      tr.className="border-b border-blue-100 hover:bg-blue-100 transition";
+      tr.innerHTML=`
+        <td class="px-6 py-3">${d.nombreCliente}</td>
+        <td class="px-6 py-3">${d.cedulaCliente}</td>
+        <td class="px-6 py-3">$${d.total.toFixed(2)}</td>
+        <td class="px-6 py-3">$${d.totalRestante.toFixed(2)}</td>
+        <td class="px-6 py-3">${d.estado}</td>
+        <td class="px-6 py-3">${new Date(d.fechaVenta).toLocaleDateString()}</td>
+        <td class="px-6 py-3 flex gap-2">
+          <button onclick="abrirModalAbono('${d.id}')" class="bg-blue-500 text-white px-3 py-1 rounded">💰</button>
+          <button onclick="verDetalle('${d.id}')" class="bg-amber-500 text-white px-3 py-1 rounded">👁️</button>
+          <button onclick="eliminarDeuda('${d.id}', '${d.estado}')" class="bg-red-500 text-white px-3 py-1 rounded">🗑️</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+    document.getElementById("paginaActual").textContent=pagina+1;
+  }catch(e){
+    showNotification("Error al cargar deudas","error");
+  }
+}
 
-                    data.forEach(abono => {
-                        const fecha = new Date(abono.fecha).toLocaleString();
-                        const row = `
-                            <tr>
-                                <td class="p-2 border">${fecha}</td>
-                                <td class="p-2 border">$${abono.monto.toFixed(2)}</td>
-                            </tr>
-                        `;
-                        historialBody.innerHTML += row;
-                    });
-                })
-                .catch(error => {
-                    historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center text-red-500">Error al cargar historial.</td></tr>';
-                    console.error("Error al cargar historial:", error);
-                });
-        }
+function cambiarPagina(d){ if(d===-1&&pagina>0){pagina--;} if(d===1&&pagina+1<totalPaginas){pagina++;} cargarDeudas(); }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add("hidden");
-        }
-    </script>
+// 🔹 Buscar y filtrar
+function filtrarDeudas(){
+  const nombre=document.getElementById("buscarCliente").value.toLowerCase();
+  const estado=document.getElementById("filtroEstado").value;
+  const inicio=document.getElementById("fechaInicio").value;
+  const fin=document.getElementById("fechaFin").value;
+  const filas=document.querySelectorAll("#tablaDeudas tr");
+  filas.forEach(f=>{
+    const cols=f.querySelectorAll("td");
+    const nombreCol=cols[0].textContent.toLowerCase();
+    const est=cols[4].textContent;
+    const fecha=cols[5].textContent;
+    const visible=(!nombre||nombreCol.includes(nombre))&&(!estado||est===estado)&&
+      (!inicio||new Date(fecha)>=new Date(inicio))&&(!fin||new Date(fecha)<=new Date(fin));
+    f.style.display=visible?"":"none";
+  });
+}
+
+// 🔹 Abonos
+function abrirModalAbono(id){ deudaSeleccionada=id; document.getElementById("modalAbono").classList.remove("hidden","opacity-0"); document.getElementById("modalAbono").classList.add("flex"); }
+function cerrarModalAbono(){ document.getElementById("modalAbono").classList.add("hidden"); }
+async function confirmarAbono(){
+  const monto=parseFloat(document.getElementById("montoAbono").value);
+  if(!monto||monto<=0){showNotification("Monto inválido","warning");return;}
+  try{
+    const res=await fetch(`/api/deudas/${deudaSeleccionada}/abonar`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({monto})
+    });
+    if(!res.ok) throw new Error(await res.text());
+    cerrarModalAbono();
+    showNotification("💰 Abono registrado con éxito","success");
+    cargarDeudas();
+  }catch(e){showNotification("Error al registrar abono","error");}
+}
+
+// 🔹 Eliminar deuda
+async function eliminarDeuda(id,estado){
+  if(estado!=="PAGADA"){showNotification("Solo se pueden eliminar deudas pagadas","warning");return;}
+  if(!confirm("¿Eliminar deuda pagada?"))return;
+  await fetch(`/api/deudas/eliminar/${id}`,{method:"DELETE"});
+  showNotification("🗑️ Deuda eliminada","success");
+  cargarDeudas();
+}
+
+// 🔹 Ver detalle
+function verDetalle(id){
+  showNotification("📝 Aquí iría el detalle de la deuda (pendiente de modal)","info");
+}
+
+// 🔹 Inicialización
+document.addEventListener("DOMContentLoaded",()=>{
+  cargarDeudas();
+  document.getElementById("linkDashboard").href=`/admin/tiendas/${tiendaId}/dashboard`;
+  document.getElementById("linkInventario").href=`/admin/tiendas/${tiendaId}/inventario`;
+  document.getElementById("linkProveedores").href=`/admin/tiendas/${tiendaId}/proveedores`;
+  document.getElementById("linkDeudas").href=`/admin/tiendas/${tiendaId}/deudas`;
+  document.getElementById("linkPuntoVenta").href=`/admin/tiendas/${tiendaId}/puntoventa`;
+  document.getElementById("linkInforme").href=`/admin/tiendas/${tiendaId}/informe`;
+    document.getElementById("linkPrediccion").href=`/admin/tiendas/${tiendaId}/prediccion`;
+  document.getElementById("linkTendero").href=`/admin/tiendas/${tiendaId}/tendero`;
+  document.getElementById("linkTiendas").href = `/admin/tiendas`;
+});
+</script>
+
 </body>
-
 </html>

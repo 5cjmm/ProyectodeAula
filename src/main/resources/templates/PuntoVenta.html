@@ -1,159 +1,598 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Punto de Venta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function actualizarPrecio() {
-            const input = document.getElementById("nombreProducto");
-            const selected = input.value;
-            const options = document.querySelectorAll("#productos option");
-            let precio = "Desconocido";
-
-            options.forEach(option => {
-                if (option.value === selected) {
-                    precio = option.dataset.precio;
-                }
-            });
-
-            document.getElementById("precioDisplay").textContent = "Precio: $" + precio;
-        }
-    </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShopMaster - Punto de Venta</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen p-6 flex flex-col items-center">
-    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
-     <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
-    <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Deudas</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Registro de Proveedor</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
-            </div>
 
-            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
-            </div>
+<body class="bg-gray-50">
+
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+      <div class="flex flex-col items-center mb-10">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
         </div>
-  </nav>
+      </div>
 
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Punto de Venta</h1>
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}" value="">
+      <nav class="space-y-2">
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Dashboard
+        </a>
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Inventario
+        </a>
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+          </svg>
+          Proveedores
+        </a>
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Deudas
+        </a>
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Punto de Venta
+        </a>
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Gestion de Tenderos
+        </a>
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Tiendas
+        </a>
+        <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Cerrar sesión
+        </a>
+      </nav>
+    </aside>
 
-    <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
-
-         <div class="flex gap-4">
-            <form th:action="@{/tendero/agregar-producto}" method="post" class="space-y-4">           <!--required-->
-                <input type="text" id="nombreProducto" placeholder="Nombre del Producto" name="nombreProducto" list="productos" onchange="actualizarPrecio()" class="w-1/1 p-2 border rounded-md">
-                    <datalist id="productos">
-                        <option th:each="p : ${todosProductos}" th:value="${p.nombre}" th:data-precio="${p.precio}"></option>
-                    </datalist>
-                <input type="number" name="cantidad" placeholder="Cantidad" min="1" required
-                        class="w-1/1 p-2 border rounded-md">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
-            </form>
-
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
+          <div class="flex items-center gap-3">
+            <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+            <span class="text-sm font-medium text-gray-700">Administrador</span>
+          </div>
         </div>
+      </header>
+      <!-- Body -->
+      <main class="w-full max-w-none px-8 py-8">
+        <div class="max-w-[1400px] mx-auto">
 
-        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
-                        <th class="p-3">Código</th>
-                        <th class="p-3">Nombre</th>
-                        <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio U. (COP)</th>
-                        <th class="p-3">Subtotal</th>
-                        <th class="p-3">Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="p : ${productosSeleccionados}" class="border-b dark:border-blue-600">
-                        <td th:text="${p.codigo}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.nombre}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.cantidad}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.precioUnitario}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.cantidad * p.precioUnitario}" class="p-3 dark:text-white"></td>
-                        <td class="p-3">
-                            <a th:href="@{'/tendero/eliminar/' + ${p.codigo}}"
-                               class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+          <!-- Top: buscar + acciones -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
+              <div class="flex items-center gap-3">
+                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
+                  class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
+                <button id="refrescarProducts"
+                  class="ml-2 px-3 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">Refrescar</button>
+              </div>
 
-
-        <div class="flex justify-between">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">Total Venta: <span th:text="${totalVenta}">0</span></h3>
-            <form th:action="@{/tendero/guardar}" method="post">
-                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold">Finalizar Venta</button>
-            </form>
-            <!-- Botón para registrar como deuda -->
-            <button onclick="abrirModalDeuda()" type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold">Registrar Deuda</button>
-        </div>
-        <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
-            <p th:text="${error}"></p>
-        </div>
-        <div th:if="${success}" class="bg-green-500 text-white p-2 rounded-md">
-            <p th:text="${success}"></p>
-        </div>
-        <!-- Modal: Registrar Deuda -->
-        <div id="modalDeuda" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg w-full max-w-md">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">Registrar Deuda</h2>
-                    <button onclick="cerrarModalDeuda()" class="text-red-500 text-xl">&times;</button>
+              <!-- Productos disponibles -->
+              <div class="mt-4">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 text-sm text-gray-700">
+                      <tr>
+                        <th class="px-4 py-3 text-left">Código</th>
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Stock</th>
+                        <th class="px-4 py-3 text-left">Precio</th>
+                        <th class="px-4 py-3 text-left">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsBody" class="text-sm">
+                      <!-- llenado por JS -->
+                    </tbody>
+                  </table>
                 </div>
-                <form th:action="@{/deudas/registrar}" method="post">
-                <label class="block mb-2">Cédula del Cliente</label>
-                    <input type="text" name="cedulaCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
 
-                    <label class="block mb-2">Nombre del Cliente</label>
-                    <input type="text" name="nombreCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
+                <div id="emptyProducts" class="text-center py-8 text-gray-500 hidden">
+                  <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4l3 10 4-18 3 8h4">
+                    </path>
+                  </svg>
+                  No hay productos disponibles.
+                </div>
 
-
-                    <!-- Campos ocultos para cada producto -->
-                    <div th:each="prod, i : ${productosSeleccionados}">
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].codigo'" th:value="${prod.codigo}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].nombre'" th:value="${prod.nombre}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].cantidad'" th:value="${prod.cantidad}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].precio'" th:value="${prod.precioUnitario}" />
-                    </div>
-
-
-                    <div class="flex justify-end">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Guardar Deuda</button>
-                    </div>
-                </form>
+                <!-- Paginación -->
+                <div class="flex justify-center items-center space-x-4 bg-gray-50 py-4 border-t border-gray-200 mt-4">
+                  <button onclick="cambiarPaginaProducts(-1)"
+                    class="px-4 py-2 bg-amber-500 text-white border border-amber-500 rounded hover:bg-amber-600">
+                    Anterior
+                  </button>
+                  <span id="paginaActualProducts" class="px-4 py-2 bg-gray-100 rounded-lg font-semibold text-gray-700">
+                    1
+                  </span>
+                  <button onclick="cambiarPaginaProducts(1)"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                    Siguiente
+                  </button>
+                </div>
+              </div>
             </div>
+
+            <!-- Carrito -->
+            <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+              <h3 class="text-lg font-semibold mb-3">Carrito</h3>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead class="text-sm text-gray-700 bg-gray-50">
+                    <tr>
+                      <th class="px-3 py-2 text-left">Código</th>
+                      <th class="px-3 py-2 text-left">Nombre</th>
+                      <th class="px-3 py-2 text-left">Cant.</th>
+                      <th class="px-3 py-2 text-left">Precio U.</th>
+                      <th class="px-3 py-2 text-left">Subtotal</th>
+                      <th class="px-3 py-2 text-left">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cartBody" class="text-sm">
+                    <!-- filas del carrito -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4 border-t pt-4">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="text-sm text-gray-600">Subtotal</div>
+                  <div id="subtotalDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                  <div class="text-sm text-gray-600">IVA (0%)</div>
+                  <div id="ivaDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="text-sm text-gray-700 font-semibold">Total</div>
+                  <div id="totalDisplay" class="text-2xl font-bold text-cyan-700">COP 0</div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 gap-3">
+                  <button id="btnRegisterSale"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
+                    Registrar Venta
+                  </button>
+                  <button id="btnRegisterDebt"
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
+                    Registrar como Deuda
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Historial rapido / últimos items (opcional) -->
+          <div class="bg-white rounded-xl shadow-lg p-4">
+            <h4 class="font-semibold mb-2">Últimas ventas (resumen)</h4>
+            <div id="recentSales" class="text-sm text-gray-600">Cargando...</div>
+          </div>
         </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal deuda -->
+  <div id="modalDebt" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Registrar Deuda</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-sm font-medium">Nombre del cliente</label>
+          <input id="debtNombre" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Cédula / Documento</label>
+          <input id="debtCedula" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Abono inicial (opcional)</label>
+          <input id="debtAbono" type="number" min="0" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md"
+            placeholder="0">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-5">
+        <button id="cancelDebt" class="px-4 py-2 rounded border">Cancelar</button>
+        <button id="confirmDebt" class="px-4 py-2 bg-yellow-500 text-white rounded">Registrar Deuda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    (function () {
+      // helpers
+      function fmtCOP(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n); }
+      function showNotification(msg, type = 'info') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
+        const d = document.createElement('div');
+        d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
+        d.textContent = msg;
+        document.body.appendChild(d);
+        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+      }
+
+      // DOM
+      const tiendaId = document.getElementById('tiendaId').value;
+      const productsBody = document.getElementById('productsBody');
+      const emptyProducts = document.getElementById('emptyProducts');
+      const buscar = document.getElementById('buscarProducts');
+      const refrescarBtn = document.getElementById('refrescarProducts');
+
+      const cartBody = document.getElementById('cartBody');
+      const subtotalDisplay = document.getElementById('subtotalDisplay');
+      const totalDisplay = document.getElementById('totalDisplay');
+
+      const btnRegisterSale = document.getElementById('btnRegisterSale');
+      const btnRegisterDebt = document.getElementById('btnRegisterDebt');
+
+      const modalDebt = document.getElementById('modalDebt');
+      const cancelDebt = document.getElementById('cancelDebt');
+      const confirmDebt = document.getElementById('confirmDebt');
+      const debtNombre = document.getElementById('debtNombre');
+      const debtCedula = document.getElementById('debtCedula');
+      const debtAbono = document.getElementById('debtAbono');
+
+      // state
+      let products = []; // productos disponibles (página actual)
+      let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
+
+      // paginación
+      let paginaProducts = 0;
+      const tamanoPaginaProducts = 10; // items por página
+      let totalPaginasProducts = 1;
+
+      // load products (paginated)
+      async function loadProducts() {
+        try {
+          productsBody.innerHTML = '';
+          const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${paginaProducts}&size=${tamanoPaginaProducts}`);
+          if (!res.ok) {
+            const txt = await res.text().catch(() => 'Error');
+            showNotification('❌ ' + txt, 'error');
+            return;
+          }
+          const data = await res.json();
+          // soporta respuesta paginada (content + totalPages) o lista plana
+          products = data.content || data || [];
+          totalPaginasProducts = data.totalPages || 1;
+
+          if (!products.length) {
+            emptyProducts.classList.remove('hidden');
+            document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+            return;
+          } else emptyProducts.classList.add('hidden');
+
+          products.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
+            <td class="px-4 py-3">${p.codigo}</td>
+            <td class="px-4 py-3">${p.nombre}</td>
+            <td class="px-4 py-3">${p.cantidad}</td>
+            <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
+            <td class="px-4 py-3">
+              <button class="add-to-cart px-3 py-1 bg-cyan-600 text-white rounded" data-id="${p.id}">Añadir</button>
+            </td>`;
+            productsBody.appendChild(tr);
+          });
+
+          // actualizar paginador
+          document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error al cargar productos', 'error');
+        }
+      }
+
+      // search
+      buscar.addEventListener('input', () => {
+        const q = buscar.value.trim().toLowerCase();
+        Array.from(productsBody.querySelectorAll('tr')).forEach(row => {
+          const codigo = row.cells[0].textContent.toLowerCase();
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+        });
+      });
+
+      refrescarBtn.addEventListener('click', () => loadProducts());
+
+      // paginación productos
+      window.cambiarPaginaProducts = function (direccion) {
+        if (direccion === -1 && paginaProducts > 0) paginaProducts--;
+        if (direccion === 1 && paginaProducts + 1 < totalPaginasProducts) paginaProducts++;
+        loadProducts();
+      }
+
+      // add to cart (delegation)
+      productsBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.add-to-cart');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const prod = products.find(x => x.id === id);
+        if (!prod) return showNotification('Producto no encontrado', 'error');
+        if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
+
+        const existing = cart.find(c => c.productoId === id);
+        if (existing) {
+          if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
+          existing.cantidad += 1;
+          existing.subtotal = existing.cantidad * existing.precioUnitario;
+        } else {
+          cart.push({
+            productoId: prod.id,
+            codigo: prod.codigo,
+            nombre: prod.nombre,
+            cantidad: 1,
+            precioUnitario: prod.precio,
+            subtotal: prod.precio
+          });
+        }
+        renderCart();
+      });
+
+      // render cart
+      function renderCart() {
+        cartBody.innerHTML = '';
+        if (cart.length === 0) {
+          cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+        } else {
+          cart.forEach((c, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
+            <td class="px-3 py-2">${c.codigo}</td>
+            <td class="px-3 py-2">${c.nombre}</td>
+            <td class="px-3 py-2">
+              <input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}">
+            </td>
+            <td class="px-3 py-2">${fmtCOP(c.precioUnitario)}</td>
+            <td class="px-3 py-2 subtotal-cell">${fmtCOP(c.subtotal)}</td>
+            <td class="px-3 py-2">
+              <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
+            </td>`;
+            cartBody.appendChild(tr);
+          });
+        }
+        recalcTotals();
+      }
+
+      // handle cart interactions
+      cartBody.addEventListener('input', (e) => {
+        const input = e.target.closest('input.cantidad-input');
+        if (!input) return;
+        const idx = Number(input.dataset.idx);
+        const val = Math.max(1, parseInt(input.value || '1'));
+        const item = cart[idx];
+        const prod = products.find(p => p.id === item.productoId);
+        if (val > prod.cantidad) {
+          showNotification('No hay suficiente stock', 'warning');
+          input.value = item.cantidad;
+          return;
+        }
+        item.cantidad = val;
+        item.subtotal = item.cantidad * item.precioUnitario;
+        renderCart();
+      });
+
+      cartBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.remove-item');
+        if (!btn) return;
+        const idx = Number(btn.dataset.idx);
+        cart.splice(idx, 1);
+        renderCart();
+      });
+
+      // totals
+      function recalcTotals() {
+        const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
+        const iva = 0; // si luego aplicas IVA, cámbialo
+        const total = subtotal + iva;
+        subtotalDisplay.textContent = fmtCOP(subtotal);
+        document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
+        totalDisplay.textContent = fmtCOP(total);
+      }
+
+      // prepare payload: map cart -> ProductoVendido
+      function buildProductosVendido() {
+        return cart.map(i => ({
+          productoId: i.productoId,
+          codigo: i.codigo,
+          nombre: i.nombre,
+          cantidad: i.cantidad,
+          precioUnitario: i.precioUnitario,
+          subtotal: i.subtotal
+        }));
+      }
+
+      // register sale
+      btnRegisterSale.addEventListener('click', async () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+
+        const venta = {
+          tiendaId: tiendaId,
+          productos: buildProductosVendido()
+        };
+
+        try {
+          const res = await fetch('/api/ventas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(venta)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al registrar venta', 'error');
+            return;
+          }
+          showNotification('✅ Venta registrada', 'success');
+          cart = [];
+          renderCart();
+          loadProducts(); // recargar stock
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      // register debt (open modal)
+      btnRegisterDebt.addEventListener('click', () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+        debtNombre.value = '';
+        debtCedula.value = '';
+        debtAbono.value = '';
+        modalDebt.classList.remove('hidden');
+        modalDebt.style.display = 'flex';
+      });
+
+      cancelDebt.addEventListener('click', () => {
+        modalDebt.classList.add('hidden');
+        modalDebt.style.display = 'none';
+      });
+
+      // confirm debt
+      confirmDebt.addEventListener('click', async () => {
+        const nombre = debtNombre.value.trim();
+        const cedula = debtCedula.value.trim();
+        const abono = parseFloat(debtAbono.value || 0);
+
+        if (!nombre || !cedula) { return showNotification('Nombre y cédula requeridos', 'warning'); }
+
+        const deuda = {
+          tiendaId: tiendaId,
+          nombreCliente: nombre,
+          cedulaCliente: cedula,
+          productos: buildProductosVendido(),
+          total: cart.reduce((s, i) => s + i.subtotal, 0),
+          totalRestante: cart.reduce((s, i) => s + i.subtotal, 0)
+        };
+
+        // si hay abono, aplicarlo: push a historialAbonos
+        if (abono > 0) {
+          deuda.totalRestante = deuda.total - abono;
+          deuda.historialAbonos = [{ monto: abono, fecha: new Date().toISOString() }];
+        }
+
+        try {
+          const res = await fetch('/api/deudas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(deuda)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al crear deuda', 'error');
+            return;
+          }
+          showNotification('✅ Deuda registrada', 'success');
+          cart = [];
+          renderCart();
+          modalDebt.classList.add('hidden');
+          modalDebt.style.display = 'none';
+          loadProducts();
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      async function loadRecentSales() {
+        try {
+          // Usa endpoint dedicado ordenado por fecha desc
+          const res = await fetch(`/api/ventas/tienda/${tiendaId}/ultimas?limite=5`);
+          if (!res.ok) return;
+          const items = await res.json();
+          const cont = document.getElementById('recentSales');
+          if (!Array.isArray(items) || items.length === 0) { cont.textContent = 'Sin ventas recientes'; return; }
+          cont.innerHTML = items.map(v => {
+            const fechaTxt = v.fecha ? new Date(v.fecha).toLocaleString() : 'Sin fecha';
+            const totalVal = (typeof v.total === 'number' && !Number.isNaN(v.total)) ? v.total : 0;
+            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(totalVal)} <span class="text-xs text-gray-500">(${fechaTxt})</span></div></div>`;
+          }).join('');
+        } catch (e) { console.warn(e); }
+      }
+
+      function initLinks() {
+        const idEl = document.getElementById('tiendaId');
+        const tid = idEl ? idEl.value : null;
+        if (!tid) return;
+        document.getElementById("linkDashboard").href = `/admin/tiendas/${tid}/dashboard`;
+        document.getElementById("linkInventario").href = `/admin/tiendas/${tid}/inventario`;
+        document.getElementById("linkProveedores").href = `/admin/tiendas/${tid}/proveedores`;
+        document.getElementById("linkDeudas").href = `/admin/tiendas/${tid}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tid}/puntoventa`;
+        document.getElementById("linkInforme").href = `/admin/tiendas/${tid}/informe`;
+        document.getElementById("linkPrediccion").href = `/admin/tiendas/${tid}/prediccion`;
+        document.getElementById("linkTendero").href = `/admin/tiendas/${tid}/tendero`;
+        document.getElementById("linkTiendas").href = `/admin/tiendas`;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadProducts();
+        renderCart();
+        loadRecentSales();
+        initLinks();
+      });
+
+    })();
+  </script>
 </body>
-<script>
-    function abrirModalDeuda() {
-      document.getElementById("modalDeuda").classList.remove("hidden");
-    }
 
-    function cerrarModalDeuda() {
-      document.getElementById("modalDeuda").classList.add("hidden");
-    }
-
-    const menuToggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-
-    menuToggle.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
-    });
-    </script>
 </html>
