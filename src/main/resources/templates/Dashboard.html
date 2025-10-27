@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <title>ShopMaster - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -130,7 +131,7 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" />
                             </svg>
                         </div>
-                        <div class="text-2xl font-bold">$12,345</div>
+                    <div class="text-2xl font-bold" id="ventasTotales" th:text="${ventasTotalesFormatted}">$12,345</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
                             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -149,7 +150,7 @@
                                     d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                             </svg>
                         </div>
-                        <div class="text-2xl font-bold">1,234</div>
+                        <div class="text-2xl font-bold" id="productosEnStock" th:text="${productosEnStock}">1,234</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
                             <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -162,13 +163,13 @@
 
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-sm font-medium text-gray-600">Pedidos Hoy</h3>
+                            <h3 class="text-sm font-medium text-gray-600">Ventas de Hoy</h3>
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
                             </svg>
                         </div>
-                        <div class="text-2xl font-bold">89</div>
+                        <div class="text-2xl font-bold" id="ventasHoy" th:text="${ventasHoy}">89</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
                             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -181,13 +182,13 @@
 
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-sm font-medium text-gray-600">Clientes Activos</h3>
+                            <h3 class="text-sm font-medium text-gray-600">Deudas Activas</h3>
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                             </svg>
                         </div>
-                        <div class="text-2xl font-bold">456</div>
+                        <div class="text-2xl font-bold" id="deudasActivas" th:text="${deudasActivas}">456</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
                             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -204,66 +205,56 @@
                     <!-- Sales Chart -->
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
                         <h3 class="text-lg font-semibold mb-4">Ventas Mensuales</h3>
-                        <div class="h-64 flex items-center justify-center text-gray-500">
-                            [Gráfico de ventas mensuales]
+                        <div class="h-64">
+                            <canvas id="ventasMensualesChart" height="220"></canvas>
                         </div>
                     </div>
 
                     <!-- Inventory Table -->
-                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                    <div class="bg-white p-6 rounded-lg border border-red-200">
                         <h3 class="text-lg font-semibold mb-4">Inventario Bajo</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                <span class="font-medium">Leche Entera 1L</span>
-                                <span class="text-red-500 font-semibold">5 unidades</span>
+                        <div class="space-y-3" id="bajosContainer" th:attr="data-page=${bajosPage.number},data-total-pages=${bajosPage.totalPages},data-total-elements=${bajosPage.totalElements}">
+                            <div th:if="${bajosPage == null or #lists.isEmpty(bajosPage.content)}" class="text-gray-500">No hay productos con stock bajo.</div>
+                            <div th:each="p : ${bajosPage.content}" class="flex items-center justify-between py-2 border-b border-gray-100 js-bajo-item">
+                                <span class="font-medium" th:text="${p.nombre}">Producto</span>
+                                <span class="text-red-500 font-semibold" th:text="${p.cantidad + ' unidades'}">0 unidades</span>
                             </div>
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                <span class="font-medium">Pan Integral</span>
-                                <span class="text-amber-500 font-semibold">12 unidades</span>
-                            </div>
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                <span class="font-medium">Huevos Docena</span>
-                                <span class="text-red-500 font-semibold">3 unidades</span>
+
+                            <!-- Paginación simple -->
+                            <div class="flex items-center justify-between mt-3" id="bajosPagination">
+                                <div class="text-sm text-gray-600">
+                                    <span id="bajosTotalElements" th:text="${bajosPage.totalElements}">0</span> productos encontrados
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <!-- Anterior (botón) -->
+                                    <button id="bajosPrev" type="button" class="px-4 py-2 bg-amber-400 text-white font-medium rounded-lg shadow hover:brightness-95">Anterior</button>
+                                    <!-- Número de página central -->
+                                    <div class="px-3 py-1 bg-gray-100 border rounded-full text-center mx-1">
+                                        <span class="font-medium" id="bajosPageNumber" th:text="${bajosPage.number + 1}">1</span>
+                                    </div>
+                                    <!-- Siguiente (botón) -->
+                                    <button id="bajosNext" type="button" class="px-4 py-2 bg-green-500 text-white font-medium rounded-lg shadow hover:brightness-95">Siguiente</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Orders -->
+                <!-- Deudas recientes -->
                 <div class="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 class="text-lg font-semibold mb-4">Pedidos Recientes</h3>
+                    <h3 class="text-lg font-semibold mb-4">Deudas Recientes</h3>
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                        <div th:if="${#lists.isEmpty(deudasRecientes)}" class="text-gray-500">No hay deudas recientes.</div>
+                        <div th:each="d : ${deudasRecientes}" class="flex items-center justify-between shadow-sm border-b border-gray-100">
                             <div>
-                                <p class="font-medium">María González</p>
-                                <p class="text-sm text-gray-500">Pedido #1234</p>
+                                <p class="font-medium" th:text="${d.nombreCliente != null ? d.nombreCliente : d.cedulaCliente}">Cliente</p>
                             </div>
                             <div class="text-right">
-                                <p class="font-semibold">$45.50</p>
-                                <span
-                                    class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Completado</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
-                            <div>
-                                <p class="font-medium">Carlos Ruiz</p>
-                                <p class="text-sm text-gray-500">Pedido #1235</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold">$32.75</p>
-                                <span
-                                    class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Pendiente</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-3">
-                            <div>
-                                <p class="font-medium">Ana López</p>
-                                <p class="text-sm text-gray-500">Pedido #1236</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold">$67.20</p>
-                                <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">En
-                                    proceso</span>
+                                <p class="font-semibold" th:text="${#numbers.formatDecimal(d.total, 1, 'COMMA', 2, 'POINT')}">$0.00</p>
+                                <span th:text="${d.estado != null ? d.estado : 'NO PAGADA'}"
+                                      th:class="${'inline-block px-2 py-1 text-xs rounded-full ' + (d.estado != null && d.estado.toUpperCase() == 'PAGADA' ? 'bg-green-100 text-green-800' : (d.estado != null && d.estado.toUpperCase() == 'PARCIAL' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))}">
+                                    Estado
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -276,7 +267,7 @@
 </html>
 
 
-<script>
+<script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const tiendaId = document.getElementById("tiendaId").value;
 
@@ -294,6 +285,152 @@
         document.getElementById("linkPrediccion").href = `/admin/tiendas/${tiendaId}/prediccion`;
         document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
         document.getElementById("linkTiendas").href = `/admin/tiendas`;
+
+        // --- Gráfico: Ventas Mensuales ---
+        let ventasChart;
+        async function loadVentasMensuales() {
+            try {
+                const res = await fetch(`/api/ventas/tienda/${tiendaId}/mensuales?meses=12`);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                // Asegurar orden cronológico por (año, mes)
+                // Orden cronológico (año, mes) y etiquetas numéricas (yyyy-MM)
+                const ordered = Array.isArray(data) ? [...data].sort((a,b) => (a.year - b.year) || (a.month - b.month)) : [];
+                const labels = ordered.map(d => d.label);
+                const valores = ordered.map(d => d.total);
+                const ctx = document.getElementById('ventasMensualesChart');
+                if (!ctx) return;
+                // destruir previo si existe
+                if (ventasChart) { ventasChart.destroy(); }
+                ventasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Total ventas (COP)',
+                            data: valores,
+                            borderColor: 'rgb(14, 165, 233)',
+                            backgroundColor: 'rgba(14, 165, 233, 0.35)'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(ctx.parsed.y || 0)
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#4b5563' } },
+                            y: { ticks: { color: '#4b5563', callback: (v) => new Intl.NumberFormat('es-CO', { notation: 'compact' }).format(v) }, beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (e) { console.error('Error cargando ventas mensuales:', e); }
+        }
+
+        // --- Paginación AJAX: Inventario Bajo ---
+        const bajosContainer = document.getElementById('bajosContainer');
+        const prevBtn = document.getElementById('bajosPrev');
+        const nextBtn = document.getElementById('bajosNext');
+        const pageNumberEl = document.getElementById('bajosPageNumber');
+        const totalElementsEl = document.getElementById('bajosTotalElements');
+
+        let bajosState = {
+            page: parseInt(bajosContainer.getAttribute('data-page') || '0', 10),
+            totalPages: parseInt(bajosContainer.getAttribute('data-total-pages') || '1', 10),
+            totalElements: parseInt(bajosContainer.getAttribute('data-total-elements') || '0', 10)
+        };
+
+        function setButtonsState() {
+            if (bajosState.page <= 0) {
+                prevBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            } else {
+                prevBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+            if (bajosState.page >= bajosState.totalPages - 1) {
+                nextBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            } else {
+                nextBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+        }
+
+        async function loadBajos(page) {
+            try {
+                const res = await fetch(`/admin/tiendas/${tiendaId}/dashboard/bajos?bajosPage=${page}`, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                // Render lista
+                const listNodes = bajosContainer.querySelectorAll('[data-item="bajo-item"], .js-bajo-item');
+                listNodes.forEach(n => n.remove());
+
+                if (!data.content || data.content.length === 0) {
+                    // Mostrar mensaje vacío si no hay elementos
+                    if (!bajosContainer.querySelector('#bajosEmpty')) {
+                        const empty = document.createElement('div');
+                        empty.id = 'bajosEmpty';
+                        empty.className = 'text-gray-500';
+                        empty.textContent = 'No hay productos con stock bajo.';
+                        bajosContainer.prepend(empty);
+                    }
+                } else {
+                    const existingEmpty = bajosContainer.querySelector('#bajosEmpty');
+                    if (existingEmpty) existingEmpty.remove();
+                    data.content.forEach(p => {
+                        const row = document.createElement('div');
+                        row.setAttribute('data-item', 'bajo-item');
+                        row.className = 'flex items-center justify-between py-2 border-b border-gray-100';
+                        row.innerHTML = `<span class="font-medium">${p.nombre}</span>
+                                         <span class="text-red-500 font-semibold">${p.cantidad} unidades</span>`;
+                        // Insert before pagination block
+                        const pagination = document.getElementById('bajosPagination');
+                        bajosContainer.insertBefore(row, pagination);
+                    });
+                }
+
+                // Actualizar estado y UI
+                bajosState.page = data.page;
+                bajosState.totalPages = data.totalPages;
+                bajosState.totalElements = data.totalElements;
+                pageNumberEl.textContent = (bajosState.page + 1).toString();
+                totalElementsEl.textContent = bajosState.totalElements.toString();
+                setButtonsState();
+
+                // Asegurar que siempre se vean 5 filas
+                padBajosRows();
+            } catch (e) {
+                console.error('Error cargando inventario bajo:', e);
+            }
+        }
+
+        function padBajosRows() {
+            const pagination = document.getElementById('bajosPagination');
+            const currentRows = bajosContainer.querySelectorAll('[data-item="bajo-item"], .js-bajo-item');
+            const toAdd = Math.max(0, 5 - currentRows.length);
+            for (let i = 0; i < toAdd; i++) {
+                const filler = document.createElement('div');
+                filler.className = 'flex items-center justify-between py-2 border-b border-gray-100 text-gray-300';
+                filler.setAttribute('data-item', 'bajo-item');
+                filler.innerHTML = '<span class="font-medium">—</span><span class="font-semibold">—</span>';
+                bajosContainer.insertBefore(filler, pagination);
+            }
+        }
+
+    // Inicializaciones
+    loadVentasMensuales();
+    setButtonsState();
+        // Padding inicial para mantener 5 filas visibles
+        padBajosRows();
+        prevBtn.addEventListener('click', () => {
+            if (bajosState.page > 0) loadBajos(bajosState.page - 1);
+        });
+        nextBtn.addEventListener('click', () => {
+            if (bajosState.page < bajosState.totalPages - 1) loadBajos(bajosState.page + 1);
+        });
     });
 
     // linkPrediccion now uses the standardized admin path: /admin/tiendas/{tiendaId}/prediccion
