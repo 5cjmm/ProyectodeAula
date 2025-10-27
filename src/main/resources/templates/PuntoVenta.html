@@ -555,15 +555,16 @@
 
       async function loadRecentSales() {
         try {
-          const res = await fetch(`/api/ventas/tienda/${tiendaId}?page=0&size=5`);
+          // Usa endpoint dedicado ordenado por fecha desc
+          const res = await fetch(`/api/ventas/tienda/${tiendaId}/ultimas?limite=5`);
           if (!res.ok) return;
-          const data = await res.json();
-          const items = data.content || [];
+          const items = await res.json();
           const cont = document.getElementById('recentSales');
-          if (!items.length) { cont.textContent = 'Sin ventas recientes'; return; }
+          if (!Array.isArray(items) || items.length === 0) { cont.textContent = 'Sin ventas recientes'; return; }
           cont.innerHTML = items.map(v => {
-            const t = new Date(v.fecha).toLocaleString();
-            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(v.total)} <span class="text-xs text-gray-500">(${t})</span></div></div>`;
+            const fechaTxt = v.fecha ? new Date(v.fecha).toLocaleString() : 'Sin fecha';
+            const totalVal = (typeof v.total === 'number' && !Number.isNaN(v.total)) ? v.total : 0;
+            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(totalVal)} <span class="text-xs text-gray-500">(${fechaTxt})</span></div></div>`;
           }).join('');
         } catch (e) { console.warn(e); }
       }

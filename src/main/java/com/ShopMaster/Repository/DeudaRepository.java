@@ -13,5 +13,11 @@ import com.ShopMaster.Model.Deuda;
 public interface DeudaRepository extends MongoRepository<Deuda, String> {
     Page<Deuda> findByTiendaId(String tiendaId, Pageable pageable);
     List<Deuda> findByTiendaIdAndFechaVentaBetween(String tiendaId, LocalDateTime inicio, LocalDateTime fin);
+
+    // Últimas 5 deudas por fecha de venta (desc)
+    List<Deuda> findTop5ByTiendaIdOrderByFechaVentaDesc(String tiendaId);
+
+    // Conteo de deudas activas (estado != PAGADA)
+    long countByTiendaIdAndEstadoNotIgnoreCase(String tiendaId, String estado);
 }
     

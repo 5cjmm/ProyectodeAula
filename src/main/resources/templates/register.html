@@ -298,8 +298,8 @@
             const btn = document.getElementById("submitBtn");
             btn.disabled = true;
             const usuario = {
-                username: document.getElementById("username").value,
-                email: document.getElementById("email").value,
+                username: document.getElementById("username").value.trim(),
+                email: document.getElementById("email").value.trim(),
                 password: document.getElementById("password").value
             };
             try {
