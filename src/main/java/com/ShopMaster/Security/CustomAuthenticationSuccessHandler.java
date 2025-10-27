@@ -40,24 +40,20 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         System.out.println("Autenticación exitosa: " + username);
         System.out.println("Token JWT generado: " + token);
 
-        // 🟦 Crear cookie JWT
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(60 * 60); // 1 hora
         response.addCookie(jwtCookie);
 
-        // 🟨 Guardar usuario y rol en sesión
         HttpSession session = request.getSession();
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Tomar el primer rol (asumimos uno principal)
         String role = authentication.getAuthorities().iterator().next().getAuthority();
         session.setAttribute("usuarioLogueado", usuario);
         session.setAttribute("rolUsuario", role);
 
-        // 🟩 Redirección según el rol
         if (role.equals("ROLE_ADMIN")) {
             response.sendRedirect("/tiendas");
             return;
@@ -71,8 +67,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             }
             return;
         }
-
-        // Rol no reconocido → redirigir a inicio genérico
+        
         response.sendRedirect("/home");
     }
 }

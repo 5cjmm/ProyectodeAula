@@ -70,6 +70,13 @@
                 </svg>
                 Informe de Ventas
             </a>
+            <a id="linkPrediccion"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+                    </svg>
+                    Predicción
+                </a>
 
             <!-- Gestión de Tenderos -->
             <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
@@ -96,50 +103,66 @@
             <header class="bg-white border-b border-gray-200 shadow-sm">
                 <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                     <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
+
                     <div class="relative">
-                        <button id="userMenuButton"
+                    <button id="userMenuButton"
                         class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                        <img src="/admin-avatar.png" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span id="userGreeting" 
-                                th:text="'Hola, ' + ${usuario.username}" 
-                                class="text-sm font-medium text-gray-700">
-                                Hola, Usuario
+
+                        <!-- ⚪ SVG Avatar con círculo gris -->
+                        <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                            <path fill="none"
+                            d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                            <path fill="#0891b2"
+                            d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                        </svg>
+                        </div>
+
+                        <span id="userGreeting"
+                        th:text="'Hola, ' + ${usuario.username}"
+                        class="text-sm font-medium text-gray-700">
+                        Hola, Usuario
                         </span>
+
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="m6 9l6 6l6-6" />
                         </svg>
-                        </button>
+                    </button>
 
-                        <div id="userDropdown"
-                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
-                        
+                    <!-- 🔽 Menú desplegable -->
+                    <div id="userDropdown"
+                        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
                         <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="text-sm text-gray-700">Rol:</p>
-                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                        <p class="text-sm text-gray-700">Rol:</p>
+                        <p id="userRole"
+                            th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
                             class="font-semibold text-gray-900">
                             Administrador
-                            </p>
+                        </p>
                         </div>
 
                         <a id="linkPerfil"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
-                            Perfil
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                        Perfil
                         </a>
 
                         <button id="logoutBtn"
-                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                             <g fill="none">
-                                <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/>
-                                <path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"/>
+                            <path fill="#f00034"
+                                d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
                             </g>
-                            </svg>
-                            Cerrar sesión
+                        </svg>
+                        Cerrar sesión
                         </button>
                     </div>
+                    </div>
                 </div>
-            </header>
+                </header>
+
             
 
             <!-- Dashboard Content -->
