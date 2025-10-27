@@ -1,955 +1,177 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil - ShopMaster</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
-    <style>
-        /* Variables de Colores Azules Cálidos */
-        :root {
-            --primary-blue: #4A90E2;
-            --primary-blue-dark: #357ABD;
-            --primary-blue-light: #6BA3E8;
-            --accent-warm: #5BA3D0;
-            --accent-light: #E8F4FD;
-            --background: #F5F9FC;
-            --surface: #FFFFFF;
-            --text-primary: #2C3E50;
-            --text-secondary: #5A6C7D;
-            --text-muted: #8B9AA8;
-            --border: #E1E8ED;
-            --success: #52C41A;
-            --error: #FF4D4F;
-            --shadow-sm: 0 2px 8px rgba(74, 144, 226, 0.08);
-            --shadow-md: 0 4px 16px rgba(74, 144, 226, 0.12);
-            --shadow-lg: 0 8px 24px rgba(74, 144, 226, 0.16);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--background);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .profile-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styles */
-        .profile-sidebar {
-            width: 320px;
-            background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
-            color: white;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-lg);
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .avatar-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1.5rem;
-        }
-
-        .avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .avatar-edit-btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            color: var(--primary-blue);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-        }
-
-        .avatar-edit-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .profile-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .profile-role {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.25rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .profile-member-since {
-            font-size: 0.875rem;
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        /* Navigation */
-        .profile-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: auto;
-        }
-
-        .nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: transparent;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s;
-            font-size: 1rem;
-            text-align: left;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-btn.active {
-            background: rgba(255, 255, 255, 0.2);
-            font-weight: 600;
-        }
-
-        .nav-btn i {
-            font-size: 1.25rem;
-            width: 24px;
-        }
-
-        .back-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: white;
-            text-decoration: none;
-            padding: 1rem;
-            border-radius: 12px;
-            transition: background 0.3s;
-            margin-top: 1rem;
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Main Content */
-        .profile-main {
-            flex: 1;
-            padding: 3rem;
-            max-width: 1200px;
-        }
-
-        .content-header {
-            margin-bottom: 2rem;
-        }
-
-        .content-header h1 {
-            font-size: 2rem;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .content-header p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        /* Alert Messages */
-        .alert {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: #f6ffed;
-            border: 1px solid #b7eb8f;
-            color: #389e0d;
-        }
-
-        .alert-error {
-            background: #fff1f0;
-            border: 1px solid #ffccc7;
-            color: #cf1322;
-        }
-
-        .alert i {
-            font-size: 1.25rem;
-        }
-
-        .alert-close {
-            margin-left: auto;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: inherit;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .alert-close:hover {
-            opacity: 1;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Form Styles */
-        .profile-form {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .form-group label i {
-            color: var(--primary-blue);
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px var(--accent-light);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .readonly-input {
-            background: var(--background);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .form-hint {
-            color: var(--text-muted);
-            font-size: 0.813rem;
-            margin-top: 0.25rem;
-        }
-
-        /* Password Input */
-        .password-input {
-            position: relative;
-        }
-
-        .password-input input {
-            padding-right: 3rem;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .toggle-password:hover {
-            color: var(--primary-blue);
-        }
-
-        /* Form Actions */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--background);
-            color: var(--text-secondary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        /* Security Card */
-        .security-card {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            background: linear-gradient(135deg, var(--accent-light) 0%, #f0f8ff 100%);
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            border: 2px solid var(--primary-blue-light);
-        }
-
-        .security-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-blue);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .security-info h3 {
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .security-info p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        /* Preferences Grid */
-        .preferences-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .preference-card {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s;
-        }
-
-        .preference-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .preference-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--accent-light);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-blue);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .preference-content h3 {
-            font-size: 1.125rem;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .preference-content p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 28px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--border);
-            transition: 0.4s;
-            border-radius: 28px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-blue);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
-
-        /* Preference Select */
-        .preference-select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .preference-select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .profile-container {
-                flex-direction: column;
-            }
-
-            .profile-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            .profile-main {
-                padding: 2rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .profile-main {
-                padding: 1.5rem;
-            }
-
-            .content-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .preferences-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil de Usuario - ShopMaster</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="profile-container">
-        
-        <aside class="profile-sidebar">
-            <div class="profile-header">
-                <div class="avatar-container">
-                    <img th:src="${usuario.avatar != null ? usuario.avatar : '/img/default-avatar.png'}" 
-                         alt="Avatar" 
-                         class="avatar">
-                    <button class="avatar-edit-btn" title="Cambiar foto">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                </div>
-                <h2 class="profile-name" th:text="${usuario.nombre}">Juan Pérez</h2>
-                <span class="profile-role" th:text="${usuario.tipoUsuario}">TENDERO</span>
-                <p class="profile-member-since">
-                    <i class="far fa-calendar"></i>
-                    Miembro desde <span th:text="${#temporals.format(usuario.fechaRegistro, 'MMM yyyy')}">Ene 2024</span>
-                </p>
-            </div>
-            
-            <nav class="profile-nav">
-                <button class="nav-btn active" data-tab="info">
-                    <i class="fas fa-user"></i>
-                    <span>Información Personal</span>
-                </button>
-                <button class="nav-btn" data-tab="security">
-                    <i class="fas fa-lock"></i>
-                    <span>Seguridad</span>
-                </button>
-                <button class="nav-btn" data-tab="preferences">
-                    <i class="fas fa-cog"></i>
-                    <span>Preferencias</span>
-                </button>
-            </nav>
-            
-            <a href="/dashboard" class="back-link">
-                <i class="fas fa-arrow-left"></i>
-                Volver al Dashboard
-            </a>
-        </aside>
 
-         
-        <main class="profile-main">
-             Alert Messages 
-            <div th:if="${mensaje}" 
-                 th:class="'alert alert-' + ${tipoMensaje == 'success' ? 'success' : 'error'}" 
-                 class="alert">
-                <i th:class="${tipoMensaje == 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'}"></i>
-                <span th:text="${mensaje}">Mensaje de alerta</span>
-                <button class="alert-close" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+<body class="bg-gray-50 text-gray-800">
+  <div class="min-h-screen flex flex-col items-center py-10 px-4">
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white shadow-md rounded-xl p-6 flex justify-between items-center mb-8">
+      <div class="flex items-center gap-4">
+        <img src="/images/logo.png" alt="Logo" class="h-14 w-auto">
+        <h1 class="text-2xl font-bold text-gray-800">Perfil de Usuario</h1>
+      </div>
 
-             
-            <div class="tab-content active" id="info-tab">
-                <div class="content-header">
-                    <h1>Información Personal</h1>
-                    <p>Actualiza tu información de perfil y datos de contacto</p>
-                </div>
+      <!-- Dropdown Usuario -->
+       <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <div class="relative">
+        <button id="userMenuButton"
+          class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+          <img src="/admin-avatar.png" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300">
+          <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}" class="text-sm font-medium text-gray-700">
+            Hola, Usuario
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="m6 9l6 6l6-6" />
+          </svg>
+        </button>
 
-                <form th:action="@{/perfil/actualizar}" method="post" th:object="${perfilDTO}" class="profile-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="nombre">
-                                <i class="fas fa-user"></i>
-                                Nombre Completo
-                            </label>
-                            <input type="text" 
-                                   id="nombre" 
-                                   th:field="*{nombre}" 
-                                   th:value="${usuario.nombre}"
-                                   placeholder="Ingresa tu nombre completo"
-                                   required>
-                        </div>
+        <div id="userDropdown"
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+          <div class="px-4 py-3 border-b border-gray-100">
+            <p class="text-sm text-gray-700">Rol:</p>
+            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+              class="font-semibold text-gray-900">Administrador</p>
+          </div>
+          <a id="linkDashboard"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Dashboard</a>
+          <button id="logoutBtn"
+            class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+              <g fill="none">
+                <path
+                  d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                <path fill="#f00034"
+                  d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+              </g>
+            </svg>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </header>
 
-                        <div class="form-group">
-                            <label for="email">
-                                <i class="fas fa-envelope"></i>
-                                Correo Electrónico
-                            </label>
-                            <input type="email" 
-                                   id="email" 
-                                   th:field="*{email}" 
-                                   th:value="${usuario.email}"
-                                   placeholder="tu@email.com"
-                                   required>
-                        </div>
+    <!-- Perfil -->
+    <main class="w-full max-w-4xl bg-white shadow-md rounded-xl p-8 space-y-6" id="profileCard">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre de Usuario</label>
+          <input id="nombreUsuario" type="text" th:value="${usuario.username}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Correo Electrónico</label>
+          <input id="correoUsuario" type="email" th:value="${usuario.email}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Rol</label>
+          <input id="rolUsuario" type="text"
+            th:value="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Contraseña</label>
+          <input id="passwordUsuario" type="password" value="********" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+      </div>
 
-                        <div class="form-group">
-                            <label for="telefono">
-                                <i class="fas fa-phone"></i>
-                                Teléfono
-                            </label>
-                            <input type="tel" 
-                                   id="telefono" 
-                                   th:field="*{telefono}" 
-                                   th:value="${usuario.telefono}"
-                                   placeholder="3001234567"
-                                   pattern="[0-9]{10}">
-                        </div>
+      <div class="flex justify-center mt-6 gap-3">
+        <button id="editarBtn"
+          class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+          Editar datos
+        </button>
+        <button id="guardarBtn"
+          class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition hidden">
+          Guardar cambios
+        </button>
+        <button id="cancelarBtn"
+          class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-500 transition hidden">
+          Cancelar
+        </button>
+      </div>
+    </main>
 
-                        <div class="form-group">
-                            <label for="tipoUsuario">
-                                <i class="fas fa-id-badge"></i>
-                                Tipo de Usuario
-                            </label>
-                            <input type="text" 
-                                   id="tipoUsuario" 
-                                   th:value="${usuario.tipoUsuario}"
-                                   readonly 
-                                   disabled 
-                                   class="readonly-input">
-                        </div>
-                    </div>
+    <!-- Preferencias -->
+    <section class="w-full max-w-4xl bg-white shadow-md rounded-xl p-8 mt-8">
+      <h2 class="text-xl font-semibold mb-4">Preferencias</h2>
+      <div class="text-gray-600">
+        <p>Configuraciones de usuario y notificaciones próximamente...</p>
+      </div>
+    </section>
+  </div>
 
-                    <div class="form-group full-width">
-                        <label for="direccion">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Dirección
-                        </label>
-                        <textarea id="direccion" 
-                                  th:field="*{direccion}" 
-                                  th:text="${usuario.direccion}"
-                                  rows="3"
-                                  placeholder="Calle 123 #45-67, Ciudad"></textarea>
-                    </div>
+  <script>
+    const editarBtn = document.getElementById('editarBtn');
+    const guardarBtn = document.getElementById('guardarBtn');
+    const cancelarBtn = document.getElementById('cancelarBtn');
+    const inputs = document.querySelectorAll('#profileCard input');
+    const tiendaId = document.getElementById("tiendaId").value;
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i>
-                            Guardar Cambios
-                        </button>
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="fas fa-undo"></i>
-                            Restablecer
-                        </button>
-                    </div>
-                </form>
-            </div>
+    editarBtn.addEventListener('click', () => {
+      inputs.forEach(input => input.removeAttribute('readonly'));
+      inputs.forEach(input => input.classList.remove('bg-gray-100'));
+      editarBtn.classList.add('hidden');
+      guardarBtn.classList.remove('hidden');
+      cancelarBtn.classList.remove('hidden');
+    });
 
-            <div class="tab-content" id="security-tab">
-                <div class="content-header">
-                    <h1>Seguridad</h1>
-                    <p>Gestiona tu contraseña y configuración de seguridad</p>
-                </div>
+    guardarBtn.addEventListener('click', () => {
+      inputs.forEach(input => input.setAttribute('readonly', true));
+      inputs.forEach(input => input.classList.add('bg-gray-100'));
+      editarBtn.classList.remove('hidden');
+      guardarBtn.classList.add('hidden');
+      cancelarBtn.classList.add('hidden');
+      alert('✅ Cambios guardados correctamente');
+    });
 
-                <div class="security-card">
-                    <div class="security-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="security-info">
-                        <h3>Cambiar Contraseña</h3>
-                        <p>Mantén tu cuenta segura con una contraseña fuerte</p>
-                    </div>
-                </div>
+    cancelarBtn.addEventListener('click', () => {
+      inputs.forEach(input => input.setAttribute('readonly', true));
+      inputs.forEach(input => input.classList.add('bg-gray-100'));
+      editarBtn.classList.remove('hidden');
+      guardarBtn.classList.add('hidden');
+      cancelarBtn.classList.add('hidden');
+    });
 
-                <form th:action="@{/perfil/cambiar-password}" method="post" class="profile-form">
-                    <div class="form-group">
-                        <label for="passwordActual">
-                            <i class="fas fa-key"></i>
-                            Contraseña Actual
-                        </label>
-                        <div class="password-input">
-                            <input type="password" 
-                                   id="passwordActual" 
-                                   name="passwordActual"
-                                   placeholder="Ingresa tu contraseña actual"
-                                   required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('passwordActual')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
+    // Dropdown usuario
+    const button = document.getElementById("userMenuButton");
+    const dropdown = document.getElementById("userDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-                    <div class="form-group">
-                        <label for="passwordNueva">
-                            <i class="fas fa-lock"></i>
-                            Nueva Contraseña
-                        </label>
-                        <div class="password-input">
-                            <input type="password" 
-                                   id="passwordNueva" 
-                                   name="passwordNueva"
-                                   placeholder="Mínimo 6 caracteres"
-                                   minlength="6"
-                                   required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('passwordNueva')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <small class="form-hint">Usa al menos 6 caracteres con letras y números</small>
-                    </div>
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.classList.contains("opacity-100");
+      dropdown.classList.toggle("opacity-100", !isVisible);
+      dropdown.classList.toggle("translate-y-0", !isVisible);
+      dropdown.classList.toggle("scale-100", !isVisible);
+      dropdown.classList.toggle("pointer-events-none", isVisible);
+      dropdown.classList.toggle("opacity-0", isVisible);
+      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+      dropdown.classList.toggle("scale-95", isVisible);
+    });
 
-                    <div class="form-group">
-                        <label for="passwordConfirmacion">
-                            <i class="fas fa-lock"></i>
-                            Confirmar Nueva Contraseña
-                        </label>
-                        <div class="password-input">
-                            <input type="password" 
-                                   id="passwordConfirmacion" 
-                                   name="passwordConfirmacion"
-                                   placeholder="Confirma tu nueva contraseña"
-                                   minlength="6"
-                                   required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('passwordConfirmacion')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+      }
+    });
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check"></i>
-                            Actualizar Contraseña
-                        </button>
-                    </div>
-                </form>
-            </div>
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("¿Deseas cerrar sesión?")) {
+        window.location.href = "/logout";
+      }
+    });
 
-             
-            <div class="tab-content" id="preferences-tab">
-                <div class="content-header">
-                    <h1>Preferencias</h1>
-                    <p>Personaliza tu experiencia en ShopMaster</p>
-                </div>
-
-                <div class="preferences-grid">
-                    <div class="preference-card">
-                        <div class="preference-icon">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                        <div class="preference-content">
-                            <h3>Notificaciones</h3>
-                            <p>Recibe alertas sobre ventas y actualizaciones</p>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="preference-card">
-                        <div class="preference-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="preference-content">
-                            <h3>Correos Electrónicos</h3>
-                            <p>Recibe reportes semanales por email</p>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="preference-card">
-                        <div class="preference-icon">
-                            <i class="fas fa-moon"></i>
-                        </div>
-                        <div class="preference-content">
-                            <h3>Modo Oscuro</h3>
-                            <p>Cambia el tema de la interfaz</p>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="preference-card">
-                        <div class="preference-icon">
-                            <i class="fas fa-language"></i>
-                        </div>
-                        <div class="preference-content">
-                            <h3>Idioma</h3>
-                            <p>Selecciona tu idioma preferido</p>
-                            <select class="preference-select">
-                                <option value="es" selected>Español</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-     
-    <script>
-        // Tab Navigation
-        document.addEventListener('DOMContentLoaded', () => {
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            navButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetTab = this.getAttribute('data-tab');
-
-                    // Remove active class from all buttons and tabs
-                    navButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(tab => tab.classList.remove('active'));
-
-                    // Add active class to clicked button and corresponding tab
-                    this.classList.add('active');
-                    document.getElementById(targetTab + '-tab').classList.add('active');
-                });
-            });
-        });
-
-        // Toggle Password Visibility
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const button = input.parentElement.querySelector('.toggle-password');
-            const icon = button.querySelector('i');
-
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        // Form Validation
-        const passwordForm = document.querySelector('form[action*="cambiar-password"]');
-        if (passwordForm) {
-            passwordForm.addEventListener('submit', (e) => {
-                const passwordNueva = document.getElementById('passwordNueva').value;
-                const passwordConfirmacion = document.getElementById('passwordConfirmacion').value;
-
-                if (passwordNueva !== passwordConfirmacion) {
-                    e.preventDefault();
-                    alert('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
-                }
-            });
-        }
-
-        // Auto-hide alerts after 5 seconds
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            setTimeout(() => {
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 300);
-            }, 5000);
-        });
-    </script>
+    document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+    
+  </script>
 </body>
 </html>

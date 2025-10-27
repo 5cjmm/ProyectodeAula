@@ -32,10 +32,12 @@ top: 228px;
 
       <!-- Navegación (desktop) -->
       <nav class="hidden md:flex items-center gap-x-6 text-sm md:text-base font-medium">
-        <a th:href="@{/home}" class="text-black font-semibold hover:text-blue-800" data-aos="fade-up"
-        data-aos-duration="1200">Inicio</a>
-        <a href="#" class="hover:text-blue-800" data-aos="fade-up" data-aos-duration="1200">¿Quiénes somos?</a>
-        <a href="#" class="hover:text-blue-800" data-aos="fade-up" data-aos-duration="1200">Contacto</a>
+        <a th:href="@{/home}" 
+          class="text-gray-800 font-semibold hover:text-blue-700 hover:scale-105 transition-all duration-200">Inicio</a>
+        <a href="#" 
+          class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">¿Quiénes somos?</a>
+        <a href="#" 
+          class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">Contacto</a>
       </nav>
 
       <!-- Botón de login -->
@@ -92,13 +94,44 @@ top: 228px;
 
 
   <!-- FOOTER -->
-  <footer class="w-full bg-gray-100 text-gray-700 py-6 mt-12">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-sm md:text-base">&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
-      <div class="flex gap-x-4 mt-4 md:mt-0">
-        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Política de Privacidad</a>
-        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Términos de Servicio</a>
-        <a href="#" class="hover:text-blue-800 text-sm md:text-base">Ayuda</a>
+      <footer class="bg-gray-50 border-t border-gray-200 py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shop.jpg-bG71uw6iCU0LVS2ACOe4tqnA1QYutU.jpeg" alt="ShopMaster" class="h-8 w-auto">
+                    </div>
+                    <p class="text-sm text-gray-600 text-pretty">
+                        Transformando el comercio comunitario con tecnología inteligente.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h4 class="font-semibold mb-3">Soporte</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition-colors">Centro de Ayuda</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition-colors">Contacto</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition-colors">PQRS</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-3">Empresa</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#quienes-somos" class="hover:text-gray-900 transition-colors">Quiénes Somos</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition-colors">Términos</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition-colors">Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
+                <p>&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
   
 
 <!-- AOS JS -->

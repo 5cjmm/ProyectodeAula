@@ -211,6 +211,17 @@
         .notification-error { background: var(--color-error); }
 
         @media (max-width: 480px) { main { padding: 2rem 1.5rem; } }
+
+        .requirements-list {
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+.requirements-list li.valid {
+    color: #22c55e;
+}
+.requirements-list li {
+    color: #ef4444;
+}
     </style>
 </head>
 
@@ -242,15 +253,24 @@
             </div>
 
             <div class="form-group">
-                <div class="input-wrapper">
-                    <i data-lucide="lock"></i>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="Contraseña" required>
-                    <button type="button" class="password-toggle" id="togglePassword">
-                        <i data-lucide="eye"></i>
-                    </button>
-                </div>
-                <div class="error-message" id="password-error"></div>
-            </div>
+    <div class="input-wrapper">
+        <i data-lucide="lock"></i>
+        <input type="password" id="password" name="password" class="form-input" 
+               placeholder="Contraseña" required onkeyup="validatePassword(this.value)"
+               onfocus="showRequirements()" onblur="hideRequirements()">
+        <button type="button" class="password-toggle" id="togglePassword">
+            <i data-lucide="eye"></i>
+        </button>
+    </div>
+    <div class="error-message" id="password-error" style="display: none;">
+        <ul class="requirements-list">
+            <li id="reqLength">Al menos 8 caracteres</li>
+            <li id="reqLetter">Al menos una letra</li>
+            <li id="reqNumber">Al menos un número</li>
+            <li id="reqSpecial">Al menos un carácter especial (@ o #)</li>
+        </ul>
+    </div>
+</div>
 
             <button type="submit" class="btn btn-primary" id="submitBtn">
                 Crear cuenta
@@ -271,6 +291,39 @@
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
+
+    function validatePassword(password) {
+    const hasLength = password.length >= 8;
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecial = /[@#]/.test(password);
+    
+    document.getElementById('reqLength').classList.toggle('valid', hasLength);
+    document.getElementById('reqLetter').classList.toggle('valid', hasLetter);
+    document.getElementById('reqNumber').classList.toggle('valid', hasNumber);
+    document.getElementById('reqSpecial').classList.toggle('valid', hasSpecial);
+    
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const isValid = hasLength && hasLetter && hasNumber && hasSpecial;
+    
+    submitBtn.disabled = !isValid;
+    submitBtn.style.opacity = isValid ? '1' : '0.5';
+    submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+    
+    return isValid;
+}
+
+function showRequirements() {
+    document.getElementById('password-error').style.display = 'block';
+}
+
+function hideRequirements() {
+    // Solo ocultar si no hay contenido o si todo es válido
+    const password = document.getElementById('password').value;
+    if (!password || validatePassword(password)) {
+        document.getElementById('password-error').style.display = 'none';
+    }
+}
   window.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
 
