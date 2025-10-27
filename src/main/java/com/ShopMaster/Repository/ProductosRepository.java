@@ -1,18 +1,27 @@
 package com.ShopMaster.Repository;
 import java.util.List;
-import java.util.Optional;
 
-import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.ShopMaster.Model.Productos;
 
-public interface ProductosRepository extends MongoRepository<Productos, ObjectId> {
-
+public interface ProductosRepository extends MongoRepository<Productos, String> {
+    List<Productos> findByTiendaId(String tiendaId);
     List<Productos> findByNombreContainingIgnoreCase(String nombre);
 
     Productos findByNombre(String nombreProducto);
+    List<Productos> findByCantidadGreaterThan(int cantidad);
 
-    Optional<Productos> findByCodigo(String codigo);
+    boolean existsByCodigoAndTiendaId(String codigo, String tiendaId);
+
+    boolean existsByCodigoAndTiendaIdAndIdNot(String codigo, String tiendaId, String id);
+    Productos findByCodigo(String codigo);
+    Page<Productos> findByTiendaId(String tiendaId, Pageable pageable);
+    List<Productos> findByTiendaIdAndCantidadGreaterThan(String tiendaId, int i);
+
+    // Nueva consulta paginada para productos con cantidad menor o igual a un umbral (ej: stock bajo)
+    Page<Productos> findByTiendaIdAndCantidadLessThanEqual(String tiendaId, int cantidad, Pageable pageable);
 
 }

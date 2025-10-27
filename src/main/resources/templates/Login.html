@@ -1,56 +1,366 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ShopMaster</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>ShopMaster - Iniciar Sesión</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
+        :root {
+            --color-primary: #3b5bff;
+            --color-primary-hover: #334bdb;
+            --color-error: #ef4444;
+            --color-success: #10b981;
+            --color-bg: #f9fafb;
+            --color-text: #1e293b;
+            --color-muted: #94a3b8;
+            --radius: 12px;
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-image: url('ruta-de-tu-imagen.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+        }
+
+        main {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem 2.5rem 2rem;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            margin-top: 2.5rem;
+        }
+
+        .logo-container img {
+            height: 70px;
+            object-fit: contain;
+            display: block;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--color-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Alert messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: left;
+        }
+
+        .alert-error {
+            background-color: #fee;
+            color: var(--color-error);
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: var(--color-success);
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            background-color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.1);
+        }
+
+        .input-wrapper svg {
+            width: 18px;
+            height: 18px;
+            color: var(--color-muted);
+            margin-right: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .form-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            background-color: transparent;
+        }
+
+        .password-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-muted);
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle:hover {
+            color: var(--color-text);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .form-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+        .forgot-password-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--color-muted);
+        }
+
+        .footer-text a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--color-error);
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
         }
     </style>
 </head>
-<body class="flex flex-col h-screen bg-blue-100 dark:bg-blue-900">
-    
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg fixed top-0 left-0 right-0">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a href="Inicio.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a href="Login.html" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Login</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="bg-white dark:bg-blue-800 bg-opacity-90 p-8 rounded-2xl shadow-2xl w-96 text-center mt-24 mx-auto">
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Iniciar Sesión</h2>
-        <form th:action="@{/login}" method="post">
-            <input type="text" name="username" placeholder="Usuario" class="w-full p-3 mb-4 border rounded-lg shadow-sm dark:bg-blue-700 dark:text-white" required>
-            <input type="password" name="password" placeholder="Contraseña" class="w-full p-3 mb-4 border rounded-lg shadow-sm dark:bg-blue-700 dark:text-white" required>
-            <button class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg shadow-md hover:bg-blue-600 transition">Ingresar</button>
-        </form>
-        <div th:if= "${errorMessage}" class=text-white-500 dark:text-blue-300 font-semibold>
-            <p th:text="${errorMessage}"></p>
-        </div>
-    </div>
-    
-    
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-        });
-    </script>
-</body>
-</html>
 
+<body>
+    <div class="auth-wrapper">
+        <div class="logo-container">
+            <a href="/home">
+                <img src="/images/logo-nav.png" alt="Logo de ShopMaster" />
+            </a>
+        </div>
+        <main>
+            <h1>Bienvenido de vuelta</h1>
+            <p class="subtitle">Inicia sesión para acceder a tu panel de control</p>
+            <div th:if="${param.error}" class="alert alert-error" role="alert">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.</span>
+            </div>
+
+            <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Has cerrado sesión correctamente.</span>
+            </div>
+
+            <form th:action="@{/login}" method="post" id="loginForm">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i data-lucide="user"></i>
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Usuario"
+                            required autocomplete="username">
+                    </div>
+                    <div class="error-message" id="username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i data-lucide="lock"></i>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Contraseña"
+                            required autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i data-lucide="eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me" name="remember-me" class="form-checkbox">
+                        <label for="remember-me" class="checkbox-label">
+                            Recordarme
+                        </label>
+                    </div>
+                    <a href="#" class="forgot-password-link">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <p class="footer-text">
+                ¿No tienes una cuenta? <a th:href="@{/register}">Regístrate aquí</a>
+            </p>
+        </main>
+
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script>
+            window.addEventListener("DOMContentLoaded", () => {
+                lucide.createIcons();
+
+                const togglePassword = document.getElementById('togglePassword');
+                const passwordInput = document.getElementById('password');
+
+                togglePassword.addEventListener('click', function () {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+
+                    // Cambiar tipo de input
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+
+                    // Limpiar y volver a insertar el ícono actualizado
+                    this.innerHTML = '';
+                    const newIcon = document.createElement('i');
+                    newIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+                    this.appendChild(newIcon);
+
+                    // Renderizar nuevamente el ícono correcto
+                    lucide.createIcons();
+                });
+            });
+        </script>
+</body>
+
+</html>

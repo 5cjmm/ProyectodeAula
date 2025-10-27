@@ -58,10 +58,19 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                        .requestMatchers("/tendero/crear-proveedor", "/tendero/actualizar", "/tendero/eliminar/{id}", "/tendero/RegistroProveedor", "/tendero/agregar-producto", "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
-                        .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                // Recursos estáticos y páginas públicas
+                        .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
+                    "/fonts/**").permitAll() // AÑADIDO
+                        .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
+
+                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
+                       /*  .requestMatchers( "/tendero/agregar-producto", 
+                        "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
+                        "/admin/crear-producto", "/admin/tiendas", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")*/
+                    //    .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
+                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
+                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

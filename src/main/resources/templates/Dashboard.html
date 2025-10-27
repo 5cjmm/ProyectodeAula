@@ -1,52 +1,450 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Proveedores</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <title>ShopMaster - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
-    
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg">
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">ShopMaster</div>
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
-            </button>
-            <div id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/tendero/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+
+        <aside class="w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex flex-col items-center mb-10">
+                <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+                    <img th:src="@{/images/logo.png}" alt="ShopMaster"
+                        class="h-28 w-auto object-contain drop-shadow-md">
+                </div>
             </div>
+
+            <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a id="linkInventario"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    Informe de Ventas
+                </a>
+                <a id="linkPrediccion"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+                    </svg>
+                    Predicción
+                </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    Gestión de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                    Tiendas
+                </a>
+                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                    Cerrar sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="flex-1 p-6 space-y-6">
+                <div class="space-y-2">
+                    <h1 class="text-3xl font-bold">Dashboard de Administrador</h1>
+                    <p class="text-gray-600">Gestiona tu tienda comunitaria desde un solo lugar</p>
+                </div>
+
+                <!-- Metrics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-medium text-gray-600">Ventas Totales</h3>
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" />
+                            </svg>
+                        </div>
+                    <div class="text-2xl font-bold" id="ventasTotales" th:text="${ventasTotalesFormatted}">$12,345</div>
+                        <div class="flex items-center gap-1 text-xs mt-1">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
+                            </svg>
+                            <span class="text-green-500">+12.5%</span>
+                            <span class="text-gray-500">vs mes anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-medium text-gray-600">Productos en Stock</h3>
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                            </svg>
+                        </div>
+                        <div class="text-2xl font-bold" id="productosEnStock" th:text="${productosEnStock}">1,234</div>
+                        <div class="flex items-center gap-1 text-xs mt-1">
+                            <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" />
+                            </svg>
+                            <span class="text-red-500">-2.3%</span>
+                            <span class="text-gray-500">vs mes anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-medium text-gray-600">Ventas de Hoy</h3>
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                            </svg>
+                        </div>
+                        <div class="text-2xl font-bold" id="ventasHoy" th:text="${ventasHoy}">89</div>
+                        <div class="flex items-center gap-1 text-xs mt-1">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
+                            </svg>
+                            <span class="text-green-500">+8.1%</span>
+                            <span class="text-gray-500">vs mes anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-medium text-gray-600">Deudas Activas</h3>
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                        </div>
+                        <div class="text-2xl font-bold" id="deudasActivas" th:text="${deudasActivas}">456</div>
+                        <div class="flex items-center gap-1 text-xs mt-1">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
+                            </svg>
+                            <span class="text-green-500">+15.2%</span>
+                            <span class="text-gray-500">vs mes anterior</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Tables Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Sales Chart -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold mb-4">Ventas Mensuales</h3>
+                        <div class="h-64">
+                            <canvas id="ventasMensualesChart" height="220"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Table -->
+                    <div class="bg-white p-6 rounded-lg border border-red-200">
+                        <h3 class="text-lg font-semibold mb-4">Inventario Bajo</h3>
+                        <div class="space-y-3" id="bajosContainer" th:attr="data-page=${bajosPage.number},data-total-pages=${bajosPage.totalPages},data-total-elements=${bajosPage.totalElements}">
+                            <div th:if="${bajosPage == null or #lists.isEmpty(bajosPage.content)}" class="text-gray-500">No hay productos con stock bajo.</div>
+                            <div th:each="p : ${bajosPage.content}" class="flex items-center justify-between py-2 border-b border-gray-100 js-bajo-item">
+                                <span class="font-medium" th:text="${p.nombre}">Producto</span>
+                                <span class="text-red-500 font-semibold" th:text="${p.cantidad + ' unidades'}">0 unidades</span>
+                            </div>
+
+                            <!-- Paginación simple -->
+                            <div class="flex items-center justify-between mt-3" id="bajosPagination">
+                                <div class="text-sm text-gray-600">
+                                    <span id="bajosTotalElements" th:text="${bajosPage.totalElements}">0</span> productos encontrados
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <!-- Anterior (botón) -->
+                                    <button id="bajosPrev" type="button" class="px-4 py-2 bg-amber-400 text-white font-medium rounded-lg shadow hover:brightness-95">Anterior</button>
+                                    <!-- Número de página central -->
+                                    <div class="px-3 py-1 bg-gray-100 border rounded-full text-center mx-1">
+                                        <span class="font-medium" id="bajosPageNumber" th:text="${bajosPage.number + 1}">1</span>
+                                    </div>
+                                    <!-- Siguiente (botón) -->
+                                    <button id="bajosNext" type="button" class="px-4 py-2 bg-green-500 text-white font-medium rounded-lg shadow hover:brightness-95">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deudas recientes -->
+                <div class="bg-white p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-4">Deudas Recientes</h3>
+                    <div class="space-y-4">
+                        <div th:if="${#lists.isEmpty(deudasRecientes)}" class="text-gray-500">No hay deudas recientes.</div>
+                        <div th:each="d : ${deudasRecientes}" class="flex items-center justify-between shadow-sm border-b border-gray-100">
+                            <div>
+                                <p class="font-medium" th:text="${d.nombreCliente != null ? d.nombreCliente : d.cedulaCliente}">Cliente</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold" th:text="${#numbers.formatDecimal(d.total, 1, 'COMMA', 2, 'POINT')}">$0.00</p>
+                                <span th:text="${d.estado != null ? d.estado : 'NO PAGADA'}"
+                                      th:class="${'inline-block px-2 py-1 text-xs rounded-full ' + (d.estado != null && d.estado.toUpperCase() == 'PAGADA' ? 'bg-green-100 text-green-800' : (d.estado != null && d.estado.toUpperCase() == 'PARCIAL' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))}">
+                                    Estado
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-    </nav>
-    
-    <h1 class="text-gray-900 dark:text-white text-4xl font-bold mb-6">Dashboard - Administrador</h1>
-    
-    <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
-        
-        <div class="flex gap-4">
-            <input type="text" placeholder="Código del Producto" class="w-1/3 p-2 border rounded-md" id="codigoProducto">
-            <input type="number" placeholder="Cantidad" class="w-1/3 p-2 border rounded-md" id="cantidad">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
-        </div>
-        
-        
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-        });
-    </script>
+    </div>
 </body>
+
 </html>
 
 
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const tiendaId = document.getElementById("tiendaId").value;
+
+        if (!tiendaId) {
+            console.error("⚠️ tiendaId no encontrado");
+            return;
+        }
+
+        document.getElementById("linkDashboard").href = `/admin/tiendas/${tiendaId}/dashboard`;
+        document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;
+        document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
+        document.getElementById("linkPrediccion").href = `/admin/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkTiendas").href = `/admin/tiendas`;
+
+        // --- Gráfico: Ventas Mensuales ---
+        let ventasChart;
+        async function loadVentasMensuales() {
+            try {
+                const res = await fetch(`/api/ventas/tienda/${tiendaId}/mensuales?meses=12`);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                // Asegurar orden cronológico por (año, mes)
+                // Orden cronológico (año, mes) y etiquetas numéricas (yyyy-MM)
+                const ordered = Array.isArray(data) ? [...data].sort((a,b) => (a.year - b.year) || (a.month - b.month)) : [];
+                const labels = ordered.map(d => d.label);
+                const valores = ordered.map(d => d.total);
+                const ctx = document.getElementById('ventasMensualesChart');
+                if (!ctx) return;
+                // destruir previo si existe
+                if (ventasChart) { ventasChart.destroy(); }
+                ventasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Total ventas (COP)',
+                            data: valores,
+                            borderColor: 'rgb(14, 165, 233)',
+                            backgroundColor: 'rgba(14, 165, 233, 0.35)'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(ctx.parsed.y || 0)
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#4b5563' } },
+                            y: { ticks: { color: '#4b5563', callback: (v) => new Intl.NumberFormat('es-CO', { notation: 'compact' }).format(v) }, beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (e) { console.error('Error cargando ventas mensuales:', e); }
+        }
+
+        // --- Paginación AJAX: Inventario Bajo ---
+        const bajosContainer = document.getElementById('bajosContainer');
+        const prevBtn = document.getElementById('bajosPrev');
+        const nextBtn = document.getElementById('bajosNext');
+        const pageNumberEl = document.getElementById('bajosPageNumber');
+        const totalElementsEl = document.getElementById('bajosTotalElements');
+
+        let bajosState = {
+            page: parseInt(bajosContainer.getAttribute('data-page') || '0', 10),
+            totalPages: parseInt(bajosContainer.getAttribute('data-total-pages') || '1', 10),
+            totalElements: parseInt(bajosContainer.getAttribute('data-total-elements') || '0', 10)
+        };
+
+        function setButtonsState() {
+            if (bajosState.page <= 0) {
+                prevBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            } else {
+                prevBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+            if (bajosState.page >= bajosState.totalPages - 1) {
+                nextBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            } else {
+                nextBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+        }
+
+        async function loadBajos(page) {
+            try {
+                const res = await fetch(`/admin/tiendas/${tiendaId}/dashboard/bajos?bajosPage=${page}`, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                // Render lista
+                const listNodes = bajosContainer.querySelectorAll('[data-item="bajo-item"], .js-bajo-item');
+                listNodes.forEach(n => n.remove());
+
+                if (!data.content || data.content.length === 0) {
+                    // Mostrar mensaje vacío si no hay elementos
+                    if (!bajosContainer.querySelector('#bajosEmpty')) {
+                        const empty = document.createElement('div');
+                        empty.id = 'bajosEmpty';
+                        empty.className = 'text-gray-500';
+                        empty.textContent = 'No hay productos con stock bajo.';
+                        bajosContainer.prepend(empty);
+                    }
+                } else {
+                    const existingEmpty = bajosContainer.querySelector('#bajosEmpty');
+                    if (existingEmpty) existingEmpty.remove();
+                    data.content.forEach(p => {
+                        const row = document.createElement('div');
+                        row.setAttribute('data-item', 'bajo-item');
+                        row.className = 'flex items-center justify-between py-2 border-b border-gray-100';
+                        row.innerHTML = `<span class="font-medium">${p.nombre}</span>
+                                         <span class="text-red-500 font-semibold">${p.cantidad} unidades</span>`;
+                        // Insert before pagination block
+                        const pagination = document.getElementById('bajosPagination');
+                        bajosContainer.insertBefore(row, pagination);
+                    });
+                }
+
+                // Actualizar estado y UI
+                bajosState.page = data.page;
+                bajosState.totalPages = data.totalPages;
+                bajosState.totalElements = data.totalElements;
+                pageNumberEl.textContent = (bajosState.page + 1).toString();
+                totalElementsEl.textContent = bajosState.totalElements.toString();
+                setButtonsState();
+
+                // Asegurar que siempre se vean 5 filas
+                padBajosRows();
+            } catch (e) {
+                console.error('Error cargando inventario bajo:', e);
+            }
+        }
+
+        function padBajosRows() {
+            const pagination = document.getElementById('bajosPagination');
+            const currentRows = bajosContainer.querySelectorAll('[data-item="bajo-item"], .js-bajo-item');
+            const toAdd = Math.max(0, 5 - currentRows.length);
+            for (let i = 0; i < toAdd; i++) {
+                const filler = document.createElement('div');
+                filler.className = 'flex items-center justify-between py-2 border-b border-gray-100 text-gray-300';
+                filler.setAttribute('data-item', 'bajo-item');
+                filler.innerHTML = '<span class="font-medium">—</span><span class="font-semibold">—</span>';
+                bajosContainer.insertBefore(filler, pagination);
+            }
+        }
+
+    // Inicializaciones
+    loadVentasMensuales();
+    setButtonsState();
+        // Padding inicial para mantener 5 filas visibles
+        padBajosRows();
+        prevBtn.addEventListener('click', () => {
+            if (bajosState.page > 0) loadBajos(bajosState.page - 1);
+        });
+        nextBtn.addEventListener('click', () => {
+            if (bajosState.page < bajosState.totalPages - 1) loadBajos(bajosState.page + 1);
+        });
+    });
+
+    // linkPrediccion now uses the standardized admin path: /admin/tiendas/{tiendaId}/prediccion
+    const menuToggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("menu");
+
+    if (menuToggle && menu) {
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    }
+
+
+</script>
+</body>
+
+</html>
