@@ -1,0 +1,43 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Predicción de precios
+  </title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>Predicción de Precio</h1>
+    <form id="priceForm">
+      <div class="form-group">
+        <label>Producto:</label>
+        <select id="productSelect" name="product"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Año inicial (opcional):</label>
+        <input type="number" id="startYear" name="startYear" placeholder="Ej: 2025" />
+      </div>
+
+      <div class="form-group">
+        <label>Horizonte (años):</label>
+        <input type="number" id="years" name="years" value="3" min="1" />
+      </div>
+
+      <button type="submit">Predecir precio</button>
+    </form>
+
+    <div id="result" class="result" style="display: none;">
+      <h2>Predicción de Precio:</h2>
+      <canvas id="priceChart" width="800" height="400"></canvas>
+      <div id="predictionsList"></div>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
