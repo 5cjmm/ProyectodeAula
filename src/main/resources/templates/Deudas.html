@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopMaster - Gestión de Deudas</title>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopMaster - Gestión deudas</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .estado {
+            border-radius: 20px;
+            padding: 2px 10px;
+            color: rgb(24, 25, 36);
+            font-weight: bold;
+        }
+
+        .estado.NO_PAGADA {
+            background-color: #f78da7;
+        }
+
+        .estado.PARCIAL {
+            background-color: #ffd966;
+            color: #333;
+        }
+
+        .estado.PAGADA {
+            background-color: #8de48f;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50">
@@ -23,71 +45,68 @@
               </div>
             </div>
 
-          <input type="hidden" id="tiendaId" th:value="${tiendaId}">
-          <nav class="space-y-2">
-            <!-- Dashboard -->
-            <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z"/>
-                </svg>
-                Dashboard
-            </a>
-
-            <!-- Inventario -->
-            <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18"/>
-                </svg>
-                Inventario
-            </a>
-
-            <!-- Proveedores -->
-            <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z"/>
-                </svg>
-                Proveedores
-            </a>
-
-            <!-- Deudas -->
-            <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6"/>
-                </svg>
-                Deudas
-            </a>
-
-            <!-- Punto de Venta -->
-            <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z"/>
-                </svg>
-                Punto de Venta
-            </a>
-
-            <!-- Informe de Ventas -->
-            <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z"/>
-                </svg>
-                Informe de Ventas
-            </a>
-
-            <!-- Gestión de Tenderos -->
-            <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z"/>
-                </svg>
-                Gestión de Tenderos
-            </a>
-
-            <!-- Tiendas -->
-            <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                </svg>
-                Tiendas
-            </a>
+    <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+    <nav class="space-y-2">
+                <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Inventario
+                </a>
+                <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z"/>
+                    </svg>
+                    Proveedores
+                </a>
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Deudas
+                </a>
+                <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Punto de Venta
+                </a>
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Informe de Ventas
+                </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Gestion de Tenderos
+                </a>
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Tiendas
+                </a>
+                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Cerrar sesión
+                </a>
             </nav>
     </aside>
 
@@ -556,6 +575,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
   document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
   document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkPrediccion").href=`/tiendas/${tiendaId}/prediccion`;
   document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
   document.getElementById("linkTiendas").href = `/tiendas`;
 });

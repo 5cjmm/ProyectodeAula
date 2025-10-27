@@ -16,5 +16,11 @@ public interface DeudaRepository extends MongoRepository<Deuda, String> {
     List<Deuda> findByTiendaIdAndFechaVentaBetween(String tiendaId, LocalDateTime inicio, LocalDateTime fin);
     Optional<Deuda> findByCedulaClienteAndTiendaId(String cedulaCliente, String tiendaId);
     Optional<Deuda> findByCedulaCliente(String cedulaCliente);
+
+    // Últimas 5 deudas por fecha de venta (desc)
+    List<Deuda> findTop5ByTiendaIdOrderByFechaVentaDesc(String tiendaId);
+
+    // Conteo de deudas activas (estado != PAGADA)
+    long countByTiendaIdAndEstadoNotIgnoreCase(String tiendaId, String estado);
 }
     

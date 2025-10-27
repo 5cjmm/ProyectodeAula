@@ -1,298 +1,405 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopMaster - Inventario</title>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopMaster - Inventario</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 p-6">
-            <div class="flex flex-col items-center mb-10">
-              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-                <img 
-                  th:src="@{/images/logo.png}" 
-                  alt="ShopMaster" 
-                  class="h-28 w-auto object-contain drop-shadow-md"
-                >
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+      <div class="flex flex-col items-center mb-10">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
+      <input type="hidden" id="rolUsuario" th:value="${rolUsuario}">
+
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <nav class="space-y-2">
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Dashboard
+        </a>
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Inventario
+        </a>
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+          </svg>
+          Proveedores
+        </a>
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Deudas
+        </a>
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Punto de Venta
+        </a>
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
+          </svg>
+          Predicción
+        </a>
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+          Gestion de Tenderos
+        </a>
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Tiendas
+        </a>
+        <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+          Cerrar sesión
+        </a>
+      </nav>
+
+      <!-- Inventario -->
+      <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+        </svg>
+        Inventario
+      </a>
+
+      <!-- Proveedores -->
+      <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
+        </svg>
+        Proveedores
+      </a>
+
+      <!-- Deudas -->
+      <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
+        </svg>
+        Deudas
+      </a>
+
+      <!-- Punto de Venta -->
+      <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+        </svg>
+        Punto de Venta
+      </a>
+
+      <!-- Informe de Ventas -->
+      <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+        </svg>
+        Informe de Ventas
+      </a>
+
+      <!-- Gestión de Tenderos -->
+      <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+        </svg>
+        Gestión de Tenderos
+      </a>
+
+      <!-- Tiendas -->
+      <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        </svg>
+        Tiendas
+      </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Inventario</h1>
+          <div class="relative">
+            <button id="userMenuButton"
+              class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+              <img src="/admin-avatar.png" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300">
+              <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
+                class="text-sm font-medium text-gray-700">
+                Hola, Usuario
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="m6 9l6 6l6-6" />
+              </svg>
+            </button>
+
+            <div id="userDropdown"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm text-gray-700">Rol:</p>
+                <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                  class="font-semibold text-gray-900">
+                  Administrador
+                </p>
               </div>
+
+              <a href="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                Perfil
+              </a>
+
+              <button id="logoutBtn"
+                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                  <g fill="none">
+                    <path
+                      d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                    <path fill="#f00034"
+                      d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                  </g>
+                </svg>
+                Cerrar sesión
+              </button>
             </div>
-            <input type="hidden" id="rolUsuario" th:value="${rolUsuario}">
-
-            <input type="hidden" id="tiendaId" th:value="${tiendaId}">
-            <nav class="space-y-2">
-            <!-- Dashboard -->
-            <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z"/>
-                </svg>
-                Dashboard
-            </a>
-
-            <!-- Inventario -->
-            <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18"/>
-                </svg>
-                Inventario
-            </a>
-
-            <!-- Proveedores -->
-            <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z"/>
-                </svg>
-                Proveedores
-            </a>
-
-            <!-- Deudas -->
-            <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6"/>
-                </svg>
-                Deudas
-            </a>
-
-            <!-- Punto de Venta -->
-            <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z"/>
-                </svg>
-                Punto de Venta
-            </a>
-
-            <!-- Informe de Ventas -->
-            <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z"/>
-                </svg>
-                Informe de Ventas
-            </a>
-
-            <!-- Gestión de Tenderos -->
-            <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z"/>
-                </svg>
-                Gestión de Tenderos
-            </a>
-
-            <!-- Tiendas -->
-            <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                </svg>
-                Tiendas
-            </a>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
-            <!-- Header -->
-           <header class="bg-white border-b border-gray-200 shadow-sm">
-                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <h1 class="text-xl font-semibold text-gray-800">Inventario</h1>
-                    <div class="relative">
-                        <button id="userMenuButton"
-                        class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                        <img src="/admin-avatar.png" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span id="userGreeting" 
-                                th:text="'Hola, ' + ${usuario.username}" 
-                                class="text-sm font-medium text-gray-700">
-                                Hola, Usuario
-                        </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="m6 9l6 6l6-6" />
-                        </svg>
-                        </button>
-
-                        <div id="userDropdown"
-                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
-                        
-                        <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="text-sm text-gray-700">Rol:</p>
-                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
-                            class="font-semibold text-gray-900">
-                            Administrador
-                            </p>
-                        </div>
-
-                        <a href="/perfil"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
-                            Perfil
-                        </a>
-
-                        <button id="logoutBtn"
-                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                            <g fill="none">
-                                <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/>
-                                <path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"/>
-                            </g>
-                            </svg>
-                            Cerrar sesión
-                        </button>
-                    </div>
-                </div>
-            </header>
-        <!-- Contenido principal con margen para el sidebar -->
-    <div class="lg:ml-30 pt-3">
+          </div>
+      </header>
+      <!-- Contenido principal con margen para el sidebar -->
+      <div class="lg:ml-30 pt-3">
         <div class="container mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Formulario Agregar Producto -->
-                 
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
-                        <div class="bg-gradient-to-r from-blue-300 to-blue-700 text-white p-6">
-                            <h2 class="text-xl font-semibold flex items-center gap-2">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                </svg>
-                                Agregar Producto
-                            </h2>
-                        </div>
-                        <form id="formProducto">
-                          <div class="p-6 space-y-6">
-                            <div class="space-y-2">
-                              <label class="text-sm font-medium text-gray-700">Código:</label>
-                              <input type="text" name="codigo" id="codigo" placeholder="Ingrese código del producto" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
-                            </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Formulario Agregar Producto -->
 
-                            <div class="space-y-2">
-                              <label class="text-sm font-medium text-gray-700">Nombre:</label>
-                              <input type="text" name="nombre" id="nombre" placeholder="Ingrese nombre del producto" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
-                            </div>
+            <div class="lg:col-span-1">
+              <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-300 to-blue-700 text-white p-6">
+                  <h2 class="text-xl font-semibold flex items-center gap-2">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Agregar Producto
+                  </h2>
+                </div>
+                <form id="formProducto">
+                  <div class="p-6 space-y-6">
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium text-gray-700">Código:</label>
+                      <input type="text" name="codigo" id="codigo" placeholder="Ingrese código del producto"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
 
-                            <div class="space-y-2">
-                              <label class="text-sm font-medium text-gray-700">Cantidad:</label>
-                              <input type="number" name="cantidad" id="cantidad" placeholder="0" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
-                            </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium text-gray-700">Nombre:</label>
+                      <input type="text" name="nombre" id="nombre" placeholder="Ingrese nombre del producto"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
 
-                            <div class="space-y-2">
-                              <label class="text-sm font-medium text-gray-700">Precio (COP):</label>
-                              <input type="number" name="precio" id="precio" placeholder="0.00" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
-                            </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium text-gray-700">Cantidad:</label>
+                      <input type="number" name="cantidad" id="cantidad" placeholder="0"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
 
-                            <div class="space-y-2">
-                              <label class="text-sm font-medium text-gray-700">Proveedor:</label>
-                              <select multiple name="proveedorId" id="proveedorId"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <option value="">Seleccionar proveedor</option>
-                              </select>
-                            </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium text-gray-700">Precio:</label>
+                      <!-- Cambiado a text para aceptar coma o punto como separador decimal -->
+                      <input type="text" inputmode="decimal" name="precio" id="precio" placeholder="0,00"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
 
-                            <!-- ✅ Contenedor centrado -->
-                            <div class="flex justify-center pt-4">
-                              <button type="submit" 
-                                class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium text-gray-700">Proveedor:</label>
+                      <select multiple name="proveedorId" id="proveedorId"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="">Seleccionar proveedor</option>
+                      </select>
+                    </div>
+
+                    <button
+                      class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl">
+                      Guardar Producto
+                    </button>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" placeholder="Ingrese nombre del producto"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      required>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidad" placeholder="0"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      required>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Precio (COP):</label>
+                    <input type="number" name="precio" id="precio" placeholder="0.00"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      required>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Proveedor:</label>
+                    <select multiple name="proveedorId" id="proveedorId"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                      <option value="">Seleccionar proveedor</option>
+                    </select>
+                  </div>
+
+                  <!-- ✅ Contenedor centrado -->
+                  <div class="flex justify-center pt-4">
+                    <button type="submit" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
                                       hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
                                       px-6 py-3 rounded-lg transition-all duration-200 transform 
                                       hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
                                       focus:ring-blue-400 focus:ring-offset-2">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                        d="M12 6v12m6-6H6"></path>
-                                </svg>
-                                <span>Guardar Producto</span>
-                              </button>
-                            </div>
-                          </div>
-                        </form>
+                      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                      </svg>
+                      <span>Guardar Producto</span>
+                    </button>
+                  </div>
+              </div>
+              </form>
 
-                    </div>
-                </div>
-
-                <!-- Lista de Productos -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
-                        <div class="bg-gradient-to-r from-gray-700 to-gray-800 text-white p-6">
-                            <h2 class="text-xl font-semibold flex items-center gap-2">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                </svg>
-                                Productos Registrados
-                            </h2>
-                        </div>
-                        <div class="p-6">
-                            <!-- Barra de búsqueda -->
-                            <div class="relative mb-6">
-                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                                <input type="text" id="buscar" placeholder="Buscar producto..." onkeyup="buscarProductos()"
-                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                            </div>
-
-                            <!-- 📋 Tabla -->
-                            <div class="rounded-lg overflow-hidden border border-gray-200">
-                                <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden" id="tablaProductos">
-                                    <thead class="bg-blue-500 text-white">
-                                    <tr class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Código</th>
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Nombre</th>
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Cantidad</th>
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Precio (COP)</th>
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Proveedor</th>
-                                        <th class="text-white font-semibold px-4 py-3 text-left">Acción</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="tbodyProductos">
-                                    <!-- Aquí se cargarán los productos dinámicamente -->
-                                    </tbody>
-                                </table>
-                                </div>
-
-                                <!-- Estado vacío -->
-                                <div id="emptyProductos" class="text-center py-10 text-gray-500 hidden">
-                                <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
-                                </svg>
-                                <p class="text-lg">No hay productos registrados aún</p>
-                                <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario de arriba</p>
-                                </div>
-
-                            </div>
-                        </div>                         
-                          <div class="flex justify-center items-center space-x-4 mt-8">
-                            <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                                <span class="flex items-center gap-2">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                                    </svg>
-                                    Anterior
-                                </span>
-                            </button>
-                            <span id="paginaActual" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
-                                1
-                            </span>
-                            <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                                <span class="flex items-center gap-2">
-                                    Siguiente
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </span>
-                            </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </div>
-    </div>
+          </div>
 
-    <script>
-      const tiendaId = document.getElementById("tiendaId").value;
-      const button = document.getElementById("userMenuButton");
+          <!-- Lista de Productos -->
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
+              <div class="bg-gradient-to-r from-gray-700 to-gray-800 text-white p-6">
+                <h2 class="text-xl font-semibold flex items-center gap-2">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  Productos Registrados
+                </h2>
+              </div>
+              <div class="p-6">
+                <!-- Barra de búsqueda -->
+                <div class="relative mb-6">
+                  <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input type="text" id="buscar" placeholder="Buscar producto..." onkeyup="buscarProductos()"
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <!-- 📋 Tabla -->
+                <div class="rounded-lg overflow-hidden border border-gray-200">
+                  <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden" id="tablaProductos">
+                    <thead class="bg-blue-500 text-white">
+                      <tr class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+                        <th class="text-white font-semibold px-4 py-3 text-left">Código</th>
+                        <th class="text-white font-semibold px-4 py-3 text-left">Nombre</th>
+                        <th class="text-white font-semibold px-4 py-3 text-left">Cantidad</th>
+                        <th class="text-white font-semibold px-4 py-3 text-left">Precio (COP)</th>
+                        <th class="text-white font-semibold px-4 py-3 text-left">Proveedor</th>
+                        <th class="text-white font-semibold px-4 py-3 text-left">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbodyProductos">
+                      <!-- Aquí se cargarán los productos dinámicamente -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Estado vacío -->
+                <div id="emptyProductos" class="text-center py-10 text-gray-500 hidden">
+                  <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
+                  </svg>
+                  <p class="text-lg">No hay productos registrados aún</p>
+                  <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario de arriba</p>
+                </div>
+
+              </div>
+            </div>
+            <div class="flex justify-center items-center space-x-4 mt-8">
+              <button onclick="cambiarPagina(-1)"
+                class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                <span class="flex items-center gap-2">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                  Anterior
+                </span>
+              </button>
+              <span id="paginaActual"
+                class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
+                1
+              </span>
+              <button onclick="cambiarPagina(1)"
+                class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                <span class="flex items-center gap-2">
+                  Siguiente
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const tiendaId = document.getElementById("tiendaId").value;
+    const button = document.getElementById("userMenuButton");
     const dropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -324,89 +431,115 @@
       }
     });
 
-function showNotification(message, type = "info") {
-  const notification = document.createElement("div");
-  notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${
-    type === "success" ? "bg-green-600" :
-    type === "error" ? "bg-red-600" :
-    type === "warning" ? "bg-yellow-500" :
-    "bg-blue-600"
-  }`;
-  notification.textContent = message;
-  document.body.appendChild(notification);
+    function showNotification(message, type = "info") {
+      const notification = document.createElement("div");
+      notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" :
+          type === "error" ? "bg-red-600" :
+            type === "warning" ? "bg-yellow-500" :
+              "bg-blue-600"
+        }`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
 
-  setTimeout(() => {
-    notification.style.opacity = "0";
-    notification.style.transform = "translateY(-10px)";
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
-}
-
-async function cargarProveedoresSelect(selectId = "proveedorId") {
-  const select = document.getElementById(selectId);
-  if (!select) return;
-
-  try {
-    const res = await fetch(`/api/proveedores/tienda/${tiendaId}`);
-    if (!res.ok) throw new Error("Error al obtener proveedores");
-
-    const data = await res.json();
-    const proveedores = data.content || data || [];
-    select.innerHTML = "";
-
-    if (proveedores.length === 0) {
-      const opt = document.createElement("option");
-      opt.value = "";
-      opt.textContent = "No hay proveedores disponibles";
-      select.appendChild(opt);
-      showNotification("No hay proveedores registrados para esta tienda", "warning");
-      return;
+      setTimeout(() => {
+        notification.style.opacity = "0";
+        notification.style.transform = "translateY(-10px)";
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
     }
 
-    proveedores.forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p.id;
-      opt.textContent = `${p.nombre} (${p.nit})`;
-      select.appendChild(opt);
-    });
-  } catch (error) {
-    console.error(error);
-    showNotification("Error al cargar proveedores", "error");
-  }
-}
-
-let pagina = 0;
-const tamanoPagina = 5;
-let totalPaginas = 0;
-
-async function cargarProductos() {
-  try {
-    const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${pagina}&size=${tamanoPagina}`);
-    if (!res.ok) throw new Error("Error al obtener productos");
-
-    const data = await res.json();
-    const productos = data.content || [];
-    totalPaginas = data.totalPages || 1;
-
-    const tbody = document.querySelector("#tablaProductos tbody");
-    tbody.innerHTML = "";
-
-    if (productos.length === 0) {
-      document.getElementById("emptyProductos").classList.remove("hidden");
-      return;
+    // Convierte una cadena con coma o punto decimal a número (acepta formatos como "1.234,56" o "1234.56" o "1234,56")
+    function parsePrecio(str) {
+      if (str === null || str === undefined) return NaN;
+      const s = String(str).trim();
+      if (s === '') return NaN;
+      // Si viene con separador de miles '.' y decimal ',', normalizamos
+      // Ej: 1.234,56 -> 1234.56
+      let normalized = s;
+      // Si hay coma y punto, asumimos que el punto es separador de miles
+      if (s.indexOf(',') > -1 && s.indexOf('.') > -1) {
+        normalized = s.replaceAll('.', '').replace(',', '.');
+      } else if (s.indexOf(',') > -1 && s.indexOf('.') === -1) {
+        // Solo coma -> reemplazar por punto
+        normalized = s.replace(',', '.');
+      }
+      // Quitar espacios
+      normalized = normalized.replace(/\s+/g, '');
+      const n = parseFloat(normalized);
+      return isNaN(n) ? NaN : n;
     }
 
-    document.getElementById("emptyProductos").classList.add("hidden");
+    // Formatea número a string con separador de miles y coma decimal (estilo colombiano)
+    function formatPrecio(num) {
+      if (num === null || num === undefined || isNaN(num)) return '';
+      return num.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-    productos.forEach(p => {
-      const provs = p.proveedores ? p.proveedores.map(pr => pr.nombre).join(", ") : "";
-      const tr = document.createElement("tr");
-      tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors'";
-      tr.innerHTML = `
+    async function cargarProveedoresSelect(selectId = "proveedorId") {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+
+      try {
+        const res = await fetch(`/api/proveedores/tienda/${tiendaId}`);
+        if (!res.ok) throw new Error("Error al obtener proveedores");
+
+        const data = await res.json();
+        const proveedores = data.content || data || [];
+        select.innerHTML = "";
+
+        if (proveedores.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "No hay proveedores disponibles";
+          select.appendChild(opt);
+          showNotification("No hay proveedores registrados para esta tienda", "warning");
+          return;
+        }
+
+        proveedores.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = `${p.nombre} (${p.nit})`;
+          select.appendChild(opt);
+        });
+      } catch (error) {
+        console.error(error);
+        showNotification("Error al cargar proveedores", "error");
+      }
+    }
+
+    let pagina = 0;
+    const tamanoPagina = 5;
+    let totalPaginas = 0;
+
+    async function cargarProductos() {
+      try {
+        const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${pagina}&size=${tamanoPagina}`);
+        if (!res.ok) throw new Error("Error al obtener productos");
+
+        const data = await res.json();
+        const productos = data.content || [];
+        totalPaginas = data.totalPages || 1;
+
+        const tbody = document.querySelector("#tablaProductos tbody");
+        tbody.innerHTML = "";
+
+        if (productos.length === 0) {
+          document.getElementById("emptyProductos").classList.remove("hidden");
+          return;
+        }
+
+        document.getElementById("emptyProductos").classList.add("hidden");
+
+        productos.forEach(p => {
+          const provs = p.proveedores ? p.proveedores.map(pr => pr.nombre).join(", ") : "";
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors'";
+          tr.innerHTML = `
         <td class="p-3">${p.codigo}</td>
         <td class="p-3">${p.nombre}</td>
         <td class="p-3">${p.cantidad}</td>
-        <td class="p-3">$${p.precio}</td>
+        <td class="p-3">$${formatPrecio(p.precio)}</td>
         <td class="p-3">${provs}</td>
         <td class="p-3 flex gap-2">
           <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
@@ -426,130 +559,139 @@ async function cargarProductos() {
           </button>
         </td>
       `;
-      tbody.appendChild(tr);
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("paginaActual").textContent = pagina + 1;
+      } catch (error) {
+        console.error(error);
+        showNotification("Error al cargar productos", "error");
+      }
+    }
+
+    function cambiarPagina(direccion) {
+      if (direccion === -1 && pagina > 0) {
+        pagina--;
+        cargarProductos();
+      }
+      if (direccion === 1 && pagina + 1 < totalPaginas) {
+        pagina++;
+        cargarProductos();
+      }
+    }
+
+
+    document.getElementById("tablaProductos").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+
+
+      if (btn.classList.contains("btn-edit")) {
+        const form = document.getElementById("formProducto");
+        form.dataset.id = btn.dataset.id;
+        form.codigo.value = btn.dataset.codigo;
+        form.nombre.value = btn.dataset.nombre;
+        form.cantidad.value = btn.dataset.cantidad;
+        form.precio.value = btn.dataset.precio;
+        showNotification("Editando producto...", "info");
+        return;
+      }
+
+
+      if (btn.classList.contains("btn-delete")) {
+        if (!confirm("¿Eliminar este producto?")) return;
+        const id = btn.dataset.id;
+
+        try {
+          const resp = await fetch(`/api/productos/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
+          if (!resp.ok) throw new Error(await resp.text());
+          showNotification("Producto eliminado correctamente", "success");
+          cargarProductos();
+        } catch (error) {
+          showNotification("Error al eliminar producto", "error");
+        }
+      }
     });
 
-    document.getElementById("paginaActual").textContent = pagina + 1;
-  } catch (error) {
-    console.error(error);
-    showNotification("Error al cargar productos", "error");
-  }
-}
+    document.getElementById("formProducto").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-function cambiarPagina(direccion) {
-  if (direccion === -1 && pagina > 0) {
-    pagina--;
-    cargarProductos();
-  }
-  if (direccion === 1 && pagina + 1 < totalPaginas) {
-    pagina++;
-    cargarProductos();
-  }
-}
+      const selectedProveedores = Array.from(document.getElementById("proveedorId").selectedOptions).map(o => o.value);
+      const rawPrecio = this.precio.value;
+      const precioNum = parsePrecio(rawPrecio);
+      if (isNaN(precioNum)) {
+        showNotification('⚠️ Precio inválido', 'warning');
+        return;
+      }
+
+      const producto = {
+        codigo: this.codigo.value.trim(),
+        nombre: this.nombre.value.trim(),
+        cantidad: parseInt(this.cantidad.value) || 0,
+        precio: precioNum,
+        proveedorIdStrs: selectedProveedores,
+        tiendaId: tiendaId
+      };
+
+      const isEdit = !!this.dataset.id;
+      const url = isEdit ? `/api/productos/${this.dataset.id}` : `/api/productos`;
+      const method = isEdit ? "PUT" : "POST";
+
+      try {
+        const resp = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(producto)
+        });
+
+        if (!resp.ok) {
+          const msg = await resp.text();
+          if (msg.includes("código")) showNotification("El código ya está registrado", "warning");
+          else if (msg.includes("nombre")) showNotification("El nombre ya está registrado", "warning");
+          else showNotification("Error al guardar: " + msg, "error");
+          return;
+        }
+
+        this.reset();
+        delete this.dataset.id;
+        showNotification(isEdit ? "Producto actualizado" : "Producto creado", "success");
+        cargarProductos();
+      } catch (error) {
+        showNotification("Error de conexión", "error");
+      }
+    });
 
 
-document.getElementById("tablaProductos").addEventListener("click", async (e) => {
-  const btn = e.target.closest("button");
-  if (!btn) return;
+    function buscarProductos() {
+      const input = document.getElementById("buscar").value.toLowerCase();
+      const filas = document.querySelectorAll("#tablaProductos tbody tr");
+
+      filas.forEach(fila => {
+        const nombre = fila.cells[1].textContent.toLowerCase();
+        const codigo = fila.cells[0].textContent.toLowerCase();
+        fila.style.display = (nombre.includes(input) || codigo.includes(input)) ? "" : "none";
+      });
+    }
 
 
-  if (btn.classList.contains("btn-edit")) {
-    const form = document.getElementById("formProducto");
-    form.dataset.id = btn.dataset.id;
-    form.codigo.value = btn.dataset.codigo;
-    form.nombre.value = btn.dataset.nombre;
-    form.cantidad.value = btn.dataset.cantidad;
-    form.precio.value = btn.dataset.precio;
-    showNotification("Editando producto...", "info");
-    return;
-  }
-
-
-  if (btn.classList.contains("btn-delete")) {
-    if (!confirm("¿Eliminar este producto?")) return;
-    const id = btn.dataset.id;
-
-    try {
-      const resp = await fetch(`/api/productos/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
-      if (!resp.ok) throw new Error(await resp.text());
-      showNotification("Producto eliminado correctamente", "success");
+    document.addEventListener("DOMContentLoaded", function () {
+      cargarProveedoresSelect();
       cargarProductos();
-    } catch (error) {
-      showNotification("Error al eliminar producto", "error");
-    }
-  }
-});
 
-document.getElementById("formProducto").addEventListener("submit", async function (e) {
-  e.preventDefault();
 
-  const selectedProveedores = Array.from(document.getElementById("proveedorId").selectedOptions).map(o => o.value);
-  const producto = {
-    codigo: this.codigo.value.trim(),
-    nombre: this.nombre.value.trim(),
-    cantidad: parseInt(this.cantidad.value),
-    precio: parseFloat(this.precio.value),
-    proveedorIdStrs: selectedProveedores,
-    tiendaId: tiendaId
-  };
-
-  const isEdit = !!this.dataset.id;
-  const url = isEdit ? `/api/productos/${this.dataset.id}` : `/api/productos`;
-  const method = isEdit ? "PUT" : "POST";
-
-  try {
-    const resp = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(producto)
+      document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+      document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+      document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+      document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+      document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+      document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+      document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+      document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+      document.getElementById("linkTiendas").href = `/tiendas`;
     });
 
-    if (!resp.ok) {
-      const msg = await resp.text();
-      if (msg.includes("código")) showNotification("El código ya está registrado", "warning");
-      else if (msg.includes("nombre")) showNotification("El nombre ya está registrado", "warning");
-      else showNotification("Error al guardar: " + msg, "error");
-      return;
-    }
-
-    this.reset();
-    delete this.dataset.id;
-    showNotification(isEdit ? "Producto actualizado" : "Producto creado", "success");
-    cargarProductos();
-  } catch (error) {
-    showNotification("Error de conexión", "error");
-  }
-});
-
-
-function buscarProductos() {
-  const input = document.getElementById("buscar").value.toLowerCase();
-  const filas = document.querySelectorAll("#tablaProductos tbody tr");
-
-  filas.forEach(fila => {
-    const nombre = fila.cells[1].textContent.toLowerCase();
-    const codigo = fila.cells[0].textContent.toLowerCase();
-    fila.style.display = (nombre.includes(input) || codigo.includes(input)) ? "" : "none";
-  });
-}
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  cargarProveedoresSelect();
-  cargarProductos();
-  
-
-  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-  document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
-  document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
-  document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
-  document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
-  document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
-  document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
-  document.getElementById("linkTiendas").href = `/tiendas`;
-});
-
-</script>
+  </script>
 
 </body>
+
 </html>

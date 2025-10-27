@@ -40,4 +40,21 @@ public class VentaRestController {
             @RequestParam(defaultValue = "5") int size) {
         return ventaService.obtenerVentasPorTienda(tiendaId, page, size);
     }
+
+    // 🔹 Últimas 5 ventas (ordenadas por fecha desc) para vistas tipo resumen
+    @GetMapping("/tienda/{tiendaId}/ultimas")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public java.util.List<Venta> ultimasVentas(@PathVariable String tiendaId,
+                                              @RequestParam(defaultValue = "5") int limite) {
+        return ventaService.obtenerUltimasVentas(tiendaId, Math.max(1, Math.min(limite, 20)));
+    }
+
+    // 🔹 Ventas mensuales (últimos N meses)
+    @GetMapping("/tienda/{tiendaId}/mensuales")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public java.util.List<java.util.Map<String, Object>> ventasMensuales(
+            @PathVariable String tiendaId,
+            @RequestParam(defaultValue = "12") int meses) {
+        return ventaService.obtenerVentasMensuales(tiendaId, meses);
+    }
 }
