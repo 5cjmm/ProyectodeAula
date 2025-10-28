@@ -62,10 +62,10 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
                     "/fonts/**").permitAll() // AÑADIDO
-                        .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
+                        .requestMatchers("/features", "/pricing", "/contacto", "/register").permitAll() // AÑADIDO
 
-                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                        .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas//{id}/tendero").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**", "/api/pqrs").permitAll()
+                        .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas/{id}/tendero").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/tenderos/**").hasAuthority("ROLE_ADMIN")
 
                         // 🟩 Rutas compartidas entre ADMIN y TENDERO
