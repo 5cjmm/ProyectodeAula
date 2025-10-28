@@ -27,19 +27,18 @@ public class DeudaRestController {
 
     // 🔹 Registrar deuda (desde el Punto de Venta)
     @PostMapping("/crear")
-@PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
-public ResponseEntity<String> registrarDeuda(@RequestBody Deuda deuda) {
-    try {
-        Deuda creada = deudaService.registrarDeuda(deuda);
-        return ResponseEntity.ok("Deuda registrada");
-    } catch (RuntimeException ex) {
-        if ("ACTUALIZADA".equals(ex.getMessage())) {
-            return ResponseEntity.ok("Deuda actualizada");
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public ResponseEntity<String> registrarDeuda(@RequestBody Deuda deuda) {
+        try {
+            deudaService.registrarDeuda(deuda);
+            return ResponseEntity.ok("Deuda registrada");
+        } catch (RuntimeException ex) {
+            if ("ACTUALIZADA".equals(ex.getMessage())) {
+                return ResponseEntity.ok("Deuda actualizada");
+            }
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
-        return ResponseEntity.badRequest().body(ex.getMessage());
     }
-}
-
 
     // 🔹 Listar deudas por tienda
     @GetMapping("/tienda/{tiendaId}")
