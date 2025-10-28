@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,14 @@ public class TiendaViewController {
     @GetMapping
     public String showTiendasPage(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario.getRoles().contains("ROLE_TENDERO")) {
+        if (usuario.getTiendas() != null && !usuario.getTiendas().isEmpty()) {
+            String tiendaId = usuario.getTiendas().get(0).getId();
+            return "redirect:/tiendas/" + tiendaId + "/dashboard";
+        } else {
+            return "redirect:/sin-tienda"; // En caso de que no tenga tienda asignada
+        }
+    }
         model.addAttribute("usuario", usuario); // se pasa a tiendas.html
         return "tiendas"; // busca templates/tiendas.html
     }
@@ -121,7 +130,17 @@ public class TiendaViewController {
     }
 
     @GetMapping("/{id}/tendero")
-    public String verTendero(@PathVariable String id, Model model) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public String verTendero(@PathVariable String id, HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario.getRoles().contains("ROLE_TENDERO")) {
+        if (usuario.getTiendas() != null && !usuario.getTiendas().isEmpty()) {
+            String tiendaId = usuario.getTiendas().get(0).getId();
+            return "redirect:/tiendas/" + tiendaId + "/dashboard";
+        } else {
+            return "redirect:/sin-tienda"; // En caso de que no tenga tienda asignada
+        }
+    }
         model.addAttribute("tiendaId", id); // se pasa a Tendero.html
         return "RegistroTendero"; // templates/Tendero.html
 

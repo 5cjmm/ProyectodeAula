@@ -19,7 +19,8 @@
         </div>
       </div>
 
-      <input type="hidden" id="tiendaId" th:value="${tiendaId}" value="">
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
       <nav class="space-y-2">
             <!-- Dashboard -->
             <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
@@ -276,14 +277,27 @@
                 </div>
 
                 <div class="mt-4 grid grid-cols-1 gap-3">
-                  <button id="btnRegisterSale"
-                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
-                    Registrar Venta
-                  </button>
-                  <button id="btnRegisterDebt"
-                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
-                    Registrar como Deuda
-                  </button>
+                  <button id="btnRegisterSale" 
+                      class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 
+                            hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-2 rounded-lg 
+                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                      <!-- SVG de dinero / venta -->
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
+                        <path d="M12.005 22.003c-5.523 0-10-4.477-10-10s4.477-10 10-10s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-3.5-6h5.5a.5.5 0 1 0 0-1h-4a2.5 2.5 0 1 1 0-5h1v-2h2v2h2.5v2h-5.5a.5.5 0 0 0 0 1h4a2.5 2.5 0 0 1 0 5h-1v2h-2v-2h-2.5z"/>
+                      </svg>
+                      Registrar Venta
+                    </button>
+                  <button id="btnRegisterDebt" 
+                      class="flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-yellow-600 
+                            hover:from-yellow-600 hover:to-yellow-700 text-white font-medium px-6 py-2 rounded-lg 
+                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                      <!-- SVG de deuda / crédito -->
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
+                        <path d="M19 2H5a3 3 0 0 0-3 3v16l4-4h13a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm-7 12h-2v-2h2v2zm2.07-7.75l-.9.92C12.45 7.9 12 8.5 12 10h-2v-.5c0-.83.45-1.48 1.17-2.09l1.24-1.26a2.49 2.49 0 0 0 .41-2.87A2.498 2.498 0 0 0 10.5 2C9.12 2 8 3.12 8 4.5H6c0-2.21 1.79-4 4-4c1.48 0 2.75.81 3.45 2.02a3.48 3.48 0 0 1-.38 4.73z"/>
+                      </svg>
+                      Registrar como Deuda
+                    </button>
+                  
                 </div>
               </div>
             </div>
@@ -657,27 +671,33 @@
         } catch (e) { console.warn(e); }
       }
 
-      function initLinks() {
-        const idEl = document.getElementById('tiendaId');
-        const tid = idEl ? idEl.value : null;
-        if (!tid) return;
-        document.getElementById("linkDashboard").href = `/tiendas/${tid}/dashboard`;
-        document.getElementById("linkInventario").href = `/tiendas/${tid}/inventario`;
-        document.getElementById("linkProveedores").href = `/tiendas/${tid}/proveedores`;
-        document.getElementById("linkDeudas").href = `/tiendas/${tid}/deudas`;
-        document.getElementById("linkPuntoVenta").href = `/tiendas/${tid}/puntoventa`;
-        document.getElementById("linkInforme").href = `/tiendas/${tid}/informe`;
-        document.getElementById("linkPrediccion").href = `/tiendas/${tid}/prediccion`;
-        document.getElementById("linkTendero").href = `/tiendas/${tid}/tendero`;
-        document.getElementById("linkPerfil").href = `/tiendas/${tid}/perfil`;
-        document.getElementById("linkTiendas").href = `/tiendas`;
-      }
+      document.addEventListener("DOMContentLoaded",()=>{
+  const rol = document.getElementById("rolUsuario")?.value;
+
+  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+  document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+  document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+  document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+  document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+  document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkPrediccion").href=`/tiendas/${tiendaId}/prediccion`;
+  document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+  document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+  document.getElementById("linkTiendas").href = `/tiendas`;
+
+  if (rol === "ROLE_TENDERO") {
+    const tenderoMenu = document.getElementById("linkTendero");
+    const tiendasMenu = document.getElementById("linkTiendas");
+
+    if (tenderoMenu) tenderoMenu.style.display = "none";
+    if (tiendasMenu) tiendasMenu.style.display = "none";
+  }
+});
 
       document.addEventListener('DOMContentLoaded', () => {
         loadProducts();
         renderCart();
         loadRecentSales();
-        initLinks();
       });
 
     })();

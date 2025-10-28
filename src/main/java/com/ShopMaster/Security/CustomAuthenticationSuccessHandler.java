@@ -61,7 +61,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         else if (role.equals("ROLE_TENDERO")) {
             if (usuario.getTiendas() != null && !usuario.getTiendas().isEmpty()) {
                 String tiendaId = usuario.getTiendas().get(0).getId();
-                response.sendRedirect("/tiendas/" + tiendaId + "/inventario");
+                response.sendRedirect("/tiendas/" + tiendaId + "/dashboard");
             } else {
                 response.sendRedirect("/sin-tienda");
             }
