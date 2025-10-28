@@ -36,8 +36,8 @@ top: 228px;
           class="text-gray-800 font-semibold hover:text-blue-700 hover:scale-105 transition-all duration-200">Inicio</a>
         <a href="#" 
           class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">¿Quiénes somos?</a>
-        <a href="#" 
-          class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">Contacto</a>
+        <a th:href="@{/contacto}" 
+          class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">PQRS</a>
       </nav>
 
       <!-- Botón de login -->
@@ -111,8 +111,7 @@ top: 228px;
                     <h4 class="font-semibold mb-3">Soporte</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li><a href="#" class="hover:text-gray-900 transition-colors">Centro de Ayuda</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition-colors">Contacto</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition-colors">PQRS</a></li>
+                        <li><a th:href="@{/contacto}" class="hover:text-gray-900 transition-colors">PQRS</a></li>
                     </ul>
                 </div>
 

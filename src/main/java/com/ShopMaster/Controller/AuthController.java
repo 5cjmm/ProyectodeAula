@@ -44,9 +44,14 @@ public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
 }
 
         
-        @GetMapping("/home")
+    @GetMapping("/home")
         public String homePage() {
         return "home";
+    }
+
+    @GetMapping("/contacto")
+        public String Contacto() {
+        return "Contacto";
     }
 
 }
