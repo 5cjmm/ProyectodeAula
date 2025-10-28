@@ -65,8 +65,12 @@ public class SecurityConfig {
                         .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
 
                         .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
+                        .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas//{id}/tendero").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/tenderos/**").hasAuthority("ROLE_ADMIN")
+
+                        // 🟩 Rutas compartidas entre ADMIN y TENDERO
                         .requestMatchers("/tiendas/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
-                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
+                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

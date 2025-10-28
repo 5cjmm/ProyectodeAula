@@ -21,6 +21,7 @@
             </div>
 
             <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
             <nav class="space-y-2">
             <!-- Dashboard -->
             <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
@@ -297,24 +298,36 @@
 
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        const tiendaId = document.getElementById("tiendaId").value;
+  const tiendaId = document.getElementById("tiendaId")?.value;
+  const rol = document.getElementById("rolUsuario")?.value;
 
-        if (!tiendaId) {
-            console.error("⚠️ tiendaId no encontrado");
-            return;
-        }
-        
+  if (!tiendaId) {
+    console.error("⚠️ tiendaId no encontrado");
+    return;
+  }
 
-        document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-        document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
-        document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
-        document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
-        document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
-        document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
-        document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
-        document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
-        document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
-        document.getElementById("linkTiendas").href = `/tiendas`;
+  // 🔗 Enlaces dinámicos
+  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+  document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+  document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+  document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+  document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+  document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+  document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+  document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+  document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+  document.getElementById("linkTiendas").href = `/tiendas`;
+
+  // 🧱 Ocultar elementos según el rol
+  if (rol === "ROLE_TENDERO") {
+    const tenderoMenu = document.getElementById("linkTendero");
+    const tiendasMenu = document.getElementById("linkTiendas");
+
+    if (tenderoMenu) tenderoMenu.style.display = "none";
+    if (tiendasMenu) tiendasMenu.style.display = "none";
+  }
+
+
 
         // --- Gráfico: Ventas Mensuales ---
         let ventasChart;

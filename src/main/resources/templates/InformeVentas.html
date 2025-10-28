@@ -22,6 +22,7 @@
             </div>
             
             <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
             <nav class="space-y-2">
             <!-- Dashboard -->
             <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
@@ -314,6 +315,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
   const tiendaId = document.getElementById("tiendaId").value;
+  const rol = document.getElementById("rolUsuario")?.value;
 
   if (!tiendaId) {
     console.error("⚠️ tiendaId no encontrado");
@@ -330,6 +332,14 @@
   document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
   document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
   document.getElementById("linkTiendas").href = `/tiendas`;
+
+  if (rol === "ROLE_TENDERO") {
+    const tenderoMenu = document.getElementById("linkTendero");
+    const tiendasMenu = document.getElementById("linkTiendas");
+
+    if (tenderoMenu) tenderoMenu.style.display = "none";
+    if (tiendasMenu) tiendasMenu.style.display = "none";
+  }
 });
 
         const menuToggle = document.getElementById("menu-toggle");
