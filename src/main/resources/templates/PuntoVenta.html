@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -13,15 +14,10 @@
   <div class="flex min-h-screen">
     <aside class="w-64 bg-white border-r border-gray-200 p-6">
       <div class="flex flex-col items-center mb-10">
-              <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-                <img 
-                  th:src="@{/images/logo.png}" 
-                  alt="ShopMaster" 
-                  class="h-28 w-auto object-contain drop-shadow-md"
-                >
-              </div>
-            </div>
-            <input type="hidden" id="rolUsuario" th:value="${rolUsuario}">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
 
       <input type="hidden" id="tiendaId" th:value="${tiendaId}" value="">
       <nav class="space-y-2">
@@ -72,13 +68,14 @@
                 </svg>
                 Informe de Ventas
             </a>
-            <!-- Predicción -->
-            <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 3v14h14V3H3zm2 10V9h2v4H5zm4 0V7h2v6H9zm4 0v-3h2v3h-2z" />
-              </svg>
-              Predicción
-            </a>
+
+            <a id="linkPrediccion"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+                    </svg>
+                    Predicción
+                </a>
 
             <!-- Gestión de Tenderos -->
             <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
@@ -101,53 +98,68 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col">
       <!-- Header -->
-            <header class="bg-white border-b border-gray-200 shadow-sm">
+      <header class="bg-white border-b border-gray-200 shadow-sm">
                 <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                     <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
-                    <div class="relative">
-                        <button id="userMenuButton"
-                        class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                        <img src="/admin-avatar.png" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span id="userGreeting" 
-                                th:text="'Hola, ' + ${usuario.username}" 
-                                class="text-sm font-medium text-gray-700">
-                                Hola, Usuario
-                        </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="m6 9l6 6l6-6" />
-                        </svg>
-                        </button>
 
-                        <div id="userDropdown"
-                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
-                        
-                        <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="text-sm text-gray-700">Rol:</p>
-                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
-                            class="font-semibold text-gray-900">
-                            Administrador
-                            </p>
+                    <div class="relative">
+                    <button id="userMenuButton"
+                        class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+
+                        <!-- ⚪ SVG Avatar con círculo gris -->
+                        <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                            <path fill="none"
+                            d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                            <path fill="#0891b2"
+                            d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                        </svg>
                         </div>
 
-                        <a href="/perfil"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
-                            Perfil
+                        <span id="userGreeting"
+                        th:text="'Hola, ' + ${usuario.username}"
+                        class="text-sm font-medium text-gray-700">
+                        Hola, Usuario
+                        </span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="m6 9l6 6l6-6" />
+                        </svg>
+                    </button>
+
+                    <!-- 🔽 Menú desplegable -->
+                    <div id="userDropdown"
+                        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
+                        <div class="px-4 py-3 border-b border-gray-100">
+                        <p class="text-sm text-gray-700">Rol:</p>
+                        <p id="userRole"
+                            th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                            class="font-semibold text-gray-900">
+                            Administrador
+                        </p>
+                        </div>
+
+                        <a id="linkPerfil"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                        Perfil
                         </a>
 
                         <button id="logoutBtn"
-                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                             <g fill="none">
-                                <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/>
-                                <path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"/>
+                            <path fill="#f00034"
+                                d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
                             </g>
-                            </svg>
-                            Cerrar sesión
+                        </svg>
+                        Cerrar sesión
                         </button>
                     </div>
+                    </div>
                 </div>
-            </header>
+                </header>
       <!-- Body -->
       <main class="w-full max-w-none px-8 py-8">
         <div class="max-w-[1400px] mx-auto">
@@ -162,7 +174,7 @@
                 </svg>
                 <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
                   class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
-                  <button id="refrescarProducts" 
+                <button id="refrescarProducts" 
                     class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
                           hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
                           px-6 py-3 rounded-lg transition-all duration-200 transform 
@@ -179,19 +191,20 @@
 
                     Refrescar
                   </button>
+
               </div>
 
               <!-- Productos disponibles -->
               <div class="mt-4">
-                <div class="overflow-x-auto">
+                <div class="rounded-lg overflow-hidden border border-gray-200">
                   <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden">
                     <thead class="bg-blue-500 text-white">
-                      <tr class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                        <th class="text-white font-semibold px-4 py-3 text-left">Código</th>
-                        <th class="text-white font-semibold px-4 py-3 text-left">Nombre</th>
-                        <th class="text-white font-semibold px-4 py-3 text-left">Cantidad</th>
-                        <th class="text-white font-semibold px-4 py-3 text-left">Precio (COP)</th>
-                        <th class="text-white font-semibold px-4 py-3 text-left">Acción</th>
+                      <tr>
+                        <th class="px-4 py-3 text-left">Código</th>
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Stock</th>
+                        <th class="px-4 py-3 text-left">Precio</th>
+                        <th class="px-4 py-3 text-left">Acción</th>
                       </tr>
                     </thead>
                     <tbody id="productsBody" class="text-sm">
@@ -237,7 +250,7 @@
                       <th class="px-3 py-2 text-left">Código</th>
                       <th class="px-3 py-2 text-left">Nombre</th>
                       <th class="px-3 py-2 text-left">Cant.</th>
-                      <th class="px-3 py-2 text-left">Precio U. (COP)</th>
+                      <th class="px-3 py-2 text-left">Precio U.</th>
                       <th class="px-3 py-2 text-left">Subtotal</th>
                       <th class="px-3 py-2 text-left">Acción</th>
                     </tr>
@@ -263,35 +276,20 @@
                 </div>
 
                 <div class="mt-4 grid grid-cols-1 gap-3">
-                    <!-- 🟩 Registrar Venta -->
-                    <button id="btnRegisterSale" 
-                      class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 
-                            hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-2 rounded-lg 
-                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                      <!-- SVG de dinero / venta -->
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
-                        <path d="M12.005 22.003c-5.523 0-10-4.477-10-10s4.477-10 10-10s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-3.5-6h5.5a.5.5 0 1 0 0-1h-4a2.5 2.5 0 1 1 0-5h1v-2h2v2h2.5v2h-5.5a.5.5 0 0 0 0 1h4a2.5 2.5 0 0 1 0 5h-1v2h-2v-2h-2.5z"/>
-                      </svg>
-                      Registrar Venta
-                    </button>
-
-                    <!-- 🟨 Registrar como Deuda -->
-                    <button id="btnRegisterDebt" 
-                      class="flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-yellow-600 
-                            hover:from-yellow-600 hover:to-yellow-700 text-white font-medium px-6 py-2 rounded-lg 
-                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                      <!-- SVG de deuda / crédito -->
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
-                        <path d="M19 2H5a3 3 0 0 0-3 3v16l4-4h13a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm-7 12h-2v-2h2v2zm2.07-7.75l-.9.92C12.45 7.9 12 8.5 12 10h-2v-.5c0-.83.45-1.48 1.17-2.09l1.24-1.26a2.49 2.49 0 0 0 .41-2.87A2.498 2.498 0 0 0 10.5 2C9.12 2 8 3.12 8 4.5H6c0-2.21 1.79-4 4-4c1.48 0 2.75.81 3.45 2.02a3.48 3.48 0 0 1-.38 4.73z"/>
-                      </svg>
-                      Registrar como Deuda
-                    </button>
-                  </div>
-
+                  <button id="btnRegisterSale"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold">
+                    Registrar Venta
+                  </button>
+                  <button id="btnRegisterDebt"
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold">
+                    Registrar como Deuda
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
+          <!-- Historial rapido / últimos items (opcional) -->
           <div class="bg-white rounded-xl shadow-lg p-4">
             <h4 class="font-semibold mb-2">Últimas ventas (resumen)</h4>
             <div id="recentSales" class="text-sm text-gray-600">Cargando...</div>
@@ -301,6 +299,7 @@
     </div>
   </div>
 
+  <!-- Modal deuda -->
   <div id="modalDebt" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
     <div class="bg-white rounded-lg w-full max-w-md p-6">
       <h3 class="text-lg font-semibold mb-4">Registrar Deuda</h3>
@@ -317,24 +316,24 @@
 
       <div class="flex justify-end gap-3 mt-5">
         <button id="cancelDebt" class="px-4 py-2 rounded border">Cancelar</button>
-        <button id="confirmDebt" class="px-4 py-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Registrar Deuda</button>
+        <button id="confirmDebt" class="px-4 py-2 bg-yellow-500 text-white rounded">Registrar Deuda</button>
       </div>
     </div>
   </div>
 
   <!-- SCRIPT -->
   <script>
-  (function(){
-    // helpers
-    function fmtCOP(n){ return new Intl.NumberFormat('es-CO',{style:'currency', currency:'COP', maximumFractionDigits:0}).format(n); }
-    function showNotification(msg, type='info'){
-      const colors = { success:'bg-green-600', error:'bg-red-600', warning:'bg-yellow-500', info:'bg-blue-600' };
-      const d = document.createElement('div');
-      d.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type]||colors.info}`;
-      d.textContent = msg;
-      document.body.appendChild(d);
-      setTimeout(()=> { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(()=> d.remove(),300); }, 3000);
-    }
+    (function () {
+      // helpers
+      function fmtCOP(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n); }
+      function showNotification(msg, type = 'info') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
+        const d = document.createElement('div');
+        d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
+        d.textContent = msg;
+        document.body.appendChild(d);
+        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+      }
 
       // DOM
       const tiendaId = document.getElementById('tiendaId').value;
@@ -350,17 +349,16 @@
       const btnRegisterSale = document.getElementById('btnRegisterSale');
       const btnRegisterDebt = document.getElementById('btnRegisterDebt');
 
-    const modalDebt = document.getElementById('modalDebt');
-    const cancelDebt = document.getElementById('cancelDebt');
-    const confirmDebt = document.getElementById('confirmDebt');
-    const debtNombre = document.getElementById('debtNombre');
-    const debtCedula = document.getElementById('debtCedula');
+      const modalDebt = document.getElementById('modalDebt');
+      const cancelDebt = document.getElementById('cancelDebt');
+      const confirmDebt = document.getElementById('confirmDebt');
+      const debtNombre = document.getElementById('debtNombre');
+      const debtCedula = document.getElementById('debtCedula');
 
-    const button = document.getElementById("userMenuButton");
+      const button = document.getElementById("userMenuButton");
     const dropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // Mostrar/ocultar con animación
     button.addEventListener("click", (e) => {
       e.stopPropagation();
       const isVisible = dropdown.classList.contains("opacity-100");
@@ -373,7 +371,6 @@
       dropdown.classList.toggle("scale-95", isVisible);
     });
 
-    // Cerrar al hacer clic fuera
     document.addEventListener("click", (e) => {
       if (!dropdown.contains(e.target) && !button.contains(e.target)) {
         dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
@@ -381,7 +378,6 @@
       }
     });
 
-    // Acción de cerrar sesión
     logoutBtn.addEventListener("click", () => {
       if (confirm("¿Deseas cerrar sesión?")) {
         window.location.href = "/logout";
@@ -394,7 +390,7 @@
 
       // paginación
       let paginaProducts = 0;
-      const tamanoPaginaProducts = 10; // items por página
+      const tamanoPaginaProducts = 7; // items por página
       let totalPaginasProducts = 1;
 
       // load products (paginated)
@@ -418,154 +414,274 @@
             return;
           } else emptyProducts.classList.add('hidden');
 
-                    products.forEach(p => {
+          products.forEach(p => {
             const tr = document.createElement('tr');
-            tr.className = "border-b border-gray-200 hover:bg-blue-100 transition";
-
+            tr.className = 'border-b border-blue-100 hover:bg-blue-100 transition-colors';
             tr.innerHTML = `
-              <td class="px-4 py-2">${p.codigo}</td>
-              <td class="px-4 py-2">${p.nombre}</td>
-              <td class="px-4 py-2">${p.cantidad}</td>
-              <td class="px-4 py-2">${fmtCOP(p.precio)}</td>
-              <td class="px-4 py-2">
-                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                  onclick="agregarAlCarrito('${p.id}', '${p.codigo}', '${p.nombre}', ${p.precio})">
-                  Agregar
-                </button>
-              </td>
-            `;
+            <td class="px-4 py-3">${p.codigo}</td>
+            <td class="px-4 py-3">${p.nombre}</td>
+            <td class="px-4 py-3">${p.cantidad}</td>
+            <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
+            <td class="px-4 py-3">
+              <button title="Agregar al carrito" class="add-to-cart bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" data-id="${p.id}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg></button>
+            </td>`;
             productsBody.appendChild(tr);
           });
 
+          // actualizar paginador
           document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
         } catch (err) {
           console.error(err);
-          showNotification('Error al cargar productos', 'error');
+          showNotification('❌ Error al cargar productos', 'error');
         }
       }
 
-      // Paginación
-      window.cambiarPaginaProducts = function (delta) {
-        paginaProducts += delta;
-        if (paginaProducts < 0) paginaProducts = 0;
-        if (paginaProducts >= totalPaginasProducts) paginaProducts = totalPaginasProducts - 1;
+      // search
+      buscar.addEventListener('input', () => {
+        const q = buscar.value.trim().toLowerCase();
+        Array.from(productsBody.querySelectorAll('tr')).forEach(row => {
+          const codigo = row.cells[0].textContent.toLowerCase();
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+        });
+      });
+
+      refrescarBtn.addEventListener('click', () => loadProducts());
+
+      // paginación productos
+      window.cambiarPaginaProducts = function (direccion) {
+        if (direccion === -1 && paginaProducts > 0) paginaProducts--;
+        if (direccion === 1 && paginaProducts + 1 < totalPaginasProducts) paginaProducts++;
         loadProducts();
-      };
+      }
 
-      // Agregar al carrito
-      window.agregarAlCarrito = function (id, codigo, nombre, precio) {
-        const item = cart.find(i => i.productoId === id);
-        if (item) item.cantidad++;
-        else cart.push({ productoId: id, codigo, nombre, cantidad: 1, precioUnitario: precio });
+      // add to cart (delegation)
+      productsBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.add-to-cart');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const prod = products.find(x => x.id === id);
+        if (!prod) return showNotification('Producto no encontrado', 'error');
+        if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
 
+        const existing = cart.find(c => c.productoId === id);
+        if (existing) {
+          if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
+          existing.cantidad += 1;
+          existing.subtotal = existing.cantidad * existing.precioUnitario;
+        } else {
+          cart.push({
+            productoId: prod.id,
+            codigo: prod.codigo,
+            nombre: prod.nombre,
+            cantidad: 1,
+            precioUnitario: prod.precio,
+            subtotal: prod.precio
+          });
+        }
         renderCart();
-      };
+      });
 
+      // render cart
       function renderCart() {
         cartBody.innerHTML = '';
-        let subtotal = 0;
-
-        cart.forEach(item => {
-          const sub = item.cantidad * item.precioUnitario;
-          subtotal += sub;
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="px-3 py-2">${item.codigo}</td>
-            <td class="px-3 py-2">${item.nombre}</td>
+        if (cart.length === 0) {
+          cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+        } else {
+          cart.forEach((c, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
+            <td class="px-3 py-2">${c.codigo}</td>
+            <td class="px-3 py-2">${c.nombre}</td>
             <td class="px-3 py-2">
-              <input type="number" min="1" value="${item.cantidad}" 
-                class="w-14 border rounded text-center"
-                onchange="actualizarCantidad('${item.productoId}', this.value)">
+              <input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}">
             </td>
-            <td class="px-3 py-2">${fmtCOP(item.precioUnitario)}</td>
-            <td class="px-3 py-2">${fmtCOP(sub)}</td>
+            <td class="px-3 py-2">${fmtCOP(c.precioUnitario)}</td>
+            <td class="px-3 py-2 subtotal-cell">${fmtCOP(c.subtotal)}</td>
             <td class="px-3 py-2">
-              <button onclick="eliminarDelCarrito('${item.productoId}')" 
-                class="text-red-600 hover:text-red-800">Eliminar</button>
-            </td>
-          `;
-          cartBody.appendChild(tr);
-        });
-
-        subtotalDisplay.textContent = fmtCOP(subtotal);
-        totalDisplay.textContent = fmtCOP(subtotal); // sin IVA por ahora
+              <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
+            </td>`;
+            cartBody.appendChild(tr);
+          });
+        }
+        recalcTotals();
       }
 
-      window.actualizarCantidad = function (id, cantidad) {
-        const item = cart.find(i => i.productoId === id);
-        if (item) {
-          item.cantidad = parseInt(cantidad) || 1;
+      // handle cart interactions
+      cartBody.addEventListener('input', (e) => {
+        const input = e.target.closest('input.cantidad-input');
+        if (!input) return;
+        const idx = Number(input.dataset.idx);
+        const val = Math.max(1, parseInt(input.value || '1'));
+        const item = cart[idx];
+        const prod = products.find(p => p.id === item.productoId);
+        if (val > prod.cantidad) {
+          showNotification('No hay suficiente stock', 'warning');
+          input.value = item.cantidad;
+          return;
+        }
+        item.cantidad = val;
+        item.subtotal = item.cantidad * item.precioUnitario;
+        renderCart();
+      });
+
+      cartBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.remove-item');
+        if (!btn) return;
+        const idx = Number(btn.dataset.idx);
+        cart.splice(idx, 1);
+        renderCart();
+      });
+
+      // totals
+      function recalcTotals() {
+        const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
+        const iva = 0; // si luego aplicas IVA, cámbialo
+        const total = subtotal + iva;
+        subtotalDisplay.textContent = fmtCOP(subtotal);
+        document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
+        totalDisplay.textContent = fmtCOP(total);
+      }
+
+      // prepare payload: map cart -> ProductoVendido
+      function buildProductosVendido() {
+        return cart.map(i => ({
+          productoId: i.productoId,
+          codigo: i.codigo,
+          nombre: i.nombre,
+          cantidad: i.cantidad,
+          precioUnitario: i.precioUnitario,
+          subtotal: i.subtotal
+        }));
+      }
+
+      // register sale
+      btnRegisterSale.addEventListener('click', async () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+
+        const venta = {
+          tiendaId: tiendaId,
+          productos: buildProductosVendido()
+        };
+
+        try {
+          const res = await fetch('/api/ventas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(venta)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al registrar venta', 'error');
+            return;
+          }
+          showNotification('✅ Venta registrada', 'success');
+          cart = [];
           renderCart();
+          loadProducts(); // recargar stock
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
         }
-      };
-
-      window.eliminarDelCarrito = function (id) {
-        cart = cart.filter(i => i.productoId !== id);
-        renderCart();
-      };
-
-      // Refrescar productos
-      refrescarBtn.addEventListener('click', () => {
-        loadProducts();
-        showNotification('Lista de productos actualizada', 'success');
       });
 
-      // Buscar productos (por nombre o código)
-      buscar.addEventListener('input', () => {
-        const term = buscar.value.toLowerCase();
-        const filas = productsBody.querySelectorAll('tr');
-        filas.forEach(f => {
-          const text = f.textContent.toLowerCase();
-          f.style.display = text.includes(term) ? '' : 'none';
-        });
-      });
-
-      // Botones de venta y deuda
-      btnRegisterSale.addEventListener('click', () => {
-        if (!cart.length) {
-          showNotification('⚠️ No hay productos en el carrito', 'warning');
-          return;
-        }
-        showNotification('✅ Venta registrada (simulación)', 'success');
-        cart = [];
-        renderCart();
-      });
-
+      // register debt (open modal)
       btnRegisterDebt.addEventListener('click', () => {
-        if (!cart.length) {
-          showNotification('⚠️ No hay productos en el carrito', 'warning');
-          return;
-        }
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+        debtNombre.value = '';
+        debtCedula.value = '';
         modalDebt.classList.remove('hidden');
-        modalDebt.classList.add('flex');
+        modalDebt.style.display = 'flex';
       });
 
       cancelDebt.addEventListener('click', () => {
         modalDebt.classList.add('hidden');
-        modalDebt.classList.remove('flex');
+        modalDebt.style.display = 'none';
       });
 
-      confirmDebt.addEventListener('click', () => {
+      // confirm debt
+      confirmDebt.addEventListener('click', async () => {
         const nombre = debtNombre.value.trim();
         const cedula = debtCedula.value.trim();
 
-        if (!nombre || !cedula) {
-          showNotification('⚠️ Por favor, completa los campos', 'warning');
-          return;
-        }
+        if (!nombre || !cedula) { return showNotification('Nombre y cédula requeridos', 'warning'); }
 
-        showNotification(`💳 Deuda registrada a nombre de ${nombre}`, 'success');
-        cart = [];
-        renderCart();
-        modalDebt.classList.add('hidden');
-        modalDebt.classList.remove('flex');
+        const deuda = {
+          tiendaId: tiendaId,
+          nombreCliente: nombre,
+          cedulaCliente: cedula,
+          productos: buildProductosVendido(),
+          total: cart.reduce((s, i) => s + i.subtotal, 0),
+          totalRestante: cart.reduce((s, i) => s + i.subtotal, 0)
+        };
+
+        try {
+          const res = await fetch('/api/deudas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(deuda)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al crear deuda', 'error');
+            return;
+          }
+          showNotification('✅ Deuda registrada', 'success');
+          cart = [];
+          renderCart();
+          modalDebt.classList.add('hidden');
+          modalDebt.style.display = 'none';
+          loadProducts();
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
       });
 
-      // Inicial
-      loadProducts();
+      async function loadRecentSales() {
+        try {
+          // Usa endpoint dedicado ordenado por fecha desc
+          const res = await fetch(`/api/ventas/tienda/${tiendaId}/ultimas?limite=5`);
+          if (!res.ok) return;
+          const items = await res.json();
+          const cont = document.getElementById('recentSales');
+          if (!Array.isArray(items) || items.length === 0) { cont.textContent = 'Sin ventas recientes'; return; }
+          cont.innerHTML = items.map(v => {
+            const fechaTxt = v.fecha ? new Date(v.fecha).toLocaleString() : 'Sin fecha';
+            const totalVal = (typeof v.total === 'number' && !Number.isNaN(v.total)) ? v.total : 0;
+            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(totalVal)} <span class="text-xs text-gray-500">(${fechaTxt})</span></div></div>`;
+          }).join('');
+        } catch (e) { console.warn(e); }
+      }
+
+      function initLinks() {
+        const idEl = document.getElementById('tiendaId');
+        const tid = idEl ? idEl.value : null;
+        if (!tid) return;
+        document.getElementById("linkDashboard").href = `/tiendas/${tid}/dashboard`;
+        document.getElementById("linkInventario").href = `/tiendas/${tid}/inventario`;
+        document.getElementById("linkProveedores").href = `/tiendas/${tid}/proveedores`;
+        document.getElementById("linkDeudas").href = `/tiendas/${tid}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/tiendas/${tid}/puntoventa`;
+        document.getElementById("linkInforme").href = `/tiendas/${tid}/informe`;
+        document.getElementById("linkPrediccion").href = `/tiendas/${tid}/prediccion`;
+        document.getElementById("linkTendero").href = `/tiendas/${tid}/tendero`;
+        document.getElementById("linkPerfil").href = `/tiendas/${tid}/perfil`;
+        document.getElementById("linkTiendas").href = `/tiendas`;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadProducts();
+        renderCart();
+        loadRecentSales();
+        initLinks();
+      });
 
     })();
   </script>
 </body>
+
 </html>
