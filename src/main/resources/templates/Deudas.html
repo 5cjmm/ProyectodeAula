@@ -1,317 +1,612 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de deudas - ShopMaster</title>
-    <link rel="icon" href="/img/logo-tc.ico" type="image/x-icon" />
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopMaster - Gestión deudas</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        .estado {
-            border-radius: 20px;
-            padding: 2px 10px;
-            color: rgb(24, 25, 36);
-            font-weight: bold;
-        }
+  <style>
+    .estado {
+      border-radius: 20px;
+      padding: 2px 10px;
+      color: rgb(24, 25, 36);
+      font-weight: bold;
+    }
 
-        .estado.NO_PAGADA {
-            background-color: #f78da7;
-        }
+    .estado.NO_PAGADA {
+      background-color: #f78da7;
+    }
 
-        .estado.PARCIAL {
-            background-color: #ffd966;
-            color: #333;
-        }
+    .estado.PARCIAL {
+      background-color: #ffd966;
+      color: #333;
+    }
 
-        .estado.PAGADA {
-            background-color: #8de48f;
-        }
-    </style>
+    .estado.PAGADA {
+      background-color: #8de48f;
+    }
+  </style>
 </head>
 
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen flex flex-col items-center p-6">
+<body class="bg-gray-50">
+  <div class="flex min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="w-full bg-blue-300 dark:bg-blue-700 p-4 flex justify-between items-center shadow-md rounded-lg mb-4">
-        <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full" />
-        <div class="text-gray-900 dark:text-white text-2xl font-bold">Gestión de deudas</div>
-        <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+      <div class="flex flex-col items-center mb-10">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
+
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
+      <nav class="space-y-2">
+        <!-- Dashboard -->
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Inventario -->
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+          </svg>
+          Inventario
+        </a>
+
+        <!-- Proveedores -->
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
+          </svg>
+          Proveedores
+        </a>
+
+        <!-- Deudas -->
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
+          </svg>
+          Deudas
+        </a>
+
+        <!-- Punto de Venta -->
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+          </svg>
+          Punto de Venta
+        </a>
+
+        <!-- Informe de Ventas -->
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+          </svg>
+          Predicción
+        </a>
+        <!-- Gestión de Tenderos -->
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+          </svg>
+          Gestión de Tenderos
+        </a>
+
+        <!-- Tiendas -->
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
+          Tiendas
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Gestion de Deudas</h1>
+
+          <div class="relative">
+            <button id="userMenuButton"
+              class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+
+              <!-- ⚪ SVG Avatar con círculo gris -->
+              <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                  <path fill="none"
+                    d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                  <path fill="#0891b2"
+                    d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                </svg>
+              </div>
+
+              <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
+                class="text-sm font-medium text-gray-700">
+                Hola, Usuario
+              </span>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="m6 9l6 6l6-6" />
+              </svg>
             </button>
-            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
-            </div>
 
-            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestionar Deudas</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
-            </div>
+            <!-- 🔽 Menú desplegable -->
+            <div id="userDropdown"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
 
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm text-gray-700">Rol:</p>
+                <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                  class="font-semibold text-gray-900">
+                  Administrador
+                </p>
+              </div>
+
+              <a id="linkPerfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                Perfil
+              </a>
+
+              <button id="logoutBtn"
+                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                  <g fill="none">
+                    <path fill="#f00034"
+                      d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                  </g>
+                </svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
         </div>
-    </nav>
+      </header>
 
-    <!-- Filtros -->
-    <!-- Contenedor general alineado con la tabla -->
-<div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 px-4">
-  
-    
-    <!-- Input: Nombre Cliente -->
-    <input type="text" name="cliente" placeholder="Nombre Cliente" id="buscar" onkeyup="filtrarPorPrimeraLetra()" class="p-2 rounded border border-gray-300"/>
+      <!-- Main -->
+      <main class="max-w-7xl mx-auto w-full px-6 py-8">
 
-    <!-- Select: Estado -->
-    <select id="estado" name="estado" class="p-2 rounded border border-gray-300">
-      <option value="">Estado</option>
-      <option value="PAGADA">Pagada</option>
-      <option value="NO_PAGADA">No pagada</option>
-      <option value="PARCIAL">Parcial</option>
-    </select>
+        <!-- Filtros -->
+        <div
+          class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6 flex flex-wrap gap-4 items-center justify-between">
+          <!-- 🔍 Buscar cliente -->
+          <input id="buscarCliente" type="text" placeholder="Buscar cliente"
+            class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
 
-    <!-- Form solo con fecha y botón -->
-    <form th:action="@{/deudas/filtrar}" method="get" class="flex items-center gap-2 flex-grow">
-      <input type="date" name="fecha" class="p-2 rounded border border-gray-300"/>
-      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded px-20 py-2.5">Buscar</button>
-    </form>
-</div>
+          <!-- ⚙️ Filtro estado -->
+          <select id="filtroEstado"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            <option value="">Todos los estados</option>
+            <option value="NO PAGADA">No pagada</option>
+            <option value="PARCIAL">Parcial</option>
+            <option value="PAGADA">Pagada</option>
+          </select>
+
+          <!-- 📅 Fecha inicio -->
+          <input id="fechaInicio" type="date"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+
+          <!-- 📅 Fecha fin -->
+          <input id="fechaFin" type="date"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+
+          <!-- 🔎 Botón filtrar -->
+          <button onclick="filtrarDeudas()" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
+                 hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
+                 px-6 py-3 rounded-lg transition-all duration-200 transform 
+                 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
+                 focus:ring-blue-400 focus:ring-offset-2">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span>Filtrar</span>
+          </button>
+        </div>
 
 
-    <!-- Tabla -->
-    <div class="w-full px-4 overflow-auto">
-        <div th:if="${SuccessMessage}" class="bg-green-500 text-white p-2 rounded-md">
-                    <p th:text="${SuccessMessage}"></p>
-                </div>
-        <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
-                    <p th:text="${error}"></p>
-                </div>
-        <table id="tablaDeudas" class="min-w-full text-sm text-left text-gray-700 bg-white rounded shadow">
-            <thead class="bg-gray-800 text-white">
-                <tr>
-                    <th class="px-4 py-2">Cédula</th>
-                    <th class="px-4 py-2">Nombre</th>
-                    <th class="px-4 py-2">Fecha venta</th>
-                    <th class="px-4 py-2">Productos</th>
-                    <th class="px-4 py-2">Total (COP)</th>
-                    <th class="px-4 py-2">Estado</th>
-                    <th class="px-4 py-2">Acciones</th>
-                </tr>
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <table class="min-w-full bg-blue-50 text-blue-900">
+            <thead class="bg-blue-500 text-white text-sm">
+              <tr>
+                <th class="px-6 py-3 text-left">Cliente</th>
+                <th class="px-6 py-3 text-left">Cédula</th>
+                <th class="px-6 py-3 text-left">Total (COP)</th>
+                <th class="px-6 py-3 text-left">Restante (COP)</th>
+                <th class="px-6 py-3 text-left">Estado</th>
+                <th class="px-6 py-3 text-left">Fecha</th>
+                <th class="px-6 py-3 text-left">Acciones</th>
+              </tr>
             </thead>
-            <tbody>
-                <tr th:each="deuda : ${deudas}" class="border-t">
-                    <td class="px-4 py-2" th:text="${deuda.cedulaCliente}"></td>
-                    <td class="px-4 py-2" th:text="${deuda.nombreCliente}"></td>
-                    <td class="px-4 py-2" th:text="${#temporals.format(deuda.fechaVenta, 'yyyy-MM-dd HH:mm')}"></td>
-                    </td>
-                    <td class="px-4 py-2">
-                        <ul>
-                            <li th:each="p : ${deuda.productos}" th:text="${p.nombre} + ' x' + ${p.cantidad}"></li>
-                        </ul>
-                    </td>
-                    <td class="px-4 py-2" th:text="'$' + ${#numbers.formatDecimal(deuda.totalRestante, 1, 'COMMA', 2, 'POINT')} + ' / $' + ${#numbers.formatDecimal(deuda.total, 1, 'COMMA', 2, 'POINT')}"></td>
-                    <td class="px-4 py-2">
-                        <span th:text="${deuda.estado}" th:class="'estado ' + deuda.estado"></span>
-                    </td>
-                        <td class="px-4 py-2 space-x-2">
-                        <button th:attr="onclick=|openAbonoModal('${deuda.id}')|"
-                            class="bg-yellow-400 hover:bg-yellow-500 text-black rounded px-3 py-1">Abonar</button>
+            <tbody id="tablaDeudas" class="text-sm"></tbody>
+          </table>
 
-                        <button th:attr="onclick=|openHistorialModal('${deuda.id}')|"
-                            class="bg-gray-500 hover:bg-gray-600 text-white rounded px-3 py-1">Ver Historial</button>
+          <div id="emptyDeudas" class="text-center py-10 text-gray-500 hidden">
+            <p>No hay deudas registradas aún</p>
+          </div>
 
-                        <form th:action="@{'/deudas/eliminar/' + ${deuda.id}}" method="post" th:object="${deuda}">
-                            <button type="submit" th:disabled="${deuda.estado != 'PAGADA'}"
-                                class="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1">
-                                Eliminar
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="pagination flex justify-center items-center gap-4 mt-4">
-                    <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-yellow-600" onclick="cambiarPagina(-1)">Anterior</button>
-                    <span id="paginaActual">1</span>
-                    <button class="bg-green-500 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-green-600" onclick="cambiarPagina(1)">Siguiente</button>
-                </div>
-    </div>
 
-    <!-- Modal: Abonar -->
-    <div id="modalAbono" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Registrar Abono</h2>
-                <button onclick="closeModal('modalAbono')" class="text-red-500 text-xl">&times;</button>
-            </div>
-            <form id="abonoForm" method="post">
-                <label class="block mb-2">Monto del abono</label>
-                <input type="number" name="montoAbono" class="w-full p-2 border border-gray-300 rounded mb-4"
-                    required />
-                <input type="hidden" name="monto" id="montoField" />
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
-                </div>
-            </form>
         </div>
-    </div>
+        <div class="flex justify-center items-center space-x-4 mt-6">
+          <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 
+                          text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform 
+                          hover:scale-[1.02] hover:shadow-lg">
+            <span class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              Anterior
+            </span>
+          </button>
 
-    <!-- Modal: Historial de Abonos -->
-<div id="modalHistorial" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg w-full max-w-lg">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Historial de Abonos</h2>
-            <button onclick="closeModal('modalHistorial')" class="text-red-500 text-xl">&times;</button>
+          <span id="paginaActual"
+            class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
+            1
+          </span>
+
+          <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
+                          text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform 
+                          hover:scale-[1.02] hover:shadow-lg">
+            <span class="flex items-center gap-2">
+              Siguiente
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </button>
         </div>
-        <table class="w-full border">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-2 border text-left">Fecha</th>
-                    <th class="p-2 border text-left">Monto</th>
-                </tr>
-            </thead>
-            <tbody id="historialAbonosBody">
-                <!-- Aquí se insertarán los abonos por JS -->
-            </tbody>
-        </table>
-        <div class="flex justify-end mt-4">
-            <button onclick="closeModal('modalHistorial')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Cerrar</button>
-        </div>
+
+      </main>
     </div>
-</div>
+  </div>
+
+  <!-- Modal Abono -->
+  <div id="modalAbono" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-96">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Registrar Abono</h3>
+      <input id="montoAbono" type="number" placeholder="Monto del abono" min="0"
+        class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 mb-4">
+      <div class="flex justify-end gap-3">
+        <button onclick="cerrarModalAbono()" class="px-4 py-2 border border-gray-300 rounded-lg">Cancelar</button>
+        <button onclick="confirmarAbono()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Registrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💬 Modal Detalle de Deuda -->
+  <div id="detalleModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50 transition-opacity duration-300">
+
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 transform transition-all scale-95">
+
+      <!-- Encabezado -->
+      <div class="flex justify-between items-center border-b pb-2 mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">Detalle de Deuda</h2>
+      </div>
+
+      <!-- Contenido dinámico -->
+      <div id="detalleContenido" class="text-sm text-gray-700 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+
+      <!-- Footer -->
+      <div class="flex justify-end mt-6 border-t pt-3">
+        <button onclick="cerrarModal()"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded-lg transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
 
 
-    <!-- JS para modales y envío -->
-    <script>
-        const selectEstado = document.querySelector('select[name="estado"]');
-  const filas = document.querySelectorAll('#tablaDeudas tbody tr');
+  <script>
+    const tiendaId = document.getElementById("tiendaId").value;
+    let pagina = 0, totalPaginas = 0, deudaSeleccionada = null, totalRestanteActual = 0;
+    const button = document.getElementById("userMenuButton");
+    const dropdown = document.getElementById("userDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  selectEstado.addEventListener('change', () => {
-    const filtro = selectEstado.value;
+    // Mostrar/ocultar con animación
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.classList.contains("opacity-100");
+      dropdown.classList.toggle("opacity-100", !isVisible);
+      dropdown.classList.toggle("translate-y-0", !isVisible);
+      dropdown.classList.toggle("scale-100", !isVisible);
+      dropdown.classList.toggle("pointer-events-none", isVisible);
+      dropdown.classList.toggle("opacity-0", isVisible);
+      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+      dropdown.classList.toggle("scale-95", isVisible);
+    });
 
-    filas.forEach(fila => {
-      const celdaEstado = fila.querySelector('td:nth-child(6) span');
-      const estado = celdaEstado?.textContent.trim();
-
-      if (!filtro || estado === filtro) {
-        fila.style.display = '';
-      } else {
-        fila.style.display = 'none';
+    // Cerrar al hacer clic fuera
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
       }
     });
-  });
 
-  const filasPorPagina = 5;
-    let paginaActual = 1;
-    const tabla = document.getElementById("tablaDeudas").getElementsByTagName("tbody")[0];
-    
+    // Acción de cerrar sesión
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("¿Deseas cerrar sesión?")) {
+        window.location.href = "/logout";
+      }
+    });
 
-    function mostrarPagina(pagina) {
-        let inicio = (pagina - 1) * filasPorPagina;
-        let fin = inicio + filasPorPagina;
-        
-        for (let i = 0; i < filas.length; i++) {
-            filas[i].style.display = (i >= inicio && i < fin) ? "" : "none";
-        }
-
-        document.getElementById("paginaActual").innerText = pagina;
+    function showNotification(msg, type = "info") {
+      const div = document.createElement("div");
+      div.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : "bg-blue-600"
+        }`;
+      div.textContent = msg;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3000);
     }
 
-    function cambiarPagina(direccion) {
-        let totalPaginas = Math.ceil(filas.length / filasPorPagina);
-        paginaActual += direccion;
-        
-        if (paginaActual < 1) paginaActual = 1;
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas;
-        
-        mostrarPagina(paginaActual);
+    async function cargarDeudas() {
+      try {
+        const res = await fetch(`/api/deudas/tienda/${tiendaId}?page=${pagina}&size=5`);
+        if (!res.ok) throw new Error("Error al obtener deudas");
+        const data = await res.json();
+        const deudas = data.content || [];
+        totalPaginas = data.totalPages || 1;
+
+        const tbody = document.getElementById("tablaDeudas");
+        tbody.innerHTML = "";
+        if (deudas.length === 0) {
+          document.getElementById("emptyDeudas").classList.remove("hidden");
+          return;
+        }
+        document.getElementById("emptyDeudas").classList.add("hidden");
+
+        deudas.forEach(d => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition";
+          tr.innerHTML = `
+        <td class="px-6 py-3">${d.nombreCliente}</td>
+        <td class="px-6 py-3">${d.cedulaCliente}</td>
+        <td class="px-6 py-3">$${d.total.toFixed(2)}</td>
+        <td class="px-6 py-3">$${d.totalRestante.toFixed(2)}</td>
+        <td class="px-6 py-3">${d.estado}</td>
+        <td class="px-6 py-3">${new Date(d.fechaVenta).toLocaleDateString()}</td>
+        <td class="px-6 py-3 flex gap-2">
+          <!-- 💰 Botón de abonar -->
+            <button onclick="abrirModalAbono('${d.id}', ${d.totalRestante})" 
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center"
+                    title="Registrar abono">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" class="h-5 w-5" fill="#ffffff">
+                <path d="M256 640v192h640V384H768v-64h150.976c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H233.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096c-2.688-5.184-4.224-10.368-4.224-24.576V640z"/>
+                <path d="M768 192H128v448h640zm64-22.976v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H105.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096C65.536 682.432 64 677.248 64 663.04V169.024c0-14.272 1.472-19.456 4.288-24.64a29.06 29.06 0 0 1 12.096-12.16C85.568 129.536 90.752 128 104.96 128h685.952c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64z"/>
+                <path d="M448 576a160 160 0 1 1 0-320a160 160 0 0 1 0 320m0-64a96 96 0 1 0 0-192a96 96 0 0 0 0 192"/>
+              </svg>
+            </button>
+
+            <!-- 👁️ Botón de ver detalle -->
+            <button onclick="verDetalle('${d.id}')" 
+                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center"
+                    title="Ver detalle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none">
+                <g fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="1.5"/>
+                  <path stroke="#ffffff" stroke-linecap="round" stroke-width="1.5" d="M12 17v-6"/>
+                  <circle cx="1" cy="1" r="1" fill="#ffffff" transform="matrix(1 0 0 -1 11 9)"/>
+                </g>
+              </svg>
+            </button>
+          <button onclick="eliminarDeuda('${d.id}', '${d.estado}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" title="Eliminar tendero">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
+              <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/>
+              <path d="M9 10h2v8H9zm4 0h2v8h-2z"/>
+            </svg>
+          </button>
+        </td>`;
+          tbody.appendChild(tr);
+        });
+        document.getElementById("paginaActual").textContent = pagina + 1;
+      } catch (e) {
+        showNotification("Error al cargar deudas", "error");
+      }
     }
 
-    
-    mostrarPagina(paginaActual);
+    function cambiarPagina(d) { if (d === -1 && pagina > 0) { pagina--; } if (d === 1 && pagina + 1 < totalPaginas) { pagina++; } cargarDeudas(); }
 
-        function filtrarPorPrimeraLetra() {
-            let input = document.getElementById("buscar").value.toLowerCase();
-            let tabla = document.getElementById("tablaDeudas");
-            let filas = tabla.getElementsByTagName("tr");
+    function filtrarDeudas() {
+      const nombre = document.getElementById("buscarCliente").value.toLowerCase();
+      const estado = document.getElementById("filtroEstado").value;
+      const inicio = document.getElementById("fechaInicio").value;
+      const fin = document.getElementById("fechaFin").value;
+      const filas = document.querySelectorAll("#tablaDeudas tr");
+      filas.forEach(f => {
+        const cols = f.querySelectorAll("td");
+        const nombreCol = cols[0].textContent.toLowerCase();
+        const est = cols[4].textContent;
+        const fecha = cols[5].textContent;
+        const visible = (!nombre || nombreCol.includes(nombre)) && (!estado || est === estado) &&
+          (!inicio || new Date(fecha) >= new Date(inicio)) && (!fin || new Date(fecha) <= new Date(fin));
+        f.style.display = visible ? "" : "none";
+      });
+    }
 
-            for (let i = 1; i < filas.length; i++) {
-                let nombreProveedor = filas[i].getElementsByTagName("td")[1]; 
+    function abrirModalAbono(id, totalRestante) {
+      deudaSeleccionada = id;
+      totalRestanteActual = parseFloat(totalRestante) || 0;
 
-                if (nombreProveedor) {
-                    let texto = nombreProveedor.textContent.toLowerCase();
-                    filas[i].style.display = texto.startsWith(input) ? "" : "none";
-                }
-            }
-        }
+      const modal = document.getElementById("modalAbono");
+      modal.classList.remove("hidden", "opacity-0");
+      modal.classList.add("flex");
 
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
-        
-        menuToggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
+      // Limpiar campo
+      document.getElementById("montoAbono").value = "";
+    }
+
+    function cerrarModalAbono() {
+      const modal = document.getElementById("modalAbono");
+      modal.classList.add("hidden");
+    }
+
+    async function confirmarAbono() {
+      const monto = parseFloat(document.getElementById("montoAbono").value);
+
+      if (!monto || monto <= 0) {
+        showNotification("Monto inválido", "warning");
+        return;
+      }
+
+      // 🔹 Validación: no permitir abonos mayores al total restante
+      if (monto > totalRestanteActual) {
+        showNotification(`El abono no puede superar el total restante ($${totalRestanteActual.toFixed(2)})`, "error");
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/deudas/${deudaSeleccionada}/abonar`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ monto })
         });
 
-        function openAbonoModal(deudaId) {
-            document.getElementById("modalAbono").classList.remove("hidden");
-            const form = document.getElementById("abonoForm");
-            form.action = "/deudas/abonar/" + deudaId;
+        if (!res.ok) throw new Error(await res.text());
+
+        cerrarModalAbono();
+        showNotification("Abono registrado con éxito", "success");
+        cargarDeudas();
+
+      } catch (e) {
+        console.error("Error al registrar abono:", e);
+        showNotification("Error al registrar abono", "error");
+      }
+    }
+
+    async function eliminarDeuda(id, estado) {
+      if (estado !== "PAGADA") { showNotification("Solo se pueden eliminar deudas pagadas", "warning"); return; }
+      if (!confirm("¿Eliminar deuda pagada?")) return;
+      await fetch(`/api/deudas/eliminar/${id}`, { method: "DELETE" });
+      showNotification("Deuda eliminada", "success");
+      cargarDeudas();
+    }
+
+
+    async function verDetalle(id) {
+      try {
+        const response = await fetch(`/api/deudas/${id}`);
+        if (!response.ok) throw new Error("Error al obtener detalle");
+
+        const deuda = await response.json();
+
+        // 🧾 Cabecera
+        let html = `
+      <p><strong>Cliente:</strong> ${deuda.nombreCliente || "N/A"}</p>
+      <p><strong>Cédula:</strong> ${deuda.cedulaCliente || "N/A"}</p>
+      <p><strong>Fecha:</strong> ${deuda.fechaVenta ? new Date(deuda.fechaVenta).toLocaleString() : "Sin fecha"}</p>
+      <p><strong>Estado:</strong> 
+        <span class="px-2 py-1 rounded ${deuda.estado === "PAGADA"
+            ? "bg-green-100 text-green-700"
+            : deuda.estado === "PARCIAL"
+              ? "bg-yellow-100 text-yellow-700"
+              : "bg-red-100 text-red-700"
+          }">${deuda.estado}</span>
+      </p>
+      <p><strong>Total:</strong> $${(deuda.total || 0).toFixed(2)}</p>
+      <p><strong>Total Restante:</strong> $${(deuda.totalRestante || 0).toFixed(2)}</p>
+      <hr class="my-3">
+    `;
+
+        // 🧩 Productos
+        html += `<h3 class="font-semibold text-blue-600 mb-2">Productos:</h3>`;
+        if (deuda.productos && deuda.productos.length > 0) {
+          html += `<ul class="list-disc pl-6 space-y-1">`;
+          deuda.productos.forEach(p => {
+            const precioUnitario = p.precioUnitario ? p.precioUnitario.toFixed(2) : "0";
+            const subtotal =
+              p.precioUnitario && p.cantidad ? (p.precioUnitario * p.cantidad).toFixed(2) : "0";
+            html += `<li>${p.nombre || "Producto"} — Cant: ${p.cantidad || 0} — $${precioUnitario} → <strong>$${subtotal}</strong></li>`;
+          });
+          html += `</ul>`;
+        } else {
+          html += `<p class="text-gray-500">Sin productos registrados.</p>`;
         }
 
-        document.getElementById("abonoForm").addEventListener("submit", function (event) {
-            const montoInput = document.querySelector("input[name='montoAbono']");
-            const hiddenMontoField = document.getElementById("montoField");
-            hiddenMontoField.value = montoInput.value;
-        });
-
-       
-            function openHistorialModal(deudaId) {
-            document.getElementById("modalHistorial").classList.remove("hidden");
-
-            const historialBody = document.getElementById("historialAbonosBody");
-            historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">Cargando...</td></tr>';
-
-            fetch(`/deudas/historial/${deudaId}`)
-                .then(response => response.json())
-                .then(data => {
-                    historialBody.innerHTML = "";
-                    if (data.length === 0) {
-                        historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center">No hay abonos registrados.</td></tr>';
-                        return;
-                    }
-
-                    data.forEach(abono => {
-                        const fecha = new Date(abono.fecha).toLocaleString();
-                        const row = `
-                            <tr>
-                                <td class="p-2 border">${fecha}</td>
-                                <td class="p-2 border">$${abono.monto.toFixed(2)}</td>
-                            </tr>
-                        `;
-                        historialBody.innerHTML += row;
-                    });
-                })
-                .catch(error => {
-                    historialBody.innerHTML = '<tr><td colspan="2" class="p-2 text-center text-red-500">Error al cargar historial.</td></tr>';
-                    console.error("Error al cargar historial:", error);
-                });
+        // 💰 Historial de abonos
+        html += `<hr class="my-3"><h3 class="font-semibold text-blue-600 mb-2">Historial de Abonos:</h3>`;
+        if (deuda.historialAbonos && deuda.historialAbonos.length > 0) {
+          html += `<ul class="list-disc pl-6 space-y-1">`;
+          deuda.historialAbonos.forEach(a => {
+            const monto = a.monto ? a.monto.toFixed(2) : "0";
+            const fecha = a.fecha
+              ? new Date(a.fecha).toLocaleString()
+              : "Fecha no disponible";
+            html += `<li>${fecha} → $${monto}</li>`;
+          });
+          html += `</ul>`;
+        } else {
+          html += `<p class="text-gray-500">No hay abonos registrados.</p>`;
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add("hidden");
-        }
-    </script>
+        // 🪟 Insertar contenido
+        const contenido = document.getElementById("detalleContenido");
+        contenido.innerHTML = html;
+
+        // Mostrar modal centrado
+        const modal = document.getElementById("detalleModal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      } catch (error) {
+        showNotification("Error al cargar detalle", "error");
+      }
+    }
+
+    // 🔹 Cerrar modal
+    function cerrarModal() {
+      const modal = document.getElementById("detalleModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const rol = document.getElementById("rolUsuario")?.value;
+
+      cargarDeudas();
+      document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+      document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+      document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+      document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+      document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+      document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+      document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+      document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+      document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+      document.getElementById("linkTiendas").href = `/tiendas`;
+
+      if (rol === "ROLE_TENDERO") {
+        const tenderoMenu = document.getElementById("linkTendero");
+        const tiendasMenu = document.getElementById("linkTiendas");
+
+        if (tenderoMenu) tenderoMenu.style.display = "none";
+        if (tiendasMenu) tiendasMenu.style.display = "none";
+      }
+    });
+  </script>
+
 </body>
 
 </html>

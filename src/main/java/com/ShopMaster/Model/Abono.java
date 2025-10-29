@@ -4,17 +4,19 @@ import java.time.LocalDateTime;
 
 public class Abono {
     private double monto;
-    private LocalDateTime fecha;
+    private LocalDateTime fecha = LocalDateTime.now();
 
     public Abono() {}
+
 
     public Abono(double monto, LocalDateTime fecha) {
         this.monto = monto;
         this.fecha = fecha;
     }
 
+
     public double getMonto() {
-        return monto;
+        return this.monto;
     }
 
     public void setMonto(double monto) {
@@ -22,10 +24,11 @@ public class Abono {
     }
 
     public LocalDateTime getFecha() {
-        return fecha;
+        return this.fecha;
     }
 
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
+    
 }

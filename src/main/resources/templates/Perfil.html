@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil de Usuario - ShopMaster</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  <div class="min-h-screen flex flex-col items-center py-10 px-4">
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white shadow-md rounded-xl p-6 flex justify-between items-center mb-8">
+      <div class="flex items-center gap-4">
+        <img src="/images/logo.png" alt="Logo" class="h-14 w-auto">
+        <h1 class="text-2xl font-bold text-gray-800">Perfil de Usuario</h1>
+      </div>
+
+      <!-- Dropdown Usuario -->
+       <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+       <input type="hidden" id="usuarioId" th:value="${usuario.id}">
+      <div class="relative">
+        <button id="userMenuButton"
+          class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+          <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+              <path fill="none"
+                d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+              <path fill="#0891b2"
+                d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+            </svg>
+          </div>
+          <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}" class="text-sm font-medium text-gray-700">
+            Hola, Usuario
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="m6 9l6 6l6-6" />
+          </svg>
+        </button>
+
+        <div id="userDropdown"
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+          <div class="px-4 py-3 border-b border-gray-100">
+            <p class="text-sm text-gray-700">Rol:</p>
+            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+              class="font-semibold text-gray-900">Administrador</p>
+          </div>
+          <a id="linkDashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Dashboard</a>
+          <button id="logoutBtn"
+            class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+              <g fill="none">
+                <path
+                  d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                <path fill="#f00034"
+                  d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+              </g>
+            </svg>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Perfil -->
+    <main class="w-full max-w-4xl bg-white shadow-md rounded-xl p-8 space-y-6" id="profileCard">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre de Usuario</label>
+          <input id="nombreUsuario" type="text" th:value="${usuario.username}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Correo Electrónico</label>
+          <input id="correoUsuario" type="email" th:value="${usuario.email}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Rol</label>
+          <input id="rolUsuario" type="text"
+            th:value="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Contraseña</label>
+          <input id="passwordUsuario" type="password" placeholder="Si esta vacio, la contraseña sera la misma" readonly
+            class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
+        </div>
+      </div>
+
+      <div class="flex justify-center mt-6 gap-3">
+        <button id="editarBtn"
+          class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+          Editar datos
+        </button>
+        <button id="guardarBtn"
+          class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition hidden">
+          Guardar cambios
+        </button>
+        <button id="cancelarBtn"
+          class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-500 transition hidden">
+          Cancelar
+        </button>
+      </div>
+    </main>
+
+  </div>
+
+ <script>
+  const editarBtn = document.getElementById('editarBtn');
+  const guardarBtn = document.getElementById('guardarBtn');
+  const cancelarBtn = document.getElementById('cancelarBtn');
+  const inputs = document.querySelectorAll('#profileCard input');
+  const tiendaId = document.getElementById("tiendaId").value;
+  const usuarioId = document.getElementById("usuarioId").value;
+
+  const rolUsuario = document.getElementById("rolUsuario").value.trim();
+
+
+  // 🔹 Si no es ADMIN → ocultar botón de editar
+  if (rolUsuario !== "Administrador") {
+    editarBtn.classList.add("hidden");
+  }
+
+  // 🔹 Habilitar edición
+  editarBtn.addEventListener('click', () => {
+    if (rolUsuario !== "Administrador") return;
+
+    inputs.forEach(input => input.removeAttribute('readonly'));
+    inputs.forEach(input => input.classList.remove('bg-gray-100'));
+    editarBtn.classList.add('hidden');
+    guardarBtn.classList.remove('hidden');
+    cancelarBtn.classList.remove('hidden');
+  });
+
+  // 🔹 Guardar cambios (solo admin)
+  guardarBtn.addEventListener('click', async () => {
+    const password = document.getElementById("passwordUsuario").value.trim();
+    const username = document.getElementById("nombreUsuario").value.trim();
+    const email = document.getElementById("correoUsuario").value.trim();
+
+    // Validar contraseña solo si fue modificada
+    if (password) {
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!strongPasswordRegex.test(password)) {
+        showNotification("⚠️ La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.", "warning");
+        return;
+      }
+    }
+
+    const updatedUser = {
+      username: username,
+      email: email,
+      password: password || null // si está vacía → mantener la actual
+    };
+
+    guardarBtn.disabled = true;
+    guardarBtn.textContent = "Guardando...";
+
+    try {
+  const response = await fetch(`/api/usuarios/admin/${usuarioId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedUser)
+  });
+
+  if (!response.ok) throw new Error("Error al guardar los cambios");
+
+  showNotification("✅ Perfil actualizado. Por favor, inicia sesión nuevamente.", "success");
+
+  setTimeout(() => {
+    window.location.href = "/logout";
+  }, 2000);
+} catch (error) {
+  showNotification("❌ Error al actualizar el perfil del administrador.", "error");
+  console.error(error);
+} finally {
+      guardarBtn.disabled = false;
+      guardarBtn.textContent = "Guardar cambios";
+    }
+  });
+
+  cancelarBtn.addEventListener('click', () => {
+    inputs.forEach(input => input.setAttribute('readonly', true));
+    inputs.forEach(input => input.classList.add('bg-gray-100'));
+    editarBtn.classList.remove('hidden');
+    guardarBtn.classList.add('hidden');
+    cancelarBtn.classList.add('hidden');
+  });
+
+  // 🔹 Dropdown usuario
+  const button = document.getElementById("userMenuButton");
+  const dropdown = document.getElementById("userDropdown");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isVisible = dropdown.classList.contains("opacity-100");
+    dropdown.classList.toggle("opacity-100", !isVisible);
+    dropdown.classList.toggle("translate-y-0", !isVisible);
+    dropdown.classList.toggle("scale-100", !isVisible);
+    dropdown.classList.toggle("pointer-events-none", isVisible);
+    dropdown.classList.toggle("opacity-0", isVisible);
+    dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+    dropdown.classList.toggle("scale-95", isVisible);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+      dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+      dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    }
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    if (confirm("¿Deseas cerrar sesión?")) {
+      window.location.href = "/logout";
+    }
+  });
+
+  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+
+  // 🔹 Notificaciones flotantes
+  function showNotification(message, type = "info") {
+    const notification = document.createElement("div");
+    notification.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${
+      type === "success"
+        ? "bg-green-600"
+        : type === "error"
+        ? "bg-red-600"
+        : type === "warning"
+        ? "bg-yellow-500 text-gray-900"
+        : "bg-blue-600"
+    }`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.opacity = "0";
+      notification.style.transform = "translateY(-10px)";
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+</script>
+
+</body>
+
+</html>

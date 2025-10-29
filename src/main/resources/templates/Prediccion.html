@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopMaster - Predicción de Precios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Resaltar inputs cuando el placeholder está visible (input vacío) */
+        input:placeholder-shown,
+        textarea:placeholder-shown {
+            border-color: #2563eb !important;
+            /* blue-600 */
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+        }
+
+        /* Hacer los bordes un poco más visibles por defecto */
+        input,
+        select,
+        textarea {
+            border-width: 1.5px;
+        }
+
+        /* Placeholder más legible */
+        input::placeholder,
+        textarea::placeholder {
+            color: #6b7280;
+            /* gray-500 */
+            opacity: 1;
+        }
+
+        /* Mantener estilo azul al enfocar */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            outline: none;
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex flex-col items-center mb-10">
+                <div class="p-4 rounded-xl shadow-sm border border-gray-100">
+                    <img th:src="@{/images/logo.png}" alt="ShopMaster"
+                        class="h-28 w-auto object-contain drop-shadow-md">
+                </div>
+            </div>
+
+            <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
+            <nav class="space-y-2">
+                <!-- Dashboard -->
+                <a id="linkDashboard"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
+                    </svg>
+                    Dashboard
+                </a>
+
+                <!-- Inventario -->
+                <a id="linkInventario"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+                    </svg>
+                    Inventario
+                </a>
+
+                <!-- Proveedores -->
+                <a id="linkProveedores"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
+                    </svg>
+                    Proveedores
+                </a>
+
+                <!-- Deudas -->
+                <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
+                    </svg>
+                    Deudas
+                </a>
+
+                <!-- Punto de Venta -->
+                <a id="linkPuntoVenta"
+                    class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+                    </svg>
+                    Punto de Venta
+                </a>
+
+                <!-- Informe de Ventas -->
+                <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+                    </svg>
+                    Informe de Ventas
+                </a>
+
+                <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+                    </svg>
+                    Predicción
+                </a>
+
+                <!-- Gestión de Tenderos -->
+                <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+                    </svg>
+                    Gestión de Tenderos
+                </a>
+
+                <!-- Tiendas -->
+                <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    </svg>
+                    Tiendas
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold text-gray-800">Módulo de Predicción</h1>
+
+                    <div class="relative">
+                        <button id="userMenuButton"
+                            class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+
+                            <!-- ⚪ SVG Avatar con círculo gris -->
+                            <div
+                                class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                                    <path fill="none"
+                                        d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                                    <path fill="#0891b2"
+                                        d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                                </svg>
+                            </div>
+
+                            <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
+                                class="text-sm font-medium text-gray-700">
+                                Hola, Usuario
+                            </span>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" d="m6 9l6 6l6-6" />
+                            </svg>
+                        </button>
+
+                        <!-- 🔽 Menú desplegable -->
+                        <div id="userDropdown"
+                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm text-gray-700">Rol:</p>
+                                <p id="userRole"
+                                    th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                                    class="font-semibold text-gray-900">
+                                    Administrador
+                                </p>
+                            </div>
+
+                            <a id="linkPerfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                Perfil
+                            </a>
+
+                            <button id="logoutBtn"
+                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path fill="#f00034"
+                                            d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                                    </g>
+                                </svg>
+                                Cerrar sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenido del módulo de predicción -->
+            <main class="flex-1 p-6 space-y-6">
+                <div
+                    class="bg-white shadow-md rounded-xl p-6 border border-blue-200 focus:ring-cyan-500 focus:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 16 16">
+                                <g fill="#4094d4">
+                                    <path d="M15 13v1H1.5l-.5-.5V0h1v13z" />
+                                    <path
+                                        d="M13 3.207L7.854 8.354h-.708L5.5 6.707l-3.646 3.647l-.708-.708l4-4h.708L7.5 7.293l5.146-5.147h.707l2 2l-.707.708z" />
+                                </g>
+                            </svg>
+                            Predicción de Precios
+                        </h2>
+                    </div>
+
+                    <form id="priceForm" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Producto:</label>
+                            <select id="productSelect" name="product"
+                                class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-cyan-500 focus:border-cyan-500 transition">
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Año inicial (opcional):</label>
+                            <input type="number" id="startYear" name="startYear" placeholder="Ej: 2025"
+                                class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-cyan-500 focus:border-cyan-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Horizonte (años):</label>
+                            <input type="number" id="years" name="years" value="3" min="1"
+                                class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-cyan-500 focus:border-cyan-500 transition">
+                        </div>
+
+                        <div class="md:col-span-3 flex justify-end">
+                            <button type="submit"
+                                class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-10 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                Predecir precio
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="result" class="hidden mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6 shadow-inner">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Resultados de la Predicción</h3>
+                        <div class="w-full flex justify-center">
+                            <canvas id="priceChart" class="w-full max-w-3xl"></canvas>
+                        </div>
+                        <div id="predictionsList" class="mt-4"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tiendaId = document.getElementById("tiendaId").value;
+            const button = document.getElementById("userMenuButton");
+            const dropdown = document.getElementById("userDropdown");
+            const logoutBtn = document.getElementById("logoutBtn");
+            const rol = document.getElementById("rolUsuario")?.value;
+
+
+            button.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const isVisible = dropdown.classList.contains("opacity-100");
+                dropdown.classList.toggle("opacity-100", !isVisible);
+                dropdown.classList.toggle("translate-y-0", !isVisible);
+                dropdown.classList.toggle("scale-100", !isVisible);
+                dropdown.classList.toggle("pointer-events-none", isVisible);
+                dropdown.classList.toggle("opacity-0", isVisible);
+                dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+                dropdown.classList.toggle("scale-95", isVisible);
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                    dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+                    dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+                }
+            });
+
+            logoutBtn.addEventListener("click", () => {
+                if (confirm("¿Deseas cerrar sesión?")) {
+                    window.location.href = "/logout";
+                }
+            });
+
+            document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+            document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+            document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+            document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+            document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+            document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+            document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+            document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+            document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+            document.getElementById("linkTiendas").href = `/tiendas`;
+
+            if (rol === "ROLE_TENDERO") {
+                const tenderoMenu = document.getElementById("linkTendero");
+                const tiendasMenu = document.getElementById("linkTiendas");
+
+                if (tenderoMenu) tenderoMenu.style.display = "none";
+                if (tiendasMenu) tiendasMenu.style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>
