@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.ShopMaster.Model.Usuario;
@@ -17,6 +16,4 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     List<Usuario> findByRolesContainingAndTiendasId(String rol, String tiendaId);
     Optional<Usuario> findByEmail(String email);
 
-    @Query("{ 'email': { $regex: ?0, $options: 'i' } }")
-Optional<Usuario> findByEmailIgnoreCase(String email);
 }

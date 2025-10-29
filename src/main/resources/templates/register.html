@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,11 @@
             --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -44,8 +49,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo-container {
@@ -70,7 +82,9 @@
             color: var(--color-text);
         }
 
-        form { text-align: left; }
+        form {
+            text-align: left;
+        }
 
         .form-group {
             margin-bottom: 1.2rem;
@@ -137,7 +151,9 @@
             color: #fff;
         }
 
-        .btn-primary:hover { background: var(--color-primary-hover); }
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
 
         .btn-google {
             display: flex;
@@ -151,7 +167,10 @@
             gap: 0.5rem;
         }
 
-        .btn-google img { width: 18px; height: 18px; }
+        .btn-google img {
+            width: 18px;
+            height: 18px;
+        }
 
         .divider {
             display: flex;
@@ -162,15 +181,21 @@
             margin: 1.5rem 0;
         }
 
-        .divider::before, .divider::after {
+        .divider::before,
+        .divider::after {
             content: '';
             flex: 1;
             height: 1px;
             background: #e2e8f0;
         }
 
-        .divider::before { margin-right: 0.75rem; }
-        .divider::after { margin-left: 0.75rem; }
+        .divider::before {
+            margin-right: 0.75rem;
+        }
+
+        .divider::after {
+            margin-left: 0.75rem;
+        }
 
         .footer-text {
             text-align: center;
@@ -185,7 +210,9 @@
             font-weight: 500;
         }
 
-        .footer-text a:hover { text-decoration: underline; }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
 
         .error-message {
             color: var(--color-error);
@@ -208,20 +235,28 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .notification-error { background: var(--color-error); }
+        .notification-error {
+            background: var(--color-error);
+        }
 
-        @media (max-width: 480px) { main { padding: 2rem 1.5rem; } }
+        @media (max-width: 480px) {
+            main {
+                padding: 2rem 1.5rem;
+            }
+        }
 
         .requirements-list {
-    font-size: 0.8em;
-    margin-top: 5px;
-}
-.requirements-list li.valid {
-    color: #22c55e;
-}
-.requirements-list li {
-    color: #ef4444;
-}
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .requirements-list li.valid {
+            color: #22c55e;
+        }
+
+        .requirements-list li {
+            color: #ef4444;
+        }
     </style>
 </head>
 
@@ -232,153 +267,151 @@
                 <img src="/images/logo-nav.png" alt="Logo de ShopMaster" />
             </a>
         </div>
-    <main>
-        <h1>Crea tu cuenta</h1>
+        <main>
+            <h1>Crea tu cuenta</h1>
 
-        <form id="registerForm" method="post">
-            <div class="form-group">
-                <div class="input-wrapper">
-                    <i data-lucide="user"></i>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="Usuario" required>
+            <form id="registerForm" method="post">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i data-lucide="user"></i>
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Usuario"
+                            required>
+                    </div>
+                    <div class="error-message" id="username-error"></div>
                 </div>
-                <div class="error-message" id="username-error"></div>
-            </div>
 
-            <div class="form-group">
-                <div class="input-wrapper">
-                    <i data-lucide="mail"></i>
-                    <input type="email" id="email" name="email" class="form-input" placeholder="Correo electrónico" required>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i data-lucide="mail"></i>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="Correo electrónico"
+                            required>
+                    </div>
+                    <div class="error-message" id="email-error"></div>
                 </div>
-                <div class="error-message" id="email-error"></div>
-            </div>
 
-            <div class="form-group">
-    <div class="input-wrapper">
-        <i data-lucide="lock"></i>
-        <input type="password" id="password" name="password" class="form-input" 
-               placeholder="Contraseña" required onkeyup="validatePassword(this.value)"
-               onfocus="showRequirements()" onblur="hideRequirements()">
-        <button type="button" class="password-toggle" id="togglePassword">
-            <i data-lucide="eye"></i>
-        </button>
-    </div>
-    <div class="error-message" id="password-error" style="display: none;">
-        <ul class="requirements-list">
-            <li id="reqLength">Al menos 8 caracteres</li>
-            <li id="reqLetter">Al menos una letra</li>
-            <li id="reqNumber">Al menos un número</li>
-            <li id="reqSpecial">Al menos un carácter especial (@ o #)</li>
-        </ul>
-    </div>
-</div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i data-lucide="lock"></i>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Contraseña"
+                            required onkeyup="validatePassword(this.value)" onfocus="showRequirements()"
+                            onblur="hideRequirements()">
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i data-lucide="eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="password-error" style="display: none;">
+                        <ul class="requirements-list">
+                            <li id="reqLength">Al menos 8 caracteres</li>
+                            <li id="reqLetter">Al menos una letra</li>
+                            <li id="reqNumber">Al menos un número</li>
+                            <li id="reqSpecial">Al menos un carácter especial (@ o #)</li>
+                        </ul>
+                    </div>
+                </div>
 
-            <button type="submit" class="btn btn-primary" id="submitBtn">
-                Crear cuenta
-            </button>
-        </form>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    Crear cuenta
+                </button>
+            </form>
 
-        <div class="divider">O</div>
+            <div class="divider">O</div>
 
-        <button class="btn btn-google">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
-            Registrarse con Google
-        </button>
+            <p class="footer-text">
+                ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
+            </p>
+        </main>
 
-        <p class="footer-text">
-            ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
-        </p>
-    </main>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script>
 
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
+            function validatePassword(password) {
+                const hasLength = password.length >= 8;
+                const hasLetter = /[a-zA-Z]/.test(password);
+                const hasNumber = /\d/.test(password);
+                const hasSpecial = /[@#]/.test(password);
 
-    function validatePassword(password) {
-    const hasLength = password.length >= 8;
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecial = /[@#]/.test(password);
-    
-    document.getElementById('reqLength').classList.toggle('valid', hasLength);
-    document.getElementById('reqLetter').classList.toggle('valid', hasLetter);
-    document.getElementById('reqNumber').classList.toggle('valid', hasNumber);
-    document.getElementById('reqSpecial').classList.toggle('valid', hasSpecial);
-    
-    const submitBtn = document.querySelector('button[type="submit"]');
-    const isValid = hasLength && hasLetter && hasNumber && hasSpecial;
-    
-    submitBtn.disabled = !isValid;
-    submitBtn.style.opacity = isValid ? '1' : '0.5';
-    submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-    
-    return isValid;
-}
+                document.getElementById('reqLength').classList.toggle('valid', hasLength);
+                document.getElementById('reqLetter').classList.toggle('valid', hasLetter);
+                document.getElementById('reqNumber').classList.toggle('valid', hasNumber);
+                document.getElementById('reqSpecial').classList.toggle('valid', hasSpecial);
 
-function showRequirements() {
-    document.getElementById('password-error').style.display = 'block';
-}
+                const submitBtn = document.querySelector('button[type="submit"]');
+                const isValid = hasLength && hasLetter && hasNumber && hasSpecial;
 
-function hideRequirements() {
-    // Solo ocultar si no hay contenido o si todo es válido
-    const password = document.getElementById('password').value;
-    if (!password || validatePassword(password)) {
-        document.getElementById('password-error').style.display = 'none';
-    }
-}
-  window.addEventListener("DOMContentLoaded", () => {
-    lucide.createIcons();
+                submitBtn.disabled = !isValid;
+                submitBtn.style.opacity = isValid ? '1' : '0.5';
+                submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
 
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-
-    togglePassword.addEventListener('click', function() {
-      const isPassword = passwordInput.getAttribute('type') === 'password';
-      
-      // Cambiar tipo de input
-      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-
-      // Limpiar y volver a insertar el ícono actualizado
-      this.innerHTML = '';
-      const newIcon = document.createElement('i');
-      newIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
-      this.appendChild(newIcon);
-
-      // Renderizar nuevamente el ícono correcto
-      lucide.createIcons();
-    });
-  });
-        document.getElementById("registerForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById("submitBtn");
-            btn.disabled = true;
-            const usuario = {
-                username: document.getElementById("username").value.trim(),
-                email: document.getElementById("email").value.trim(),
-                password: document.getElementById("password").value
-            };
-            try {
-                let res = await fetch("/register", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(usuario)
-                });
-                let msg = await res.text();
-                if (res.ok) showNotification(msg, "success");
-                else showNotification(msg, "error");
-            } catch {
-                showNotification("Error de conexión", "error");
-            } finally {
-                btn.disabled = false;
+                return isValid;
             }
-        });
 
-        function showNotification(msg, type) {
-            const n = document.createElement("div");
-            n.classList.add("notification");
-            if (type === "error") n.classList.add("notification-error");
-            n.textContent = msg;
-            document.body.appendChild(n);
-            setTimeout(() => n.remove(), 3000);
-        }
-    </script>
+            function showRequirements() {
+                document.getElementById('password-error').style.display = 'block';
+            }
+
+            function hideRequirements() {
+                // Solo ocultar si no hay contenido o si todo es válido
+                const password = document.getElementById('password').value;
+                if (!password || validatePassword(password)) {
+                    document.getElementById('password-error').style.display = 'none';
+                }
+            }
+            window.addEventListener("DOMContentLoaded", () => {
+                lucide.createIcons();
+
+                const togglePassword = document.getElementById('togglePassword');
+                const passwordInput = document.getElementById('password');
+
+                togglePassword.addEventListener('click', function () {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+
+                    // Cambiar tipo de input
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+
+                    // Limpiar y volver a insertar el ícono actualizado
+                    this.innerHTML = '';
+                    const newIcon = document.createElement('i');
+                    newIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+                    this.appendChild(newIcon);
+
+                    // Renderizar nuevamente el ícono correcto
+                    lucide.createIcons();
+                });
+            });
+            document.getElementById("registerForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const btn = document.getElementById("submitBtn");
+                btn.disabled = true;
+                const usuario = {
+                    username: document.getElementById("username").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    password: document.getElementById("password").value
+                };
+                try {
+                    let res = await fetch("/register", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(usuario)
+                    });
+                    let msg = await res.text();
+                    if (res.ok) showNotification(msg, "success");
+                    else showNotification(msg, "error");
+                } catch {
+                    showNotification("Error de conexión", "error");
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+
+            function showNotification(msg, type) {
+                const n = document.createElement("div");
+                n.classList.add("notification");
+                if (type === "error") n.classList.add("notification-error");
+                n.textContent = msg;
+                document.body.appendChild(n);
+                setTimeout(() => n.remove(), 3000);
+            }
+        </script>
 </body>
+
 </html>
