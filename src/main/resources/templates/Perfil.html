@@ -19,6 +19,7 @@
 
       <!-- Dropdown Usuario -->
        <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+       <input type="hidden" id="usuarioId" th:value="${usuario.id}">
       <div class="relative">
         <button id="userMenuButton"
           class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
@@ -85,7 +86,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-600">Contraseña</label>
-          <input id="passwordUsuario" type="password" value="********" readonly
+          <input id="passwordUsuario" type="password" placeholder="En caso de no actualizar, la contraseña sera la misma" readonly
             class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
         </div>
       </div>
@@ -109,68 +110,104 @@
   </div>
 
   <script>
-    const editarBtn = document.getElementById('editarBtn');
-    const guardarBtn = document.getElementById('guardarBtn');
-    const cancelarBtn = document.getElementById('cancelarBtn');
-    const inputs = document.querySelectorAll('#profileCard input');
-    const tiendaId = document.getElementById("tiendaId").value;
+   const editarBtn = document.getElementById('editarBtn');
+  const guardarBtn = document.getElementById('guardarBtn');
+  const cancelarBtn = document.getElementById('cancelarBtn');
+  const inputs = document.querySelectorAll('#profileCard input');
+  const tiendaId = document.getElementById("tiendaId").value;
 
-    editarBtn.addEventListener('click', () => {
-      inputs.forEach(input => input.removeAttribute('readonly'));
-      inputs.forEach(input => input.classList.remove('bg-gray-100'));
-      editarBtn.classList.add('hidden');
-      guardarBtn.classList.remove('hidden');
-      cancelarBtn.classList.remove('hidden');
-    });
+  const rolUsuario = document.getElementById("rolUsuario").value.trim();
+  const usuarioId = /*[[${usuario.id}]]*/ ""; // asegúrate de pasar el id con Thymeleaf
 
-    guardarBtn.addEventListener('click', () => {
+  // 🔹 Si NO es administrador → desactivar edición
+  if (rolUsuario !== "Administrador") {
+    editarBtn.classList.add("hidden");
+  }
+
+  // 🔹 Habilitar edición
+  editarBtn.addEventListener('click', () => {
+    if (rolUsuario !== "Administrador") return;
+
+    inputs.forEach(input => input.removeAttribute('readonly'));
+    inputs.forEach(input => input.classList.remove('bg-gray-100'));
+    editarBtn.classList.add('hidden');
+    guardarBtn.classList.remove('hidden');
+    cancelarBtn.classList.remove('hidden');
+  });
+
+  // 🔹 Guardar cambios (solo admin)
+  guardarBtn.addEventListener('click', async () => {
+    const usuarioId = document.getElementById("usuarioId").value;
+
+    const updatedUser = {
+      username: document.getElementById("nombreUsuario").value.trim(),
+      email: document.getElementById("correoUsuario").value.trim(),
+      password: document.getElementById("passwordUsuario").value.trim()
+    };
+
+    try {
+      const response = await fetch(`/api/usuarios/admin/${usuarioId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedUser)
+      });
+
+      if (!response.ok) throw new Error("Error al guardar los cambios");
+
+      const data = await response.json();
+      alert("✅ Perfil del administrador actualizado correctamente");
+
+      // Restaurar modo lectura
       inputs.forEach(input => input.setAttribute('readonly', true));
       inputs.forEach(input => input.classList.add('bg-gray-100'));
       editarBtn.classList.remove('hidden');
       guardarBtn.classList.add('hidden');
       cancelarBtn.classList.add('hidden');
-      alert('✅ Cambios guardados correctamente');
-    });
+    } catch (error) {
+      alert("❌ No se pudo actualizar el perfil del administrador");
+      console.error(error);
+    }
+  });
 
-    cancelarBtn.addEventListener('click', () => {
-      inputs.forEach(input => input.setAttribute('readonly', true));
-      inputs.forEach(input => input.classList.add('bg-gray-100'));
-      editarBtn.classList.remove('hidden');
-      guardarBtn.classList.add('hidden');
-      cancelarBtn.classList.add('hidden');
-    });
+  cancelarBtn.addEventListener('click', () => {
+    inputs.forEach(input => input.setAttribute('readonly', true));
+    inputs.forEach(input => input.classList.add('bg-gray-100'));
+    editarBtn.classList.remove('hidden');
+    guardarBtn.classList.add('hidden');
+    cancelarBtn.classList.add('hidden');
+  });
 
-    // Dropdown usuario
-    const button = document.getElementById("userMenuButton");
-    const dropdown = document.getElementById("userDropdown");
-    const logoutBtn = document.getElementById("logoutBtn");
+  // 🔹 Dropdown usuario
+  const button = document.getElementById("userMenuButton");
+  const dropdown = document.getElementById("userDropdown");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-    button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isVisible = dropdown.classList.contains("opacity-100");
-      dropdown.classList.toggle("opacity-100", !isVisible);
-      dropdown.classList.toggle("translate-y-0", !isVisible);
-      dropdown.classList.toggle("scale-100", !isVisible);
-      dropdown.classList.toggle("pointer-events-none", isVisible);
-      dropdown.classList.toggle("opacity-0", isVisible);
-      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-      dropdown.classList.toggle("scale-95", isVisible);
-    });
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isVisible = dropdown.classList.contains("opacity-100");
+    dropdown.classList.toggle("opacity-100", !isVisible);
+    dropdown.classList.toggle("translate-y-0", !isVisible);
+    dropdown.classList.toggle("scale-100", !isVisible);
+    dropdown.classList.toggle("pointer-events-none", isVisible);
+    dropdown.classList.toggle("opacity-0", isVisible);
+    dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+    dropdown.classList.toggle("scale-95", isVisible);
+  });
 
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
-      }
-    });
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+      dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+      dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    }
+  });
 
-    logoutBtn.addEventListener("click", () => {
-      if (confirm("¿Deseas cerrar sesión?")) {
-        window.location.href = "/logout";
-      }
-    });
+  logoutBtn.addEventListener("click", () => {
+    if (confirm("¿Deseas cerrar sesión?")) {
+      window.location.href = "/logout";
+    }
+  });
 
-    document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
     
   </script>
 </body>

@@ -66,7 +66,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**", "/api/pqrs").permitAll()
                         .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas/{id}/tendero").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/tenderos/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/tenderos/**", "/api/usuarios/**").hasAuthority("ROLE_ADMIN")
 
                         // 🟩 Rutas compartidas entre ADMIN y TENDERO
                         .requestMatchers("/tiendas/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
