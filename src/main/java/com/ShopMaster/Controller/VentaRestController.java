@@ -1,5 +1,8 @@
 package com.ShopMaster.Controller;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopMaster.Model.Venta;
 import com.ShopMaster.Service.VentaService;
+import com.ShopMaster.Service.PdfService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class VentaRestController {
 
     private final VentaService ventaService;
+    private final PdfService pdfService;
 
     // 🔹 Registrar una nueva venta
     @PostMapping("/crear")
@@ -56,5 +61,63 @@ public class VentaRestController {
             @PathVariable String tiendaId,
             @RequestParam(defaultValue = "12") int meses) {
         return ventaService.obtenerVentasMensuales(tiendaId, meses);
+    }
+
+    // 🔹 Generar PDF del recibo de una venta
+    @GetMapping("/{ventaId}/pdf")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public ResponseEntity<byte[]> generarPdf(@PathVariable("ventaId") String ventaId) {
+        byte[] pdf = pdfService.generarReciboVenta(ventaId);
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=Factura-" + ventaId + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdf.length)
+                .body(pdf);
+    }
+
+    // 🔹 Ventas por día (paginado)
+    @GetMapping("/tienda/{tiendaId}/por-dia")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public Page<Venta> ventasPorDia(
+            @PathVariable String tiendaId,
+            @RequestParam String fecha, // yyyy-MM-dd
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        java.time.LocalDate day = java.time.LocalDate.parse(fecha);
+        java.time.ZoneId zone = java.time.ZoneId.of("America/Bogota");
+        java.util.Date from = java.util.Date.from(day.atStartOfDay(zone).toInstant());
+        java.util.Date to = java.util.Date.from(day.plusDays(1).atStartOfDay(zone).toInstant());
+        return ventaService.obtenerVentasPorRango(tiendaId, from, to, page, size);
+    }
+
+    // 🔹 Resumen de un día (totales del día sin paginar)
+    @GetMapping("/tienda/{tiendaId}/por-dia/resumen")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public java.util.Map<String, Object> resumenPorDia(
+            @PathVariable String tiendaId,
+            @RequestParam String fecha) {
+        java.time.LocalDate day = java.time.LocalDate.parse(fecha);
+        java.time.ZoneId zone = java.time.ZoneId.of("America/Bogota");
+        java.util.Date from = java.util.Date.from(day.atStartOfDay(zone).toInstant());
+        java.util.Date to = java.util.Date.from(day.plusDays(1).atStartOfDay(zone).toInstant());
+        return ventaService.obtenerResumenPorRango(tiendaId, from, to);
+    }
+
+    // 🔹 PDF de informe de ventas por día
+    @GetMapping("/tienda/{tiendaId}/informe/pdf")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public ResponseEntity<byte[]> informePdfPorDia(
+            @PathVariable String tiendaId,
+            @RequestParam String fecha) {
+        java.time.LocalDate day = java.time.LocalDate.parse(fecha);
+        java.time.ZoneId zone = java.time.ZoneId.of("America/Bogota");
+        java.util.Date from = java.util.Date.from(day.atStartOfDay(zone).toInstant());
+        java.util.Date to = java.util.Date.from(day.plusDays(1).atStartOfDay(zone).toInstant());
+    byte[] pdf = pdfService.generarInformeVentasDia(tiendaId, from, to, fecha);
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=InformeVentas-" + fecha + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdf.length)
+                .body(pdf);
     }
 }
