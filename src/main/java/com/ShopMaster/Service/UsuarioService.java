@@ -40,34 +40,28 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username) != null;
     }*/
 
-   public void actualizarUsuario(Usuario usuario) {
-    Optional<Usuario> existenteOpt = usuarioRepository.findById(usuario.getId());
 
-    if (existenteOpt.isPresent()) {
-        Usuario existente = existenteOpt.get();
-        existente.setUsername(usuario.getUsername());
+    public Usuario actualizarAdmin(String id, Usuario datosActualizados) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-       if (usuario.getPassword() != null && !usuario.getPassword().isBlank()) {
-            String encriptada = passwordEncoder.encode(usuario.getPassword());
-            existente.setPassword(encriptada);
+        // Actualizar username y email
+        if (datosActualizados.getUsername() != null && !datosActualizados.getUsername().isBlank()) {
+            usuario.setUsername(datosActualizados.getUsername());
         }
 
-        // No permitir cambiar roles si no eres admin (opcional)
-        if (usuario.getRoles() != null && !usuario.getRoles().isEmpty()) {
-            existente.setRoles(usuario.getRoles());
+        if (datosActualizados.getEmail() != null && !datosActualizados.getEmail().isBlank()) {
+            usuario.setEmail(datosActualizados.getEmail());
         }
 
-        existente.setRoles(usuario.getRoles());
+        if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isBlank()) {
+            String nuevaPassword = passwordEncoder.encode(datosActualizados.getPassword());
+            usuario.setPassword(nuevaPassword);
+        }
 
-
-        usuarioRepository.save(existente);
+        return usuarioRepository.save(usuario);
     }
-}
-
-
-    public void eliminarUsuario(String id) {
-        usuarioRepository.deleteById(id);
-    }
+    
 
     // 🔹 Registrar tendero
     public Usuario registrarTendero(Usuario tendero, String tiendaId) {
