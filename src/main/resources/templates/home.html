@@ -8,21 +8,50 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <style> dff
-    .bag {
-position: absolute;
-width: 750.83px;
-height: 700.79px;
-left: 346.51px;
-top: 228px;
+  <style>
+    dff .bag {
+      position: absolute;
+      width: 750.83px;
+      height: 700.79px;
+      left: 346.51px;
+      top: 228px;
 
-}
+    }
+    /* Estilos del formulario PQRS (reusados de Contacto.html) */
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      transition: all 0.2s;
+      background-color: white;
+    }
+    .input-wrapper:focus-within {
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 2px #bae6fd;
+    }
+    .input-wrapper svg {
+      width: 20px;
+      height: 20px;
+      color: #9ca3af;
+      margin-right: 0.5rem;
+    }
+    .form-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 0.95rem;
+      color: #374151;
+      background-color: transparent;
+    }
   </style>
 </head>
 
 <body class="bg-white overflow-x-hidden">
   <!-- HEADER -->
-  <header id="main-header" class="fixed top-0 left-0 w-full z-50 py- transition-transform duration-300 ease-in-out transform will-change-transform">
+  <header id="main-header"
+    class="fixed top-0 left-0 w-full z-50 py-3 transition-transform duration-300 ease-in-out transform will-change-transform">
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-12">
       <!-- Logo -->
       <a th:href="@{/home}" class="flex-shrink-0">
@@ -32,17 +61,18 @@ top: 228px;
 
       <!-- Navegación (desktop) -->
       <nav class="hidden md:flex items-center gap-x-6 text-sm md:text-base font-medium">
-        <a th:href="@{/home}" 
+        <a th:href="@{/home}" id="inicio-link"
           class="text-gray-800 font-semibold hover:text-blue-700 hover:scale-105 transition-all duration-200">Inicio</a>
-        <a href="#" 
-          class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">¿Quiénes somos?</a>
-        <a th:href="@{/contacto}" 
+        <a href="#" id="about-link" class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">¿Quiénes
+          somos?</a>
+        <a href="#" id="pqrs-link"
           class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">PQRS</a>
       </nav>
 
       <!-- Botón de login -->
       <a th:href="@{/login}"
-        class="inline-flex items-center justify-center gap-2 bg-white text-[#05314D] border border-[#042443] rounded-lg px-4 py-2 text-sm md:text-base hover:bg-gray-100 font-medium transition-colors duration-200" data-aos="fade-up" data-aos-duration="1200">
+        class="inline-flex items-center justify-center gap-2 bg-white text-[#05314D] border border-[#042443] rounded-lg px-4 py-2 text-sm md:text-base hover:bg-gray-100 font-medium transition-colors duration-200"
+        data-aos="fade-up" data-aos-duration="1200">
         <span>Iniciar sesión</span>
         <svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -58,117 +88,310 @@ top: 228px;
   <div class="h-20 md:h-24"></div>
 
   <!-- MAIN -->
-  <main class="relative flex flex-col md:flex-row items-center justify-between px-8 md:px-16 lg:px-20 xl:px-28 py-12 md:py-10 bg-white">
-  <!-- Texto -->
-  <div class="flex-1 text-center md:text-left md:pr-10 lg:pr-16 xl:pr-20 z-10">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-gray-800 leading-tight"
-      data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700">
-      Gestión<br>
-      inteligente <br>
-      para tu <span class="text-[#187EBE]">Tienda</span>
-    </h1>
+  <main id="hero-section"
+    class="relative flex flex-col md:flex-row items-center justify-between px-8 md:px-16 lg:px-20 xl:px-28 py-12 md:py-10 bg-white">
+    <!-- Texto -->
+    <div class="flex-1 text-center md:text-left md:pr-10 lg:pr-16 xl:pr-20 z-10">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-gray-800 leading-tight"
+        data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700">
+        Gestión<br>
+        inteligente <br>
+        para tu <span class="text-[#187EBE]">Tienda</span>
+      </h1>
 
-    <p data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
-      class="text-lg md:text-xl xl:text-2xl text-gray-600 mt-6 mb-8 leading-relaxed max-w-md md:max-w-lg">
-      Todo lo que necesitas para administrar<br>
-      tu tienda, en un solo sistema.
-    </p>
+      <p data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
+        class="text-lg md:text-xl xl:text-2xl text-gray-600 mt-6 mb-8 leading-relaxed max-w-md md:max-w-lg">
+        Todo lo que necesitas para administrar<br>
+        tu tienda, en un solo sistema.
+      </p>
 
-    <a th:href="@{/register}" data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
-      class="inline-flex items-center justify-center gap-2 bg-[#187EBE] hover:bg-[#156fa6] text-white px-6 py-3 rounded-lg text-lg font-medium transition-colors duration-200">
-      <span>Registrarse</span>
-      <svg class="shrink-0" width="22" height="22" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 6 15 12 9 18"></polyline>
-      </svg>
-    </a>
-  </div>
-  <div class="relative flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
-    <img th:src="@{/images/Bolsa.svg}" alt="Ilustración ShopMaster"
-      class="w-[70vw] sm:w-[100vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-auto opacity-95 relative bottom-0"
-      data-aos="fade-left" data-aos-duration="1800" data-aos-delay="500" />
-  </div>
-</main>
+      <a th:href="@{/register}" data-aos="fade-right" data-aos-duration="2000" data-aos-delay="700"
+        class="inline-flex items-center justify-center gap-2 bg-[#187EBE] hover:bg-[#156fa6] text-white px-6 py-3 rounded-lg text-lg font-medium transition-colors duration-200">
+        <span>Registrarse</span>
+        <svg class="shrink-0" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 6 15 12 9 18"></polyline>
+        </svg>
+      </a>
+    </div>
+    <div class="relative flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
+      <img th:src="@{/images/Bolsa.svg}" alt="Ilustración ShopMaster"
+        class="w-[70vw] sm:w-[100vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-auto opacity-95 relative bottom-0"
+        data-aos="fade-left" data-aos-duration="1800" data-aos-delay="500" />
+    </div>
+  </main>
 
 
+  <!-- QUIÉNES SOMOS (oculto por defecto) -->
+  <section id="about-section" class="hidden bg-white">
+    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-16 xl:px-20 py-16 md:py-24">
+      <div class="text-center mb-12 md:mb-16">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800" data-aos="fade-up" data-aos-duration="1200">¿Quiénes somos?</h2>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="150">
+          Somos un equipo apasionado por potenciar a los tenderos con tecnología simple, útil y accesible.
+        </p>
+      </div>
+      <!-- Perfiles -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <div class="bg-white border rounded-xl p-7 shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="0">
+          <img th:src="@{/images/Milagro.png}" alt="Milagro - Frontend y UI" class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto ring-2 ring-gray-100">
+          <h3 class="mt-4 text-lg font-semibold text-gray-800 text-center">Milagro</h3>
+          <p class="text-sm text-gray-500 text-center">Frontend y UI</p>
+          <p class="mt-3 text-sm text-gray-600 text-center">Interfaz, experiencia de usuario y diseño.</p>
+        </div>
+        <div class="bg-white border rounded-xl p-7 shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="100">
+          <img th:src="@{/images/Carol.png}" alt="Carol - Backend" class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto ring-2 ring-gray-100">
+          <h3 class="mt-4 text-lg font-semibold text-gray-800 text-center">Carol</h3>
+          <p class="text-sm text-gray-500 text-center">Backend</p>
+          <p class="mt-3 text-sm text-gray-600 text-center">Servicios, APIs y lógica de negocio.</p>
+        </div>
+        <div class="bg-white border rounded-xl p-7 shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="200">
+          <img th:src="@{/images/Juan.png}" alt="Juan - Backend" class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto ring-2 ring-gray-100">
+          <h3 class="mt-4 text-lg font-semibold text-gray-800 text-center">Juan</h3>
+          <p class="text-sm text-gray-500 text-center">Backend</p>
+          <p class="mt-3 text-sm text-gray-600 text-center">Servicios, APIs y lógica de negocio.</p>
+        </div>
+        <div class="bg-white border rounded-xl p-7 shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="300">
+          <img th:src="@{/images/Gabriela.png}" alt="Gabriela - Frontend y UI" class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto ring-2 ring-gray-100">
+          <h3 class="mt-4 text-lg font-semibold text-gray-800 text-center">Gabriela</h3>
+          <p class="text-sm text-gray-500 text-center">Frontend y UI</p>
+          <p class="mt-3 text-sm text-gray-600 text-center">Interfaz, experiencia de usuario y diseño.</p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="#" id="volver-inicio"
+           class="inline-flex items-center justify-center gap-2 bg-[#187EBE] hover:bg-[#156fa6] text-white px-6 py-3 rounded-lg text-base font-medium transition-colors duration-200">
+          Volver al inicio
+          <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PQRS (oculto por defecto) -->
+  <section id="pqrs-section" class="hidden bg-white">
+    <div class="max-w-7xl mx-auto px-8 md:px-12 lg:px-16 xl:px-20 py-16 md:py-24">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800" data-aos="fade-up" data-aos-duration="1200">
+          Enviar PQRS
+        </h2>
+        <p class="mt-3 text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="150">
+          ¿Tienes una sugerencia o encontraste un problema? Cuéntanos y te responderemos pronto.
+        </p>
+      </div>
+
+      <div class="bg-white shadow-lg rounded-2xl w-full max-w-lg p-8 border border-gray-200 mx-auto" data-aos="zoom-in" data-aos-duration="800">
+        <h3 class="text-2xl font-bold text-center text-cyan-700 mb-6 flex items-center justify-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 20 20">
+            <path fill="#0284c7" fill-rule="evenodd"
+              d="m7.172 11.334l2.83 1.935l2.728-1.882l6.115 6.033q-.242.079-.512.08H1.667c-.22 0-.43-.043-.623-.12zM20 6.376v9.457c0 .247-.054.481-.15.692l-5.994-5.914zM0 6.429l6.042 4.132l-5.936 5.858A1.7 1.7 0 0 1 0 15.833zM18.333 2.5c.92 0 1.667.746 1.667 1.667v.586L9.998 11.648L0 4.81v-.643C0 3.247.746 2.5 1.667 2.5z" />
+          </svg>
+        </h3>
+
+        <form id="pqrsForm" class="space-y-5">
+          <!-- Tipo -->
+          <div>
+            <label for="tipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Solicitud</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16" />
+              </svg>
+              <select id="tipo" required class="form-input">
+                <option value="">Seleccionar...</option>
+                <option value="Sugerencia">💡 Sugerencia</option>
+                <option value="Reporte de Fallas">⚙️ Reporte de Fallas</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+              </svg>
+              <input type="text" id="nombre" required placeholder="Tu nombre" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Correo -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <input type="email" id="email" required placeholder="tuemail@ejemplo.com" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Asunto -->
+          <div>
+            <label for="asunto" class="block text-sm font-medium text-gray-700 mb-1">Asunto</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M3 20h9m-9-8h18M3 4h18" />
+              </svg>
+              <input type="text" id="asunto" required placeholder="Escribe un asunto breve" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div>
+            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+              </svg>
+              <textarea id="descripcion" required rows="5" placeholder="Describe detalladamente tu solicitud o sugerencia..." class="form-input"></textarea>
+            </div>
+          </div>
+
+          <!-- Botón -->
+          <div class="pt-4 text-center">
+            <button type="submit" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:scale-[1.02] hover:shadow-md transition-transform duration-200">Enviar PQRS</button>
+          </div>
+        </form>
+
+        <p id="statusMessage" class="text-center text-sm mt-4 hidden"></p>
+      </div>
+    </div>
+  </section>
 
 
   <!-- FOOTER -->
-      <footer class="bg-gray-50 border-t border-gray-200 py-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center mb-4">
-                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shop.jpg-bG71uw6iCU0LVS2ACOe4tqnA1QYutU.jpeg" alt="ShopMaster" class="h-8 w-auto">
-                    </div>
-                    <p class="text-sm text-gray-600 text-pretty">
-                        Transformando el comercio comunitario con tecnología inteligente.
-                    </p>
-                </div>
+  <footer class="bg-gray-100 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 text-center text-sm text-gray-600">
+      &copy; 2025 ShopMaster. Todos los derechos reservados.
+    </div>
+  </footer>
 
 
-                <div>
-                    <h4 class="font-semibold mb-3">Soporte</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900 transition-colors">Centro de Ayuda</a></li>
-                        <li><a th:href="@{/contacto}" class="hover:text-gray-900 transition-colors">PQRS</a></li>
-                    </ul>
-                </div>
 
-                <div>
-                    <h4 class="font-semibold mb-3">Empresa</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#quienes-somos" class="hover:text-gray-900 transition-colors">Quiénes Somos</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition-colors">Términos</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition-colors">Privacidad</a></li>
-                    </ul>
-                </div>
-            </div>
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script>
+    (function () {
+      const header = document.getElementById('main-header');
+      if (!header) return;
+      let lastScroll = 0;
 
-            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
-                <p>&copy; 2024 ShopMaster. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+      // Ajustes opcionales: altura mínima para empezar a ocultar (px)
+      const hideOffset = 100;
 
-  
+      window.addEventListener('scroll', () => {
+        const current = window.pageYOffset || document.documentElement.scrollTop;
 
-<!-- AOS JS -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init();
-</script>
-<script>
-  (function () {
-    const header = document.getElementById('main-header');
-    if (!header) return;
-    let lastScroll = 0;
+        // Mostrar / ocultar según dirección del scroll
+        if (current > lastScroll && current > hideOffset) {
+          // scroll down -> ocultar
+          header.classList.add('-translate-y-full');
+        } else {
+          // scroll up -> mostrar
+          header.classList.remove('-translate-y-full');
+        }
+        lastScroll = Math.max(current, 0);
 
-    // Ajustes opcionales: altura mínima para empezar a ocultar (px)
-    const hideOffset = 100;
+        // Añadir fondo translúcido y sombra después de un pequeño scroll
+        if (current > 20) {
+          header.classList.add('bg-white/90', 'backdrop-blur-sm', 'shadow-md');
+        } else {
+          header.classList.remove('bg-white/90', 'backdrop-blur-sm', 'shadow-md');
+        }
+      }, { passive: true });
+    })();
+  </script>
+  <script>
+    // Toggle entre Inicio (hero), ¿Quiénes somos? y PQRS sin recargar
+    (function () {
+      const hero = document.getElementById('hero-section');
+      const about = document.getElementById('about-section');
+      const pqrs = document.getElementById('pqrs-section');
+      const aboutLink = document.getElementById('about-link');
+      const pqrsLink = document.getElementById('pqrs-link');
+      const inicioLink = document.getElementById('inicio-link');
+      const volverAbout = document.getElementById('volver-inicio');
+      const volverPQRS = document.getElementById('volver-inicio-pqrs');
 
-    window.addEventListener('scroll', () => {
-      const current = window.pageYOffset || document.documentElement.scrollTop;
-
-      // Mostrar / ocultar según dirección del scroll
-      if (current > lastScroll && current > hideOffset) {
-        // scroll down -> ocultar
-        header.classList.add('-translate-y-full');
-      } else {
-        // scroll up -> mostrar
-        header.classList.remove('-translate-y-full');
+      function showSection(section) {
+        if (!hero || !about || !pqrs) return;
+        const sections = { hero, about, pqrs };
+        // Ocultar todas
+        Object.values(sections).forEach(el => el.classList.add('hidden'));
+        // Mostrar la indicada
+        const target = sections[section] || hero;
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.AOS) { AOS.refreshHard(); }
       }
-      lastScroll = Math.max(current, 0);
 
-      // Añadir fondo translúcido y sombra después de un pequeño scroll
-      if (current > 20) {
-        header.classList.add('bg-white/90', 'backdrop-blur-sm', 'shadow-md');
-      } else {
-        header.classList.remove('bg-white/90', 'backdrop-blur-sm', 'shadow-md');
+      if (aboutLink) {
+        aboutLink.addEventListener('click', (e) => { e.preventDefault(); showSection('about'); });
       }
-    }, { passive: true });
-  })();
-</script>
+      if (pqrsLink) {
+        pqrsLink.addEventListener('click', (e) => { e.preventDefault(); showSection('pqrs'); });
+      }
+      if (inicioLink) {
+        inicioLink.addEventListener('click', (e) => { e.preventDefault(); showSection('hero'); });
+      }
+      if (volverAbout) {
+        volverAbout.addEventListener('click', (e) => { e.preventDefault(); showSection('hero'); });
+      }
+      if (volverPQRS) {
+        volverPQRS.addEventListener('click', (e) => { e.preventDefault(); showSection('hero'); });
+      }
+    })();
+  </script>
+  <script>
+    // Lógica de envío del formulario PQRS
+    (function () {
+      const form = document.getElementById('pqrsForm');
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const tipo = document.getElementById('tipo');
+        const nombre = document.getElementById('nombre');
+        const email = document.getElementById('email');
+        const asunto = document.getElementById('asunto');
+        const descripcion = document.getElementById('descripcion');
+        const pqrs = {
+          tipo: tipo.value,
+          nombre: nombre.value,
+          email: email.value,
+          asunto: asunto.value,
+          descripcion: descripcion.value,
+        };
+        const status = document.getElementById('statusMessage');
+        status.classList.remove('hidden', 'text-green-600', 'text-red-600');
+        status.textContent = 'Enviando...';
+        status.classList.add('text-gray-600');
+        try {
+          const resp = await fetch('/api/pqrs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pqrs),
+          });
+          if (!resp.ok) throw new Error('Request failed');
+          status.textContent = '✅ PQRS enviado correctamente. ¡Gracias por tu mensaje!';
+          status.classList.remove('text-gray-600');
+          status.classList.add('text-green-600');
+          form.reset();
+        } catch (err) {
+          status.textContent = '❌ Error al enviar el PQRS. Intenta nuevamente.';
+          status.classList.remove('text-gray-600');
+          status.classList.add('text-red-600');
+        }
+      });
+    })();
+  </script>
 
 </body>
 

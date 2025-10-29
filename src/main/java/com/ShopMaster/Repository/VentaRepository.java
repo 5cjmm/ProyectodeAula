@@ -15,6 +15,7 @@ import com.ShopMaster.Model.Venta;
 public interface VentaRepository extends MongoRepository<Venta, String> {
     Page<Venta> findByTiendaId(String tiendaId, Pageable pageable);
     List<Venta> findByTiendaIdAndFechaBetween(String tiendaId, Date inicio, Date fin);
+    Page<Venta> findByTiendaIdAndFechaBetween(String tiendaId, Date inicio, Date fin, Pageable pageable);
 
     // Optimizado: sumar total de ventas por tienda vía aggregation (sin límite de página)
     @Aggregation(pipeline = {
