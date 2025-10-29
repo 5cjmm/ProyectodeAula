@@ -62,15 +62,15 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
                     "/fonts/**").permitAll() // AÑADIDO
-                        .requestMatchers("/features", "/pricing", "/contact", "/register").permitAll() // AÑADIDO
+                        .requestMatchers("/features", "/pricing", "/contacto", "/register").permitAll() // AÑADIDO
 
-                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**").permitAll()
-                       /*  .requestMatchers( "/tendero/agregar-producto", 
-                        "/tendero/eliminar/{codigo}", "/tendero/guardar", "/tendero/PuntoVenta",
-                        "/admin/crear-producto", "/admin/tiendas", "/admin/actualizar", "/admin/eliminar/{id}", "/admin/Inventario").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")*/
-                    //    .requestMatchers("/tendero/**").hasAuthority("ROLE_TENDERO")
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
-                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_TENDERO", "ROLE_ADMIN")
+                        .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**", "/api/pqrs").permitAll()
+                        .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas/{id}/tendero").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/tenderos/**").hasAuthority("ROLE_ADMIN")
+
+                        // 🟩 Rutas compartidas entre ADMIN y TENDERO
+                        .requestMatchers("/tiendas/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
+                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TENDERO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
