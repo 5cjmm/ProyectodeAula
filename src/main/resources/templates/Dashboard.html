@@ -22,49 +22,59 @@
             </div>
 
             <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+            <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
             <nav class="space-y-2">
+                <!-- Dashboard -->
                 <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
                     </svg>
                     Dashboard
                 </a>
+
+                <!-- Inventario -->
                 <a id="linkInventario"
                     class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
                     </svg>
                     Inventario
                 </a>
+
+                <!-- Proveedores -->
                 <a id="linkProveedores"
                     class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
                     </svg>
                     Proveedores
                 </a>
+
+                <!-- Deudas -->
                 <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
                     </svg>
                     Deudas
                 </a>
+
+                <!-- Punto de Venta -->
                 <a id="linkPuntoVenta"
                     class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
                     </svg>
                     Punto de Venta
                 </a>
+
+                <!-- Informe de Ventas -->
                 <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
                     </svg>
                     Informe de Ventas
                 </a>
@@ -75,26 +85,23 @@
                     </svg>
                     Predicción
                 </a>
+
+                <!-- Gestión de Tenderos -->
                 <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
                     </svg>
                     Gestión de Tenderos
                 </a>
+
+                <!-- Tiendas -->
                 <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     </svg>
                     Tiendas
-                </a>
-                <a href="/logout" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                    </svg>
-                    Cerrar sesión
                 </a>
             </nav>
         </aside>
@@ -105,12 +112,67 @@
             <header class="bg-white border-b border-gray-200 shadow-sm">
                 <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                     <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
-                    <div class="flex items-center gap-3">
-                        <img src="/admin-avatar.png" alt="Admin" class="w-9 h-9 rounded-full border-2 border-gray-300">
-                        <span class="text-sm font-medium text-gray-700">Administrador</span>
+
+                    <div class="relative">
+                        <button id="userMenuButton"
+                            class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+
+                            <!-- ⚪ SVG Avatar con círculo gris -->
+                            <div
+                                class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                                    <path fill="none"
+                                        d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                                    <path fill="#0891b2"
+                                        d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                                </svg>
+                            </div>
+
+                            <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
+                                class="text-sm font-medium text-gray-700">
+                                Hola, Usuario
+                            </span>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" d="m6 9l6 6l6-6" />
+                            </svg>
+                        </button>
+
+                        <!-- 🔽 Menú desplegable -->
+                        <div id="userDropdown"
+                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm text-gray-700">Rol:</p>
+                                <p id="userRole"
+                                    th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                                    class="font-semibold text-gray-900">
+                                    Administrador
+                                </p>
+                            </div>
+
+                            <a id="linkPerfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                Perfil
+                            </a>
+
+                            <button id="logoutBtn"
+                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path fill="#f00034"
+                                            d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                                    </g>
+                                </svg>
+                                Cerrar sesión
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
+
+
 
             <!-- Dashboard Content -->
             <main class="flex-1 p-6 space-y-6">
@@ -131,14 +193,9 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" />
                             </svg>
                         </div>
-                    <div class="text-2xl font-bold" id="ventasTotales" th:text="${ventasTotalesFormatted}">$12,345</div>
+                        <div class="text-2xl font-bold" id="ventasTotales" th:text="${ventasTotalesFormatted}">$12,345
+                        </div>
                         <div class="flex items-center gap-1 text-xs mt-1">
-                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
-                            </svg>
-                            <span class="text-green-500">+12.5%</span>
-                            <span class="text-gray-500">vs mes anterior</span>
                         </div>
                     </div>
 
@@ -152,12 +209,6 @@
                         </div>
                         <div class="text-2xl font-bold" id="productosEnStock" th:text="${productosEnStock}">1,234</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
-                            <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" />
-                            </svg>
-                            <span class="text-red-500">-2.3%</span>
-                            <span class="text-gray-500">vs mes anterior</span>
                         </div>
                     </div>
 
@@ -171,12 +222,6 @@
                         </div>
                         <div class="text-2xl font-bold" id="ventasHoy" th:text="${ventasHoy}">89</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
-                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
-                            </svg>
-                            <span class="text-green-500">+8.1%</span>
-                            <span class="text-gray-500">vs mes anterior</span>
                         </div>
                     </div>
 
@@ -190,12 +235,7 @@
                         </div>
                         <div class="text-2xl font-bold" id="deudasActivas" th:text="${deudasActivas}">456</div>
                         <div class="flex items-center gap-1 text-xs mt-1">
-                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" />
-                            </svg>
-                            <span class="text-green-500">+15.2%</span>
-                            <span class="text-gray-500">vs mes anterior</span>
+
                         </div>
                     </div>
                 </div>
@@ -213,27 +253,35 @@
                     <!-- Inventory Table -->
                     <div class="bg-white p-6 rounded-lg border border-red-200">
                         <h3 class="text-lg font-semibold mb-4">Inventario Bajo</h3>
-                        <div class="space-y-3" id="bajosContainer" th:attr="data-page=${bajosPage.number},data-total-pages=${bajosPage.totalPages},data-total-elements=${bajosPage.totalElements}">
-                            <div th:if="${bajosPage == null or #lists.isEmpty(bajosPage.content)}" class="text-gray-500">No hay productos con stock bajo.</div>
-                            <div th:each="p : ${bajosPage.content}" class="flex items-center justify-between py-2 border-b border-gray-100 js-bajo-item">
+                        <div class="space-y-3" id="bajosContainer"
+                            th:attr="data-page=${bajosPage.number},data-total-pages=${bajosPage.totalPages},data-total-elements=${bajosPage.totalElements}">
+                            <div th:if="${bajosPage == null or #lists.isEmpty(bajosPage.content)}"
+                                class="text-gray-500">No hay productos con stock bajo.</div>
+                            <div th:each="p : ${bajosPage.content}"
+                                class="flex items-center justify-between py-2 border-b border-gray-100 js-bajo-item">
                                 <span class="font-medium" th:text="${p.nombre}">Producto</span>
-                                <span class="text-red-500 font-semibold" th:text="${p.cantidad + ' unidades'}">0 unidades</span>
+                                <span class="text-red-500 font-semibold" th:text="${p.cantidad + ' unidades'}">0
+                                    unidades</span>
                             </div>
 
                             <!-- Paginación simple -->
                             <div class="flex items-center justify-between mt-3" id="bajosPagination">
                                 <div class="text-sm text-gray-600">
-                                    <span id="bajosTotalElements" th:text="${bajosPage.totalElements}">0</span> productos encontrados
+                                    <span id="bajosTotalElements" th:text="${bajosPage.totalElements}">0</span>
+                                    productos encontrados
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <!-- Anterior (botón) -->
-                                    <button id="bajosPrev" type="button" class="px-4 py-2 bg-amber-400 text-white font-medium rounded-lg shadow hover:brightness-95">Anterior</button>
+                                    <button id="bajosPrev" type="button"
+                                        class="px-4 py-2 bg-amber-400 text-white font-medium rounded-lg shadow hover:brightness-95">Anterior</button>
                                     <!-- Número de página central -->
                                     <div class="px-3 py-1 bg-gray-100 border rounded-full text-center mx-1">
-                                        <span class="font-medium" id="bajosPageNumber" th:text="${bajosPage.number + 1}">1</span>
+                                        <span class="font-medium" id="bajosPageNumber"
+                                            th:text="${bajosPage.number + 1}">1</span>
                                     </div>
                                     <!-- Siguiente (botón) -->
-                                    <button id="bajosNext" type="button" class="px-4 py-2 bg-green-500 text-white font-medium rounded-lg shadow hover:brightness-95">Siguiente</button>
+                                    <button id="bajosNext" type="button"
+                                        class="px-4 py-2 bg-green-500 text-white font-medium rounded-lg shadow hover:brightness-95">Siguiente</button>
                                 </div>
                             </div>
                         </div>
@@ -244,15 +292,19 @@
                 <div class="bg-white p-6 rounded-lg border border-gray-200">
                     <h3 class="text-lg font-semibold mb-4">Deudas Recientes</h3>
                     <div class="space-y-4">
-                        <div th:if="${#lists.isEmpty(deudasRecientes)}" class="text-gray-500">No hay deudas recientes.</div>
-                        <div th:each="d : ${deudasRecientes}" class="flex items-center justify-between shadow-sm border-b border-gray-100">
+                        <div th:if="${#lists.isEmpty(deudasRecientes)}" class="text-gray-500">No hay deudas recientes.
+                        </div>
+                        <div th:each="d : ${deudasRecientes}"
+                            class="flex items-center justify-between shadow-sm border-b border-gray-100">
                             <div>
-                                <p class="font-medium" th:text="${d.nombreCliente != null ? d.nombreCliente : d.cedulaCliente}">Cliente</p>
+                                <p class="font-medium"
+                                    th:text="${d.nombreCliente != null ? d.nombreCliente : d.cedulaCliente}">Cliente</p>
                             </div>
                             <div class="text-right">
-                                <p class="font-semibold" th:text="${#numbers.formatDecimal(d.total, 1, 'COMMA', 2, 'POINT')}">$0.00</p>
+                                <p class="font-semibold"
+                                    th:text="${#numbers.formatDecimal(d.total, 1, 'COMMA', 2, 'POINT')}">$0.00</p>
                                 <span th:text="${d.estado != null ? d.estado : 'NO PAGADA'}"
-                                      th:class="${'inline-block px-2 py-1 text-xs rounded-full ' + (d.estado != null && d.estado.toUpperCase() == 'PAGADA' ? 'bg-green-100 text-green-800' : (d.estado != null && d.estado.toUpperCase() == 'PARCIAL' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))}">
+                                    th:class="${'inline-block px-2 py-1 text-xs rounded-full ' + (d.estado != null && d.estado.toUpperCase() == 'PAGADA' ? 'bg-green-100 text-green-800' : (d.estado != null && d.estado.toUpperCase() == 'PARCIAL' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))}">
                                     Estado
                                 </span>
                             </div>
@@ -269,22 +321,36 @@
 
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        const tiendaId = document.getElementById("tiendaId").value;
+        const tiendaId = document.getElementById("tiendaId")?.value;
+        const rol = document.getElementById("rolUsuario")?.value;
 
         if (!tiendaId) {
             console.error("⚠️ tiendaId no encontrado");
             return;
         }
 
-        document.getElementById("linkDashboard").href = `/admin/tiendas/${tiendaId}/dashboard`;
-        document.getElementById("linkInventario").href = `/admin/tiendas/${tiendaId}/inventario`;
-        document.getElementById("linkProveedores").href = `/admin/tiendas/${tiendaId}/proveedores`;
-        document.getElementById("linkDeudas").href = `/admin/tiendas/${tiendaId}/deudas`;
-        document.getElementById("linkPuntoVenta").href = `/admin/tiendas/${tiendaId}/puntoventa`;
-        document.getElementById("linkInforme").href = `/admin/tiendas/${tiendaId}/informe`;
-        document.getElementById("linkPrediccion").href = `/admin/tiendas/${tiendaId}/prediccion`;
-        document.getElementById("linkTendero").href = `/admin/tiendas/${tiendaId}/tendero`;
-        document.getElementById("linkTiendas").href = `/admin/tiendas`;
+        // 🔗 Enlaces dinámicos
+        document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+        document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+        document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+        document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+        document.getElementById("linkTiendas").href = `/tiendas`;
+
+        // 🧱 Ocultar elementos según el rol
+        if (rol === "ROLE_TENDERO") {
+            const tenderoMenu = document.getElementById("linkTendero");
+            const tiendasMenu = document.getElementById("linkTiendas");
+
+            if (tenderoMenu) tenderoMenu.style.display = "none";
+            if (tiendasMenu) tiendasMenu.style.display = "none";
+        }
+
+
 
         // --- Gráfico: Ventas Mensuales ---
         let ventasChart;
@@ -295,7 +361,7 @@
                 const data = await res.json();
                 // Asegurar orden cronológico por (año, mes)
                 // Orden cronológico (año, mes) y etiquetas numéricas (yyyy-MM)
-                const ordered = Array.isArray(data) ? [...data].sort((a,b) => (a.year - b.year) || (a.month - b.month)) : [];
+                const ordered = Array.isArray(data) ? [...data].sort((a, b) => (a.year - b.year) || (a.month - b.month)) : [];
                 const labels = ordered.map(d => d.label);
                 const valores = ordered.map(d => d.total);
                 const ctx = document.getElementById('ventasMensualesChart');
@@ -339,6 +405,38 @@
         const pageNumberEl = document.getElementById('bajosPageNumber');
         const totalElementsEl = document.getElementById('bajosTotalElements');
 
+        const button = document.getElementById("userMenuButton");
+        const dropdown = document.getElementById("userDropdown");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        // Mostrar/ocultar con animación
+        button.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isVisible = dropdown.classList.contains("opacity-100");
+            dropdown.classList.toggle("opacity-100", !isVisible);
+            dropdown.classList.toggle("translate-y-0", !isVisible);
+            dropdown.classList.toggle("scale-100", !isVisible);
+            dropdown.classList.toggle("pointer-events-none", isVisible);
+            dropdown.classList.toggle("opacity-0", isVisible);
+            dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+            dropdown.classList.toggle("scale-95", isVisible);
+        });
+
+        // Cerrar al hacer clic fuera
+        document.addEventListener("click", (e) => {
+            if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+                dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+            }
+        });
+
+        // Acción de cerrar sesión
+        logoutBtn.addEventListener("click", () => {
+            if (confirm("¿Deseas cerrar sesión?")) {
+                window.location.href = "/logout";
+            }
+        });
+
         let bajosState = {
             page: parseInt(bajosContainer.getAttribute('data-page') || '0', 10),
             totalPages: parseInt(bajosContainer.getAttribute('data-total-pages') || '1', 10),
@@ -360,7 +458,7 @@
 
         async function loadBajos(page) {
             try {
-                const res = await fetch(`/admin/tiendas/${tiendaId}/dashboard/bajos?bajosPage=${page}`, { headers: { 'Accept': 'application/json' } });
+                const res = await fetch(`/tiendas/${tiendaId}/dashboard/bajos?bajosPage=${page}`, { headers: { 'Accept': 'application/json' } });
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
 
@@ -420,9 +518,9 @@
             }
         }
 
-    // Inicializaciones
-    loadVentasMensuales();
-    setButtonsState();
+        // Inicializaciones
+        loadVentasMensuales();
+        setButtonsState();
         // Padding inicial para mantener 5 filas visibles
         padBajosRows();
         prevBtn.addEventListener('click', () => {

@@ -1,4 +1,4 @@
-package com.ShopMaster.Controller;
+/*package com.ShopMaster.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,3 +34,4 @@ public class TenderoViewController {
     }
     
 }
+*/

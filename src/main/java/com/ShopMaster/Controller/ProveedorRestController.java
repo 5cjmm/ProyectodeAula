@@ -1,5 +1,7 @@
 package com.ShopMaster.Controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,7 +61,17 @@ public class ProveedorRestController {
         return proveedorService.obtenerProveedoresPorTienda(tiendaId, page, size);
     }
 
-    
+    @GetMapping("/buscar")
+@PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+public List<Proveedor> buscarProveedores(
+        @RequestParam String tiendaId,
+        @RequestParam(required = false) String nombre) {
+
+    if (nombre == null || nombre.isBlank()) {
+        return proveedorService.obtenerProveedoresPorTienda(tiendaId);
+    }
+    return proveedorService.buscarPorNombre(tiendaId, nombre);
+}
 }
 
 

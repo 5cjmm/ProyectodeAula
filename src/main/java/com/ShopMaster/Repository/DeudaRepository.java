@@ -2,6 +2,7 @@ package com.ShopMaster.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,8 @@ import com.ShopMaster.Model.Deuda;
 public interface DeudaRepository extends MongoRepository<Deuda, String> {
     Page<Deuda> findByTiendaId(String tiendaId, Pageable pageable);
     List<Deuda> findByTiendaIdAndFechaVentaBetween(String tiendaId, LocalDateTime inicio, LocalDateTime fin);
+    Optional<Deuda> findByCedulaClienteAndTiendaId(String cedulaCliente, String tiendaId);
+    Optional<Deuda> findByCedulaCliente(String cedulaCliente);
 
     // Últimas 5 deudas por fecha de venta (desc)
     List<Deuda> findTop5ByTiendaIdOrderByFechaVentaDesc(String tiendaId);

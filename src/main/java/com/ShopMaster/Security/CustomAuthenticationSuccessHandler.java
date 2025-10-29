@@ -2,20 +2,27 @@ package com.ShopMaster.Security;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import com.ShopMaster.Model.Usuario;
+import com.ShopMaster.Repository.UsuarioRepository;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public CustomAuthenticationSuccessHandler(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -23,8 +30,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException, ServletException {
 
         String username = authentication.getName();
         String token = jwtUtil.generateToken(username);
@@ -35,21 +43,31 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(60 * 60);
+        jwtCookie.setMaxAge(60 * 60); // 1 hora
         response.addCookie(jwtCookie);
 
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            String role = authority.getAuthority();
+        HttpSession session = request.getSession();
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            if (role.equals("ROLE_ADMIN")) {
-                response.sendRedirect("/admin/tiendas");
-                return;
-            } else if (role.equals("ROLE_TENDERO")) {
-                response.sendRedirect("/admin/tiendas/{id}/inventario");
-                return;
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        session.setAttribute("usuarioLogueado", usuario);
+        session.setAttribute("rolUsuario", role);
+
+        if (role.equals("ROLE_ADMIN")) {
+            response.sendRedirect("/tiendas");
+            return;
+        } 
+        else if (role.equals("ROLE_TENDERO")) {
+            if (usuario.getTiendas() != null && !usuario.getTiendas().isEmpty()) {
+                String tiendaId = usuario.getTiendas().get(0).getId();
+                response.sendRedirect("/tiendas/" + tiendaId + "/dashboard");
+            } else {
+                response.sendRedirect("/sin-tienda");
             }
+            return;
         }
-
+        
         response.sendRedirect("/home");
     }
 }

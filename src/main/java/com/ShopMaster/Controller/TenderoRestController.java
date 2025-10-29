@@ -26,6 +26,7 @@ public class TenderoRestController {
     public TenderoRestController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
+    
 
     @PostMapping("/crear")
     public Usuario crearTendero(@RequestBody Usuario tendero, @RequestParam String tiendaId) {

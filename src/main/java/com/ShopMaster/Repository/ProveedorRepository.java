@@ -19,4 +19,5 @@ public interface ProveedorRepository extends MongoRepository<Proveedor, String> 
     boolean existsByTelefonoAndTiendaIdAndIdNot(String telefono, String tiendaId, String id);
     Page<Proveedor> findByTiendaId(String tiendaId, Pageable pageable);
     List<Proveedor> findByTiendaId(String tiendaId);
+    List<Proveedor> findByNombreContainingIgnoreCaseAndTiendaId(String nombre, String tiendaId);
 }

@@ -33,6 +33,10 @@ public class ProveedorService {
         return proveedorRepository.findByTiendaId(tiendaId);
     }
 
+    public List<Proveedor> buscarPorNombre(String tiendaId, String nombre) {
+    return proveedorRepository.findByNombreContainingIgnoreCaseAndTiendaId(nombre, tiendaId);
+}
+
     // Listar proveedores de una tienda
     public Page<Proveedor> obtenerProveedoresPorTienda(String tiendaId, int page, int size) {
         return proveedorRepository.findByTiendaId(tiendaId, PageRequest.of(page, size));
@@ -42,9 +46,16 @@ public class ProveedorService {
         Proveedor existente = proveedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
 
-        if (proveedorRepository.existsByNitAndTiendaIdAndIdNot(proveedor.getNit(), proveedor.getTiendaId(), proveedor.getId())) {
-            throw new RuntimeException("El NIT ya está en uso por otro proveedor en esta tienda");
-        }
+        boolean nitDuplicado = proveedorRepository
+        .existsByNitAndTiendaIdAndIdNot(proveedor.getNit(), existente.getTiendaId(), id);
+
+    if (nitDuplicado) {
+        throw new RuntimeException("El NIT ya está en uso por otro proveedor en esta tienda");
+    }
+
+    // 🧠 Mantener la tienda original
+    proveedor.setId(id);
+    proveedor.setTiendaId(existente.getTiendaId());
 
         if (proveedorRepository.existsByTelefonoAndTiendaIdAndIdNot(proveedor.getTelefono(), proveedor.getTiendaId(), proveedor.getId())) {
             throw new RuntimeException("El Teléfono ya está en uso por otro proveedor en esta tienda");
