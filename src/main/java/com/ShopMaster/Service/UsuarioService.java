@@ -42,25 +42,43 @@ public class UsuarioService {
 
 
     public Usuario actualizarAdmin(String id, Usuario datosActualizados) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Actualizar username y email
-        if (datosActualizados.getUsername() != null && !datosActualizados.getUsername().isBlank()) {
-            usuario.setUsername(datosActualizados.getUsername());
+    // 🧩 Validar y actualizar username (solo si cambia)
+    if (datosActualizados.getUsername() != null && !datosActualizados.getUsername().isBlank()) {
+        String nuevoUsername = datosActualizados.getUsername().trim();
+
+        // Verificar si ya existe otro usuario con ese nombre
+        Optional<Usuario> existente = usuarioRepository.findByUsername(nuevoUsername);
+        if (existente.isPresent() && !existente.get().getId().equals(id)) {
+            throw new RuntimeException("El nombre de usuario ya está en uso");
         }
 
-        if (datosActualizados.getEmail() != null && !datosActualizados.getEmail().isBlank()) {
-            usuario.setEmail(datosActualizados.getEmail());
-        }
-
-        if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isBlank()) {
-            String nuevaPassword = passwordEncoder.encode(datosActualizados.getPassword());
-            usuario.setPassword(nuevaPassword);
-        }
-
-        return usuarioRepository.save(usuario);
+        usuario.setUsername(nuevoUsername);
     }
+
+    if (datosActualizados.getEmail() != null && !datosActualizados.getEmail().isBlank()) {
+        usuario.setEmail(datosActualizados.getEmail().trim());
+    }
+
+    // 🧩 Actualizar contraseña solo si se proporciona una nueva
+    if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isBlank()) {
+        // Validar seguridad mínima
+        String password = datosActualizados.getPassword();
+        boolean valida = password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$");
+        if (!valida) {
+            throw new RuntimeException("La contraseña debe tener al menos 8 caracteres, " +
+                    "una mayúscula, una minúscula, un número y un símbolo.");
+        }
+
+        String nuevaPassword = passwordEncoder.encode(password);
+        usuario.setPassword(nuevaPassword);
+    }
+
+    return usuarioRepository.save(usuario);
+}
+
     
 
     // 🔹 Registrar tendero
