@@ -79,6 +79,31 @@ public class VentaService {
         return ventaRepository.findByTiendaId(tiendaId, pageable);
     }
 
+    public Page<Venta> obtenerVentasPorRango(String tiendaId, Date desde, Date hasta, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "fecha"));
+        return ventaRepository.findByTiendaIdAndFechaBetween(tiendaId, desde, hasta, pageable);
+    }
+
+    public java.util.Map<String, Object> obtenerResumenPorRango(String tiendaId, Date desde, Date hasta) {
+        java.util.List<Venta> ventas = ventaRepository.findByTiendaIdAndFechaBetween(tiendaId, desde, hasta);
+        long totalVentas = ventas.size();
+        double totalMonto = 0.0;
+        long totalCantidad = 0L;
+        for (Venta v : ventas) {
+            totalMonto += (v.getTotal() != 0 ? v.getTotal() : 0);
+            if (v.getProductos() != null) {
+                for (com.ShopMaster.Model.ProductoVendido p : v.getProductos()) {
+                    totalCantidad += p.getCantidad();
+                }
+            }
+        }
+        java.util.Map<String, Object> out = new java.util.HashMap<>();
+        out.put("totalVentas", totalVentas);
+        out.put("totalCantidad", totalCantidad);
+        out.put("totalMonto", totalMonto);
+        return out;
+    }
+
     // Obtener últimas N ventas (ordenadas por fecha desc)
     public java.util.List<Venta> obtenerUltimasVentas(String tiendaId, int limite) {
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, limite,

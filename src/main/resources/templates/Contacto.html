@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +10,8 @@
 
   <style>
     body {
-      background-color: #f9fafb; /* gris suave igual que el login */
+      background-color: #f9fafb;
+      /* gris suave igual que el login */
     }
 
     .logo-container {
@@ -74,7 +76,7 @@
       <h2 class="text-2xl font-bold text-center text-cyan-700 mb-6 flex items-center justify-center gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 20 20">
           <path fill="#0284c7" fill-rule="evenodd"
-            d="m7.172 11.334l2.83 1.935l2.728-1.882l6.115 6.033q-.242.079-.512.08H1.667c-.22 0-.43-.043-.623-.12zM20 6.376v9.457c0 .247-.054.481-.15.692l-5.994-5.914zM0 6.429l6.042 4.132l-5.936 5.858A1.7 1.7 0 0 1 0 15.833zM18.333 2.5c.92 0 1.667.746 1.667 1.667v.586L9.998 11.648L0 4.81v-.643C0 3.247.746 2.5 1.667 2.5z"/>
+            d="m7.172 11.334l2.83 1.935l2.728-1.882l6.115 6.033q-.242.079-.512.08H1.667c-.22 0-.43-.043-.623-.12zM20 6.376v9.457c0 .247-.054.481-.15.692l-5.994-5.914zM0 6.429l6.042 4.132l-5.936 5.858A1.7 1.7 0 0 1 0 15.833zM18.333 2.5c.92 0 1.667.746 1.667 1.667v.586L9.998 11.648L0 4.81v-.643C0 3.247.746 2.5 1.667 2.5z" />
         </svg>
         Enviar PQRS
       </h2>
@@ -86,10 +88,9 @@
             Tipo de Solicitud
           </label>
           <div class="input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 6h16M4 12h8m-8 6h16"/>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
             <select id="tipo" required class="form-input">
               <option value="">Seleccionar...</option>
@@ -105,10 +106,10 @@
             Nombre Completo
           </label>
           <div class="input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z"/>
+                d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
             </svg>
             <input type="text" id="nombre" required placeholder="Tu nombre" class="form-input" />
           </div>
@@ -120,10 +121,10 @@
             Correo Electrónico
           </label>
           <div class="input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             <input type="email" id="email" required placeholder="tuemail@ejemplo.com" class="form-input" />
           </div>
@@ -135,10 +136,9 @@
             Asunto
           </label>
           <div class="input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 20h9M3 20h9m-9-8h18M3 4h18"/>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M3 20h9m-9-8h18M3 4h18" />
             </svg>
             <input type="text" id="asunto" required placeholder="Escribe un asunto breve" class="form-input" />
           </div>
@@ -150,21 +150,19 @@
             Descripción
           </label>
           <div class="input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
-                d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
             </svg>
             <textarea id="descripcion" required rows="5"
-              placeholder="Describe detalladamente tu solicitud o sugerencia..."
-              class="form-input"></textarea>
+              placeholder="Describe detalladamente tu solicitud o sugerencia..." class="form-input"></textarea>
           </div>
         </div>
 
         <!-- Botón -->
         <div class="pt-4 text-center">
-          <button type="submit"
-            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold
+          <button type="submit" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold
                    hover:scale-[1.02] hover:shadow-md transition-transform duration-200">
             Enviar PQRS
           </button>
@@ -211,4 +209,5 @@
     });
   </script>
 </body>
+
 </html>
