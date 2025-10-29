@@ -86,7 +86,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-600">Contraseña</label>
-          <input id="passwordUsuario" type="password" placeholder="En caso de no actualizar, la contraseña sera la misma" readonly
+          <input id="passwordUsuario" type="password" placeholder="Si esta vacio, la contraseña sera la misma" readonly
             class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
         </div>
       </div>
@@ -109,17 +109,18 @@
 
   </div>
 
-  <script>
-   const editarBtn = document.getElementById('editarBtn');
+ <script>
+  const editarBtn = document.getElementById('editarBtn');
   const guardarBtn = document.getElementById('guardarBtn');
   const cancelarBtn = document.getElementById('cancelarBtn');
   const inputs = document.querySelectorAll('#profileCard input');
   const tiendaId = document.getElementById("tiendaId").value;
+  const usuarioId = document.getElementById("usuarioId").value;
 
   const rolUsuario = document.getElementById("rolUsuario").value.trim();
-  const usuarioId = /*[[${usuario.id}]]*/ ""; // asegúrate de pasar el id con Thymeleaf
 
-  // 🔹 Si NO es administrador → desactivar edición
+
+  // 🔹 Si no es ADMIN → ocultar botón de editar
   if (rolUsuario !== "Administrador") {
     editarBtn.classList.add("hidden");
   }
@@ -137,35 +138,48 @@
 
   // 🔹 Guardar cambios (solo admin)
   guardarBtn.addEventListener('click', async () => {
-    const usuarioId = document.getElementById("usuarioId").value;
+    const password = document.getElementById("passwordUsuario").value.trim();
+    const username = document.getElementById("nombreUsuario").value.trim();
+    const email = document.getElementById("correoUsuario").value.trim();
+
+    // Validar contraseña solo si fue modificada
+    if (password) {
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!strongPasswordRegex.test(password)) {
+        showNotification("⚠️ La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.", "warning");
+        return;
+      }
+    }
 
     const updatedUser = {
-      username: document.getElementById("nombreUsuario").value.trim(),
-      email: document.getElementById("correoUsuario").value.trim(),
-      password: document.getElementById("passwordUsuario").value.trim()
+      username: username,
+      email: email,
+      password: password || null // si está vacía → mantener la actual
     };
 
+    guardarBtn.disabled = true;
+    guardarBtn.textContent = "Guardando...";
+
     try {
-      const response = await fetch(`/api/usuarios/admin/${usuarioId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedUser)
-      });
+  const response = await fetch(`/api/usuarios/admin/${usuarioId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedUser)
+  });
 
-      if (!response.ok) throw new Error("Error al guardar los cambios");
+  if (!response.ok) throw new Error("Error al guardar los cambios");
 
-      const data = await response.json();
-      alert("✅ Perfil del administrador actualizado correctamente");
+  showNotification("✅ Perfil actualizado. Por favor, inicia sesión nuevamente.", "success");
 
-      // Restaurar modo lectura
-      inputs.forEach(input => input.setAttribute('readonly', true));
-      inputs.forEach(input => input.classList.add('bg-gray-100'));
-      editarBtn.classList.remove('hidden');
-      guardarBtn.classList.add('hidden');
-      cancelarBtn.classList.add('hidden');
-    } catch (error) {
-      alert("❌ No se pudo actualizar el perfil del administrador");
-      console.error(error);
+  setTimeout(() => {
+    window.location.href = "/logout";
+  }, 2000);
+} catch (error) {
+  showNotification("❌ Error al actualizar el perfil del administrador.", "error");
+  console.error(error);
+} finally {
+      guardarBtn.disabled = false;
+      guardarBtn.textContent = "Guardar cambios";
     }
   });
 
@@ -208,7 +222,29 @@
   });
 
   document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-    
-  </script>
+
+  // 🔹 Notificaciones flotantes
+  function showNotification(message, type = "info") {
+    const notification = document.createElement("div");
+    notification.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${
+      type === "success"
+        ? "bg-green-600"
+        : type === "error"
+        ? "bg-red-600"
+        : type === "warning"
+        ? "bg-yellow-500 text-gray-900"
+        : "bg-blue-600"
+    }`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.opacity = "0";
+      notification.style.transform = "translateY(-10px)";
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+</script>
+
 </body>
 </html>
