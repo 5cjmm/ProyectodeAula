@@ -1,0 +1,227 @@
+@relation Dataset_final
+
+@attribute ﻿año numeric
+@attribute producto {'Gaseosa Postobón 1.5L','Agua Brisa 600ml','Colombiana 1.5L','Coca-Cola 1.5L','Sprite 1.5L','Fanta 1.5L','Leche Alquería 1L','Mantequilla Alquería 250g','Yogurt Alpina 200ml','Queso Alpina 250g','Arroz Diana x 500g','Lentejas El Dorado x 500g','Queso Colanta 250g','Leche Colanta 1L','Pan Bimbo Tajado','Tostadas Bimbo',Chocorramo,'Gansito Ramo','Jabón Protex 120g','Suavitel 1L','Detergente Ariel 1kg','Shampoo Head & Shoulders 350ml'}
+@attribute precio numeric
+
+@data
+2015,'Gaseosa Postobón 1.5L',4253.51
+2016,'Gaseosa Postobón 1.5L',4663.73
+2017,'Gaseosa Postobón 1.5L',4872.53
+2018,'Gaseosa Postobón 1.5L',5018.92
+2019,'Gaseosa Postobón 1.5L',5259.42
+2020,'Gaseosa Postobón 1.5L',5641.27
+2021,'Gaseosa Postobón 1.5L',5831.31
+2022,'Gaseosa Postobón 1.5L',6126.9
+2023,'Gaseosa Postobón 1.5L',6323.72
+2024,'Gaseosa Postobón 1.5L',6802.96
+2015,'Agua Brisa 600ml',2679.01
+2016,'Agua Brisa 600ml',2933.53
+2017,'Agua Brisa 600ml',3027.47
+2018,'Agua Brisa 600ml',3219.21
+2019,'Agua Brisa 600ml',3374.12
+2020,'Agua Brisa 600ml',3703.69
+2021,'Agua Brisa 600ml',3868.79
+2022,'Agua Brisa 600ml',4154.56
+2023,'Agua Brisa 600ml',4455.3
+2024,'Agua Brisa 600ml',4759.7
+2015,'Colombiana 1.5L',6290.25
+2016,'Colombiana 1.5L',6742.22
+2017,'Colombiana 1.5L',7061.3
+2018,'Colombiana 1.5L',7735.07
+2019,'Colombiana 1.5L',8055.12
+2020,'Colombiana 1.5L',8806.1
+2021,'Colombiana 1.5L',9074.89
+2022,'Colombiana 1.5L',9943.9
+2023,'Colombiana 1.5L',10795.9
+2024,'Colombiana 1.5L',11667.9
+2015,'Coca-Cola 1.5L',3356.16
+2016,'Coca-Cola 1.5L',3541.11
+2017,'Coca-Cola 1.5L',3840.19
+2018,'Coca-Cola 1.5L',4215.45
+2019,'Coca-Cola 1.5L',4381.93
+2020,'Coca-Cola 1.5L',4783.51
+2021,'Coca-Cola 1.5L',5121.48
+2022,'Coca-Cola 1.5L',5604.76
+2023,'Coca-Cola 1.5L',5929.68
+2024,'Coca-Cola 1.5L',6518.33
+2015,'Sprite 1.5L',7011.73
+2016,'Sprite 1.5L',7703.06
+2017,'Sprite 1.5L',8109.08
+2018,'Sprite 1.5L',8367.29
+2019,'Sprite 1.5L',8835.11
+2020,'Sprite 1.5L',9213.72
+2021,'Sprite 1.5L',10002.35
+2022,'Sprite 1.5L',10890.7
+2023,'Sprite 1.5L',11397.63
+2024,'Sprite 1.5L',11918.18
+2015,'Fanta 1.5L',5580.59
+2016,'Fanta 1.5L',6123.61
+2017,'Fanta 1.5L',6609.72
+2018,'Fanta 1.5L',6938.78
+2019,'Fanta 1.5L',7501.61
+2020,'Fanta 1.5L',7819.27
+2021,'Fanta 1.5L',8527.05
+2022,'Fanta 1.5L',8924.56
+2023,'Fanta 1.5L',9466.34
+2024,'Fanta 1.5L',9922.3
+2015,'Leche Alquería 1L',2867.14
+2016,'Leche Alquería 1L',3139.16
+2017,'Leche Alquería 1L',3284.46
+2018,'Leche Alquería 1L',3475.7
+2019,'Leche Alquería 1L',3655.01
+2020,'Leche Alquería 1L',3779.26
+2021,'Leche Alquería 1L',4022.51
+2022,'Leche Alquería 1L',4397.17
+2023,'Leche Alquería 1L',4745.79
+2024,'Leche Alquería 1L',5212.86
+2015,'Mantequilla Alquería 250g',6126.51
+2016,'Mantequilla Alquería 250g',6633.93
+2017,'Mantequilla Alquería 250g',7295.38
+2018,'Mantequilla Alquería 250g',7524.41
+2019,'Mantequilla Alquería 250g',7754.34
+2020,'Mantequilla Alquería 250g',8131.03
+2021,'Mantequilla Alquería 250g',8871.09
+2022,'Mantequilla Alquería 250g',9253.02
+2023,'Mantequilla Alquería 250g',9894.67
+2024,'Mantequilla Alquería 250g',10307.63
+2015,'Yogurt Alpina 200ml',4316.75
+2016,'Yogurt Alpina 200ml',4587.99
+2017,'Yogurt Alpina 200ml',4847.32
+2018,'Yogurt Alpina 200ml',5051.16
+2019,'Yogurt Alpina 200ml',5508.42
+2020,'Yogurt Alpina 200ml',5780.47
+2021,'Yogurt Alpina 200ml',6125.04
+2022,'Yogurt Alpina 200ml',6351.53
+2023,'Yogurt Alpina 200ml',6687.51
+2024,'Yogurt Alpina 200ml',7102.55
+2015,'Queso Alpina 250g',2408.72
+2016,'Queso Alpina 250g',2611.77
+2017,'Queso Alpina 250g',2706.97
+2018,'Queso Alpina 250g',2911.2
+2019,'Queso Alpina 250g',3074.87
+2020,'Queso Alpina 250g',3299.6
+2021,'Queso Alpina 250g',3408.59
+2022,'Queso Alpina 250g',3666.05
+2023,'Queso Alpina 250g',3819.17
+2024,'Queso Alpina 250g',4100.81
+2015,'Arroz Diana x 500g',5339.21
+2016,'Arroz Diana x 500g',5789.8
+2017,'Arroz Diana x 500g',6338.65
+2018,'Arroz Diana x 500g',6766.55
+2019,'Arroz Diana x 500g',7268.69
+2020,'Arroz Diana x 500g',7962.89
+2021,'Arroz Diana x 500g',8275.53
+2022,'Arroz Diana x 500g',8939.42
+2023,'Arroz Diana x 500g',9641.73
+2024,'Arroz Diana x 500g',10417.77
+2015,'Lentejas El Dorado x 500g',7396.42
+2016,'Lentejas El Dorado x 500g',8100.31
+2017,'Lentejas El Dorado x 500g',8517.09
+2018,'Lentejas El Dorado x 500g',9037.89
+2019,'Lentejas El Dorado x 500g',9825.01
+2020,'Lentejas El Dorado x 500g',10145.22
+2021,'Lentejas El Dorado x 500g',10785.08
+2022,'Lentejas El Dorado x 500g',11427.95
+2023,'Lentejas El Dorado x 500g',12315.06
+2024,'Lentejas El Dorado x 500g',12814.56
+2015,'Queso Colanta 250g',7367.67
+2016,'Queso Colanta 250g',8076.53
+2017,'Queso Colanta 250g',8469.92
+2018,'Queso Colanta 250g',9190.09
+2019,'Queso Colanta 250g',10058.08
+2020,'Queso Colanta 250g',10560.9
+2021,'Queso Colanta 250g',11208.23
+2022,'Queso Colanta 250g',12103.33
+2023,'Queso Colanta 250g',13217.31
+2024,'Queso Colanta 250g',13952.61
+2015,'Leche Colanta 1L',5106.18
+2016,'Leche Colanta 1L',5343.35
+2017,'Leche Colanta 1L',5556.66
+2018,'Leche Colanta 1L',5951.02
+2019,'Leche Colanta 1L',6207.92
+2020,'Leche Colanta 1L',6420.86
+2021,'Leche Colanta 1L',6709.87
+2022,'Leche Colanta 1L',7208.88
+2023,'Leche Colanta 1L',7447.59
+2024,'Leche Colanta 1L',7831.73
+2015,'Pan Bimbo Tajado',3031.98
+2016,'Pan Bimbo Tajado',3169.64
+2017,'Pan Bimbo Tajado',3363.69
+2018,'Pan Bimbo Tajado',3649.01
+2019,'Pan Bimbo Tajado',3947.63
+2020,'Pan Bimbo Tajado',4108.3
+2021,'Pan Bimbo Tajado',4315.61
+2022,'Pan Bimbo Tajado',4589.56
+2023,'Pan Bimbo Tajado',4992.85
+2024,'Pan Bimbo Tajado',5177.61
+2015,'Tostadas Bimbo',5374.92
+2016,'Tostadas Bimbo',5777.87
+2017,'Tostadas Bimbo',6010.28
+2018,'Tostadas Bimbo',6330.22
+2019,'Tostadas Bimbo',6932.88
+2020,'Tostadas Bimbo',7471.66
+2021,'Tostadas Bimbo',8045.15
+2022,'Tostadas Bimbo',8671.52
+2023,'Tostadas Bimbo',9509.18
+2024,'Tostadas Bimbo',10093.2
+2015,Chocorramo,7123.28
+2016,Chocorramo,7348.16
+2017,Chocorramo,7974.86
+2018,Chocorramo,8556.25
+2019,Chocorramo,9251.28
+2020,Chocorramo,9549.71
+2021,Chocorramo,10247.85
+2022,Chocorramo,10973.58
+2023,Chocorramo,11798.83
+2024,Chocorramo,12362.75
+2015,'Gansito Ramo',2988.32
+2016,'Gansito Ramo',3094.51
+2017,'Gansito Ramo',3231.55
+2018,'Gansito Ramo',3488.46
+2019,'Gansito Ramo',3730.12
+2020,'Gansito Ramo',3947.47
+2021,'Gansito Ramo',4140.8
+2022,'Gansito Ramo',4440.1
+2023,'Gansito Ramo',4686.78
+2024,'Gansito Ramo',4944.03
+2015,'Jabón Protex 120g',2393.22
+2016,'Jabón Protex 120g',2564.88
+2017,'Jabón Protex 120g',2751.84
+2018,'Jabón Protex 120g',3012.55
+2019,'Jabón Protex 120g',3161.88
+2020,'Jabón Protex 120g',3341.28
+2021,'Jabón Protex 120g',3492.07
+2022,'Jabón Protex 120g',3664.03
+2023,'Jabón Protex 120g',3899.92
+2024,'Jabón Protex 120g',4288.79
+2015,'Suavitel 1L',5918.51
+2016,'Suavitel 1L',6293.71
+2017,'Suavitel 1L',6874.23
+2018,'Suavitel 1L',7517.63
+2019,'Suavitel 1L',7872.77
+2020,'Suavitel 1L',8278.61
+2021,'Suavitel 1L',8731.07
+2022,'Suavitel 1L',9430.33
+2023,'Suavitel 1L',9722.83
+2024,'Suavitel 1L',10081.26
+2015,'Detergente Ariel 1kg',2105.67
+2016,'Detergente Ariel 1kg',2311.86
+2017,'Detergente Ariel 1kg',2384.27
+2018,'Detergente Ariel 1kg',2529.14
+2019,'Detergente Ariel 1kg',2667.86
+2020,'Detergente Ariel 1kg',2764.98
+2021,'Detergente Ariel 1kg',2867.11
+2022,'Detergente Ariel 1kg',3076.23
+2023,'Detergente Ariel 1kg',3376.15
+2024,'Detergente Ariel 1kg',3639.28
+2015,'Shampoo Head & Shoulders 350ml',6618.67
+2016,'Shampoo Head & Shoulders 350ml',7014.82
+2017,'Shampoo Head & Shoulders 350ml',7563.49
+2018,'Shampoo Head & Shoulders 350ml',8204.68
+2019,'Shampoo Head & Shoulders 350ml',8631.36
+2020,'Shampoo Head & Shoulders 350ml',9384.16
+2021,'Shampoo Head & Shoulders 350ml',10113.93
+2022,'Shampoo Head & Shoulders 350ml',10858.25
+2023,'Shampoo Head & Shoulders 350ml',11785.31
+2024,'Shampoo Head & Shoulders 350ml',12661.49

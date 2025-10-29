@@ -11,6 +11,8 @@ public class ProductoConProveedores {
     private String nombre;
     private int cantidad;
     private double precio;
+    private String tiendaId;
+
     private List<ObjectId> proveedorIds;
     private List<Proveedor> proveedores;
 
@@ -19,15 +21,18 @@ public class ProductoConProveedores {
     }
 
 
-    public ProductoConProveedores(String id, String codigo, String nombre, int cantidad, double precio, List<ObjectId> proveedorIds, List<Proveedor> proveedores) {
+
+    public ProductoConProveedores(String id, String codigo, String nombre, int cantidad, double precio, String tiendaId, List<ObjectId> proveedorIds, List<Proveedor> proveedores) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
+        this.tiendaId = tiendaId;
         this.proveedorIds = proveedorIds;
         this.proveedores = proveedores;
     }
+    
 
 
     public String getId() {
@@ -86,6 +91,14 @@ public class ProductoConProveedores {
         this.proveedores = proveedores;
     }
 
+
+    public String getTiendaId() {
+        return this.tiendaId;
+    }
+
+    public void setTiendaId(String tiendaId) {
+        this.tiendaId = tiendaId;
+    }
     
 
 }

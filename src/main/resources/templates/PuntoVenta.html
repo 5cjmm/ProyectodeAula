@@ -1,160 +1,740 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Punto de Venta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function actualizarPrecio() {
-            const input = document.getElementById("nombreProducto");
-            const selected = input.value;
-            const options = document.querySelectorAll("#productos option");
-            let precio = "Desconocido";
-
-            options.forEach(option => {
-                if (option.value === selected) {
-                    precio = option.dataset.precio;
-                }
-            });
-
-            document.getElementById("precioDisplay").textContent = "Precio: $" + precio;
-        }
-    </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShopMaster - Punto de Venta</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-100 dark:bg-blue-900 min-h-screen p-6 flex flex-col items-center">
-    <nav class="w-full bg-blue-300 p-4 flex justify-between items-center shadow-md">
-     <img src="https://shopmaster.in/uploads/logo/logo_66593bf8604a3.svg" alt="Logo" class="w-25 h-10 rounded-full">
-     <div class="text-gray-900 dark:text-white text-2xl font-bold">Punto de Venta</div>
-    <div class="relative">
-            <button id="menu-toggle" class="text-gray-900 dark:text-white px-4 py-2">
-                <img src="https://www.shutterstock.com/image-vector/menu-icon-trendy-flat-style-600nw-432264136.jpg" alt="Menú" class="w-8 h-8">
+
+<body class="bg-gray-50">
+
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r border-gray-200 p-6">
+      <div class="flex flex-col items-center mb-10">
+        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+        </div>
+      </div>
+
+      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+      <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
+      <nav class="space-y-2">
+        <!-- Dashboard -->
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Inventario -->
+        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+          </svg>
+          Inventario
+        </a>
+
+        <!-- Proveedores -->
+        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
+          </svg>
+          Proveedores
+        </a>
+
+        <!-- Deudas -->
+        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
+          </svg>
+          Deudas
+        </a>
+
+        <!-- Punto de Venta -->
+        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+          </svg>
+          Punto de Venta
+        </a>
+
+        <!-- Informe de Ventas -->
+        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+          </svg>
+          Informe de Ventas
+        </a>
+
+        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+          </svg>
+          Predicción
+        </a>
+
+        <!-- Gestión de Tenderos -->
+        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+          </svg>
+          Gestión de Tenderos
+        </a>
+
+        <!-- Tiendas -->
+        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
+          Tiendas
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Punto de Venta</h1>
+
+          <div class="relative">
+            <button id="userMenuButton"
+              class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+
+              <!-- ⚪ SVG Avatar con círculo gris -->
+              <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                  <path fill="none"
+                    d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                  <path fill="#0891b2"
+                    d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                </svg>
+              </div>
+
+              <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
+                class="text-sm font-medium text-gray-700">
+                Hola, Usuario
+              </span>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="m6 9l6 6l6-6" />
+              </svg>
             </button>
-            <div sec:authorize="hasAuthority('ROLE_TENDERO')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Deudas</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
+
+            <!-- 🔽 Menú desplegable -->
+            <div id="userDropdown"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm text-gray-700">Rol:</p>
+                <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
+                  class="font-semibold text-gray-900">
+                  Administrador
+                </p>
+              </div>
+
+              <a id="linkPerfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                Perfil
+              </a>
+
+              <button id="logoutBtn"
+                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                  <g fill="none">
+                    <path fill="#f00034"
+                      d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                  </g>
+                </svg>
+                Cerrar sesión
+              </button>
             </div>
-
-            <div sec:authorize="hasAuthority('ROLE_ADMIN')" id="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-blue-800 shadow-lg rounded-lg overflow-hidden">
-                <a th:href="@{/Inicio}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inicio</a>
-                <a th:href="@{/admin/Dashboard}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Dashboard</a>
-                <a th:href="@{/admin/InformeVentas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Informe de Venta</a>
-                <a th:href="@{/admin/Inventario}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Inventario</a>
-                <a th:href="@{/admin/Registro}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Usuarios</a>
-                <a th:href="@{/tendero/PuntoVenta}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Punto de Venta</a>
-                <a th:href="@{/admin/RegistroProveedor}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Proveedores</a>
-                <a th:href="@{/deudas}" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Gestion de Deudas</a>
-                <a href="/logout" class="block px-4 py-2 text-gray-900 dark:text-white hover:bg-blue-300 dark:hover:bg-blue-600">Cerrar sesión</a>
-            </div>
+          </div>
         </div>
-  </nav>
+      </header>
+      <!-- Body -->
+      <main class="w-full max-w-none px-8 py-8">
+        <div class="max-w-[1400px] mx-auto">
 
+          <!-- Top: buscar + acciones -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
+              <div class="flex items-center gap-3">
+                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
+                  class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
+                <button id="refrescarProducts" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
+                          hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
+                          px-6 py-3 rounded-lg transition-all duration-200 transform 
+                          hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
+                          focus:ring-blue-400 focus:ring-offset-2">
 
-    <div class="w-full max-w-6xl bg-white dark:bg-blue-800 shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+                  <!-- SVG de refrescar -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21" class="h-5 w-5" fill="none"
+                    stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+                    <g fill="none" fill-rule="evenodd">
+                      <path d="M3.578 6.487A8 8 0 1 1 2.5 10.5" />
+                      <path d="M7.5 6.5h-4v-4" />
+                    </g>
+                  </svg>
 
-         <div class="flex gap-4">
-            <form th:action="@{/tendero/agregar-producto}" method="post" class="space-y-4">           <!--required-->
-                <input type="text" id="nombreProducto" placeholder="Nombre del Producto" name="nombreProducto" list="productos" onchange="actualizarPrecio()" class="w-1/1 p-2 border rounded-md">
-                    <datalist id="productos">
-                        <option th:each="p : ${todosProductos}" th:value="${p.nombre}" th:data-precio="${p.precio}"></option>
-                    </datalist>
-                <input type="number" name="cantidad" placeholder="Cantidad" min="1" required
-                        class="w-1/1 p-2 border rounded-md">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-600">Agregar</button>
-            </form>
+                  Refrescar
+                </button>
 
-        </div>
+              </div>
 
-        <div class="overflow-x-auto bg-blue-200 dark:bg-blue-700 p-4 rounded-xl shadow-md">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-blue-400 dark:bg-blue-600 text-white">
-                        <th class="p-3">Código</th>
-                        <th class="p-3">Nombre</th>
-                        <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio U. (COP)</th>
-                        <th class="p-3">Subtotal</th>
-                        <th class="p-3">Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="p : ${productosSeleccionados}" class="border-b dark:border-blue-600">
-                        <td th:text="${p.codigo}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.nombre}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.cantidad}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.precio}" class="p-3 dark:text-white"></td>
-                        <td th:text="${p.cantidad * p.precio}" class="p-3 dark:text-white"></td>
-                        <td class="p-3">
-                            <a th:href="@{'/tendero/eliminar/' + ${p.codigo}}"
-                               class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Eliminar</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="flex justify-between">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">Total Venta: <span th:text="${totalVenta}">0</span></h3>
-            <form th:action="@{/tendero/guardar}" method="post">
-                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold">Finalizar Venta</button>
-            </form>
-            <!-- Botón para registrar como deuda -->
-            <button onclick="abrirModalDeuda()" type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold">Registrar Deuda</button>
-        </div>
-        <div th:if="${error}" class="bg-red-500 text-white p-2 rounded-md">
-            <p th:text="${error}"></p>
-        </div>
-        <div th:if="${success}" class="bg-green-500 text-white p-2 rounded-md">
-            <p th:text="${success}"></p>
-        </div>
-        <!-- Modal: Registrar Deuda -->
-        <div id="modalDeuda" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg w-full max-w-md">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">Registrar Deuda</h2>
-                    <button onclick="cerrarModalDeuda()" class="text-red-500 text-xl">&times;</button>
+              <!-- Productos disponibles -->
+              <div class="mt-4">
+                <div class="rounded-lg overflow-hidden border border-gray-200">
+                  <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden">
+                    <thead class="bg-blue-500 text-white">
+                      <tr>
+                        <th class="px-4 py-3 text-left">Código</th>
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Stock</th>
+                        <th class="px-4 py-3 text-left">Precio</th>
+                        <th class="px-4 py-3 text-left">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsBody" class="text-sm">
+                      <!-- llenado por JS -->
+                    </tbody>
+                  </table>
                 </div>
-                <form th:action="@{/deudas/registrar}" method="post">
-                <label class="block mb-2">Cédula del Cliente</label>
-                    <input type="text" name="cedulaCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
 
-                    <label class="block mb-2">Nombre del Cliente</label>
-                    <input type="text" name="nombreCliente" class="w-full p-2 border border-gray-300 rounded mb-4" required/>
+                <div id="emptyProducts" class="text-center py-8 text-gray-500 hidden">
+                  <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4l3 10 4-18 3 8h4">
+                    </path>
+                  </svg>
+                  No hay productos disponibles.
+                </div>
 
-
-                    <!-- Campos ocultos para cada producto -->
-                    <div th:each="prod, i : ${productosSeleccionados}">
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].codigo'" th:value="${prod.codigo}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].nombre'" th:value="${prod.nombre}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].cantidad'" th:value="${prod.cantidad}" />
-                        <input type="hidden" th:name="'productos[' + ${i.index} + '].precio'" th:value="${prod.precio}" />
-                    </div>
-
-
-                    <div class="flex justify-end">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Guardar Deuda</button>
-                    </div>
-                </form>
+                <!-- Paginación -->
+                <div class="flex justify-center items-center space-x-4 bg-gray-50 py-4 border-t border-gray-200 mt-4">
+                  <button onclick="cambiarPaginaProducts(-1)"
+                    class="px-4 py-2 bg-amber-500 text-white border border-amber-500 rounded hover:bg-amber-600">
+                    Anterior
+                  </button>
+                  <span id="paginaActualProducts" class="px-4 py-2 bg-gray-100 rounded-lg font-semibold text-gray-700">
+                    1
+                  </span>
+                  <button onclick="cambiarPaginaProducts(1)"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                    Siguiente
+                  </button>
+                </div>
+              </div>
             </div>
+
+            <!-- Carrito -->
+            <div class="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+              <h3 class="text-lg font-semibold mb-3">Carrito</h3>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead class="text-sm text-gray-700 bg-gray-50">
+                    <tr>
+                      <th class="px-3 py-2 text-left">Código</th>
+                      <th class="px-3 py-2 text-left">Nombre</th>
+                      <th class="px-3 py-2 text-left">Cant.</th>
+                      <th class="px-3 py-2 text-left">Precio U.</th>
+                      <th class="px-3 py-2 text-left">Subtotal</th>
+                      <th class="px-3 py-2 text-left">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cartBody" class="text-sm">
+                    <!-- filas del carrito -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4 border-t pt-4">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="text-sm text-gray-600">Subtotal</div>
+                  <div id="subtotalDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                  <div class="text-sm text-gray-600">IVA (0%)</div>
+                  <div id="ivaDisplay" class="text-lg font-semibold">COP 0</div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="text-sm text-gray-700 font-semibold">Total</div>
+                  <div id="totalDisplay" class="text-2xl font-bold text-cyan-700">COP 0</div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 gap-3">
+                  <button id="btnRegisterSale" class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 
+                            hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-2 rounded-lg 
+                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                    <!-- SVG de dinero / venta -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
+                      <path
+                        d="M12.005 22.003c-5.523 0-10-4.477-10-10s4.477-10 10-10s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-3.5-6h5.5a.5.5 0 1 0 0-1h-4a2.5 2.5 0 1 1 0-5h1v-2h2v2h2.5v2h-5.5a.5.5 0 0 0 0 1h4a2.5 2.5 0 0 1 0 5h-1v2h-2v-2h-2.5z" />
+                    </svg>
+                    Registrar Venta
+                  </button>
+                  <button id="btnDownloadReceipt" disabled class="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-cyan-600 
+                            hover:from-cyan-600 hover:to-cyan-700 text-white font-medium px-6 py-2 rounded-lg 
+                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <!-- SVG download -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
+                      <path d="M12 3a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L11 12.586V4a1 1 0 0 1 1-1z"/>
+                      <path d="M5 20a1 1 0 1 1 0-2h14a1 1 0 1 1 0 2H5z"/>
+                    </svg>
+                    Descargar recibo (PDF)
+                  </button>
+                  <button id="btnRegisterDebt" class="flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-yellow-600 
+                            hover:from-yellow-600 hover:to-yellow-700 text-white font-medium px-6 py-2 rounded-lg 
+                            transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                    <!-- SVG de deuda / crédito -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="#ffffff">
+                      <path
+                        d="M19 2H5a3 3 0 0 0-3 3v16l4-4h13a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm-7 12h-2v-2h2v2zm2.07-7.75l-.9.92C12.45 7.9 12 8.5 12 10h-2v-.5c0-.83.45-1.48 1.17-2.09l1.24-1.26a2.49 2.49 0 0 0 .41-2.87A2.498 2.498 0 0 0 10.5 2C9.12 2 8 3.12 8 4.5H6c0-2.21 1.79-4 4-4c1.48 0 2.75.81 3.45 2.02a3.48 3.48 0 0 1-.38 4.73z" />
+                    </svg>
+                    Registrar como Deuda
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Historial rapido / últimos items (opcional) -->
+          <div class="bg-white rounded-xl shadow-lg p-4">
+            <h4 class="font-semibold mb-2">Últimas ventas (resumen)</h4>
+            <div id="recentSales" class="text-sm text-gray-600">Cargando...</div>
+          </div>
         </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal deuda -->
+  <div id="modalDebt" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
+    <div class="bg-white rounded-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Registrar Deuda</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-sm font-medium">Nombre del cliente</label>
+          <input id="debtNombre" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+        <div>
+          <label class="text-sm font-medium">Cédula / Documento</label>
+          <input id="debtCedula" type="text" class="w-full mt-1 px-3 py-2 border rounded-md">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-5">
+        <button id="cancelDebt" class="px-4 py-2 rounded border">Cancelar</button>
+        <button id="confirmDebt" class="px-4 py-2 bg-yellow-500 text-white rounded">Registrar Deuda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    (function () {
+      // helpers
+      function fmtCOP(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n); }
+      function showNotification(msg, type = 'info') {
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
+        const d = document.createElement('div');
+        d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
+        d.textContent = msg;
+        document.body.appendChild(d);
+        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+      }
+
+      // DOM
+      const tiendaId = document.getElementById('tiendaId').value;
+      const productsBody = document.getElementById('productsBody');
+      const emptyProducts = document.getElementById('emptyProducts');
+      const buscar = document.getElementById('buscarProducts');
+      const refrescarBtn = document.getElementById('refrescarProducts');
+
+      const cartBody = document.getElementById('cartBody');
+      const subtotalDisplay = document.getElementById('subtotalDisplay');
+      const totalDisplay = document.getElementById('totalDisplay');
+
+      const btnRegisterSale = document.getElementById('btnRegisterSale');
+  const btnDownloadReceipt = document.getElementById('btnDownloadReceipt');
+      const btnRegisterDebt = document.getElementById('btnRegisterDebt');
+
+      const modalDebt = document.getElementById('modalDebt');
+      const cancelDebt = document.getElementById('cancelDebt');
+      const confirmDebt = document.getElementById('confirmDebt');
+      const debtNombre = document.getElementById('debtNombre');
+      const debtCedula = document.getElementById('debtCedula');
+
+      const button = document.getElementById("userMenuButton");
+      const dropdown = document.getElementById("userDropdown");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isVisible = dropdown.classList.contains("opacity-100");
+        dropdown.classList.toggle("opacity-100", !isVisible);
+        dropdown.classList.toggle("translate-y-0", !isVisible);
+        dropdown.classList.toggle("scale-100", !isVisible);
+        dropdown.classList.toggle("pointer-events-none", isVisible);
+        dropdown.classList.toggle("opacity-0", isVisible);
+        dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+        dropdown.classList.toggle("scale-95", isVisible);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+          dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+          dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+        }
+      });
+
+      logoutBtn.addEventListener("click", () => {
+        if (confirm("¿Deseas cerrar sesión?")) {
+          window.location.href = "/logout";
+        }
+      });
+
+      // state
+      let products = []; // productos disponibles (página actual)
+      let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
+  let lastSaleId = null;
+
+      // paginación
+      let paginaProducts = 0;
+      const tamanoPaginaProducts = 7; // items por página
+      let totalPaginasProducts = 1;
+
+      // load products (paginated)
+      async function loadProducts() {
+        try {
+          productsBody.innerHTML = '';
+          const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${paginaProducts}&size=${tamanoPaginaProducts}`);
+          if (!res.ok) {
+            const txt = await res.text().catch(() => 'Error');
+            showNotification('❌ ' + txt, 'error');
+            return;
+          }
+          const data = await res.json();
+          // soporta respuesta paginada (content + totalPages) o lista plana
+          products = data.content || data || [];
+          totalPaginasProducts = data.totalPages || 1;
+
+          if (!products.length) {
+            emptyProducts.classList.remove('hidden');
+            document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+            return;
+          } else emptyProducts.classList.add('hidden');
+
+          products.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-blue-100 hover:bg-blue-100 transition-colors';
+            tr.innerHTML = `
+            <td class="px-4 py-3">${p.codigo}</td>
+            <td class="px-4 py-3">${p.nombre}</td>
+            <td class="px-4 py-3">${p.cantidad}</td>
+            <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
+            <td class="px-4 py-3">
+              <button title="Agregar al carrito" class="add-to-cart bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" data-id="${p.id}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg></button>
+            </td>`;
+            productsBody.appendChild(tr);
+          });
+
+          // actualizar paginador
+          document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error al cargar productos', 'error');
+        }
+      }
+
+      // search
+      buscar.addEventListener('input', () => {
+        const q = buscar.value.trim().toLowerCase();
+        Array.from(productsBody.querySelectorAll('tr')).forEach(row => {
+          const codigo = row.cells[0].textContent.toLowerCase();
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+        });
+      });
+
+      refrescarBtn.addEventListener('click', () => loadProducts());
+
+      // paginación productos
+      window.cambiarPaginaProducts = function (direccion) {
+        if (direccion === -1 && paginaProducts > 0) paginaProducts--;
+        if (direccion === 1 && paginaProducts + 1 < totalPaginasProducts) paginaProducts++;
+        loadProducts();
+      }
+
+      // add to cart (delegation)
+      productsBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.add-to-cart');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const prod = products.find(x => x.id === id);
+        if (!prod) return showNotification('Producto no encontrado', 'error');
+        if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
+
+        const existing = cart.find(c => c.productoId === id);
+        if (existing) {
+          if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
+          existing.cantidad += 1;
+          existing.subtotal = existing.cantidad * existing.precioUnitario;
+        } else {
+          cart.push({
+            productoId: prod.id,
+            codigo: prod.codigo,
+            nombre: prod.nombre,
+            cantidad: 1,
+            precioUnitario: prod.precio,
+            subtotal: prod.precio
+          });
+        }
+        renderCart();
+      });
+
+      // render cart
+      function renderCart() {
+        cartBody.innerHTML = '';
+        if (cart.length === 0) {
+          cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+        } else {
+          cart.forEach((c, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b';
+            tr.innerHTML = `
+            <td class="px-3 py-2">${c.codigo}</td>
+            <td class="px-3 py-2">${c.nombre}</td>
+            <td class="px-3 py-2">
+              <input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}">
+            </td>
+            <td class="px-3 py-2">${fmtCOP(c.precioUnitario)}</td>
+            <td class="px-3 py-2 subtotal-cell">${fmtCOP(c.subtotal)}</td>
+            <td class="px-3 py-2">
+              <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
+            </td>`;
+            cartBody.appendChild(tr);
+          });
+        }
+        recalcTotals();
+      }
+
+      // handle cart interactions
+      cartBody.addEventListener('input', (e) => {
+        const input = e.target.closest('input.cantidad-input');
+        if (!input) return;
+        const idx = Number(input.dataset.idx);
+        const val = Math.max(1, parseInt(input.value || '1'));
+        const item = cart[idx];
+        const prod = products.find(p => p.id === item.productoId);
+        if (val > prod.cantidad) {
+          showNotification('No hay suficiente stock', 'warning');
+          input.value = item.cantidad;
+          return;
+        }
+        item.cantidad = val;
+        item.subtotal = item.cantidad * item.precioUnitario;
+        renderCart();
+      });
+
+      cartBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.remove-item');
+        if (!btn) return;
+        const idx = Number(btn.dataset.idx);
+        cart.splice(idx, 1);
+        renderCart();
+      });
+
+      // totals
+      function recalcTotals() {
+        const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
+        const iva = 0; // si luego aplicas IVA, cámbialo
+        const total = subtotal + iva;
+        subtotalDisplay.textContent = fmtCOP(subtotal);
+        document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
+        totalDisplay.textContent = fmtCOP(total);
+      }
+
+      // prepare payload: map cart -> ProductoVendido
+      function buildProductosVendido() {
+        return cart.map(i => ({
+          productoId: i.productoId,
+          codigo: i.codigo,
+          nombre: i.nombre,
+          cantidad: i.cantidad,
+          precioUnitario: i.precioUnitario,
+          subtotal: i.subtotal
+        }));
+      }
+
+      // register sale
+      btnRegisterSale.addEventListener('click', async () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+
+        const venta = {
+          tiendaId: tiendaId,
+          productos: buildProductosVendido()
+        };
+
+        try {
+          const res = await fetch('/api/ventas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(venta)
+          });
+          if (!res.ok) {
+            const msg = await res.text().catch(() => 'Error');
+            showNotification(msg || 'Error al registrar venta', 'error');
+            return;
+          }
+          const ventaCreada = await res.json().catch(() => null);
+          lastSaleId = ventaCreada?.id || null;
+          // Mostrar primero el mensaje de confirmación
+          showNotification('✅ Venta registrada', 'success');
+          // Habilitar el botón de recibo y preguntar si desea abrir ahora
+          if (lastSaleId) {
+            btnDownloadReceipt.disabled = false;
+            setTimeout(() => {
+              if (confirm('Venta registrada. ¿Deseas abrir el recibo PDF ahora?')) {
+                window.open(`/api/ventas/${lastSaleId}/pdf`, '_blank');
+              }
+            }, 200);
+          }
+          cart = [];
+          renderCart();
+          loadProducts(); // recargar stock
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      // descargar recibo
+      btnDownloadReceipt.addEventListener('click', () => {
+        if (!lastSaleId) {
+          showNotification('No hay recibo para descargar aún', 'warning');
+          return;
+        }
+        window.open(`/api/ventas/${lastSaleId}/pdf`, '_blank');
+      });
+
+      // register debt (open modal)
+      btnRegisterDebt.addEventListener('click', () => {
+        if (cart.length === 0) return showNotification('Carrito vacío', 'warning');
+        debtNombre.value = '';
+        debtCedula.value = '';
+        modalDebt.classList.remove('hidden');
+        modalDebt.style.display = 'flex';
+      });
+
+      cancelDebt.addEventListener('click', () => {
+        modalDebt.classList.add('hidden');
+        modalDebt.style.display = 'none';
+      });
+
+      // confirm debt
+      confirmDebt.addEventListener('click', async () => {
+        const nombre = debtNombre.value.trim();
+        const cedula = debtCedula.value.trim();
+
+        if (!nombre || !cedula) { return showNotification('Nombre y cédula requeridos', 'warning'); }
+
+        const deuda = {
+          tiendaId: tiendaId,
+          nombreCliente: nombre,
+          cedulaCliente: cedula,
+          productos: buildProductosVendido(),
+          total: cart.reduce((s, i) => s + i.subtotal, 0),
+          totalRestante: cart.reduce((s, i) => s + i.subtotal, 0)
+        };
+
+        try {
+          const res = await fetch('/api/deudas/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(deuda)
+          });
+          const msg = await res.text();
+          if (!res.ok) {
+            showNotification(msg || 'Error al crear deuda', 'error');
+            return;
+          }
+          showNotification('✅ Deuda registrada', 'success');
+          cart = [];
+          renderCart();
+          modalDebt.classList.add('hidden');
+          modalDebt.style.display = 'none';
+          loadProducts();
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Error de conexión', 'error');
+        }
+      });
+
+      async function loadRecentSales() {
+        try {
+          // Usa endpoint dedicado ordenado por fecha desc
+          const res = await fetch(`/api/ventas/tienda/${tiendaId}/ultimas?limite=5`);
+          if (!res.ok) return;
+          const items = await res.json();
+          const cont = document.getElementById('recentSales');
+          if (!Array.isArray(items) || items.length === 0) { cont.textContent = 'Sin ventas recientes'; return; }
+          cont.innerHTML = items.map(v => {
+            const fechaTxt = v.fecha ? new Date(v.fecha).toLocaleString() : 'Sin fecha';
+            const totalVal = (typeof v.total === 'number' && !Number.isNaN(v.total)) ? v.total : 0;
+            return `<div class="py-2 border-b last:border-b-0"><div class="text-sm font-medium">${fmtCOP(totalVal)} <span class="text-xs text-gray-500">(${fechaTxt})</span></div></div>`;
+          }).join('');
+        } catch (e) { console.warn(e); }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const rol = document.getElementById("rolUsuario")?.value;
+
+        document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+        document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+        document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+        document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+        document.getElementById("linkTiendas").href = `/tiendas`;
+
+        if (rol === "ROLE_TENDERO") {
+          const tenderoMenu = document.getElementById("linkTendero");
+          const tiendasMenu = document.getElementById("linkTiendas");
+
+          if (tenderoMenu) tenderoMenu.style.display = "none";
+          if (tiendasMenu) tiendasMenu.style.display = "none";
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadProducts();
+        renderCart();
+        loadRecentSales();
+      });
+
+    })();
+  </script>
 </body>
-<script>
-    function abrirModalDeuda() {
-      document.getElementById("modalDeuda").classList.remove("hidden");
-    }
 
-    function cerrarModalDeuda() {
-      document.getElementById("modalDeuda").classList.add("hidden");
-    }
-
-    const menuToggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-
-    menuToggle.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
-    });
-    </script>
 </html>
