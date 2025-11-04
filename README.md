@@ -1,2 +1,3 @@
 ﻿# ProyectodeAula
-ShopMaster Proyecto de aula V Semestre
+ShopMaster Proyecto de aula VI Semestre
+
