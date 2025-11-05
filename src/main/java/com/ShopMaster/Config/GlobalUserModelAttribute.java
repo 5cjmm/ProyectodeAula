@@ -21,7 +21,7 @@ public class GlobalUserModelAttribute {
     public Usuario addUsuarioToModel() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-            return usuarioRepository.findByUsername(auth.getName()).orElse(null);
+            return usuarioRepository.findByEmail(auth.getName()).orElse(null);
         }
         return null;
     }

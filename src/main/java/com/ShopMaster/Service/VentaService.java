@@ -17,7 +17,10 @@ import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import com.ShopMaster.Model.ProductoVendido;
+import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Model.Venta;
+import com.ShopMaster.Repository.ProductosRepository;
 import com.ShopMaster.Repository.VentaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class VentaService {
 
     private final VentaRepository ventaRepository;
     private final MongoTemplate mongoTemplate;
+    private final ProductosRepository productosRepository;
 
     public List<Venta> obtenerTodaslasVentas() {
         return ventaRepository.findAll();
@@ -38,34 +42,29 @@ public class VentaService {
         ventaRepository.deleteById(id);
     }
 
-    // Método utilizado por el controlador: registrarVenta
     public Venta registrarVenta(Venta venta) {
-        // Calcular total de la venta en el servidor para evitar registros con total=0
-        if (venta != null) {
-            double totalCalculado = 0.0;
-            if (venta.getProductos() != null) {
-                for (com.ShopMaster.Model.ProductoVendido pv : venta.getProductos()) {
-                    // Preferir subtotal si viene; si no, calcularlo a partir de cantidad * precioUnitario
-                    double precio = pv.getPrecioUnitario() > 0 ? pv.getPrecioUnitario() : pv.getPrecio();
-                    double subtotal = pv.getSubtotal() > 0 ? pv.getSubtotal() : (precio * pv.getCantidad());
-                    // Asegurar que el subtotal quede persistido
-                    pv.setSubtotal(subtotal);
-                    totalCalculado += subtotal;
-                }
+        double total = 0;
+
+        for (ProductoVendido pv : venta.getProductos()) {
+            Productos producto = productosRepository.findById(pv.getProductoId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+            if (pv.getCantidad() > producto.getCantidad()) {
+                throw new RuntimeException("Cantidad insuficiente para el producto: " + producto.getNombre());
             }
 
-            // Si el cliente no envió total o envió 0/negativo, usar el calculado
-            if (venta.getTotal() <= 0) {
-                venta.setTotal(totalCalculado);
-            }
+   
+            producto.setCantidad(producto.getCantidad() - pv.getCantidad());
+            productosRepository.save(producto);
 
-            // Si no se envió fecha, usar la del servidor (necesaria para métricas "ventas de hoy")
-            if (venta.getFecha() == null) {
-                venta.setFecha(new java.util.Date());
-            }
+            pv.setSubtotal(pv.getCantidad() * pv.getPrecioUnitario());
+            total += pv.getSubtotal();
         }
 
-        return ventaRepository.save(venta);
+        venta.setFecha(new Date());
+        venta.setTotal(total);
+        return venta;
+
     }
 
     // Método con nombre alternativo (si otras partes usan guardarVenta)

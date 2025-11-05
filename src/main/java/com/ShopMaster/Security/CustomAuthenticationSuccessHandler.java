@@ -34,10 +34,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        String username = authentication.getName();
-        String token = jwtUtil.generateToken(username);
+        String email = authentication.getName(); // ahora es el email
+        String token = jwtUtil.generateToken(email);
 
-        System.out.println("Autenticación exitosa: " + username);
+        System.out.println("Autenticación exitosa (email): " + email);
         System.out.println("Token JWT generado: " + token);
 
         Cookie jwtCookie = new Cookie("jwt", token);
@@ -47,7 +47,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.addCookie(jwtCookie);
 
         HttpSession session = request.getSession();
-        Usuario usuario = usuarioRepository.findByUsername(username)
+        Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         String role = authentication.getAuthorities().iterator().next().getAuthority();
@@ -57,8 +57,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (role.equals("ROLE_ADMIN")) {
             response.sendRedirect("/tiendas");
             return;
-        } 
-        else if (role.equals("ROLE_TENDERO")) {
+        } else if (role.equals("ROLE_TENDERO")) {
             if (usuario.getTiendas() != null && !usuario.getTiendas().isEmpty()) {
                 String tiendaId = usuario.getTiendas().get(0).getId();
                 response.sendRedirect("/tiendas/" + tiendaId + "/dashboard");
@@ -67,7 +66,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             }
             return;
         }
-        
+
         response.sendRedirect("/home");
     }
 }
