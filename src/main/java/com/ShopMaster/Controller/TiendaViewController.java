@@ -119,7 +119,6 @@ public class TiendaViewController {
     @GetMapping("/{id}/puntoventa")
     public String verPuntoVenta(@PathVariable String id, Authentication authentication, Model model) {
         model.addAttribute("tiendaId", id);
-        model.addAttribute("rolUsuario", authentication.getAuthorities().iterator().next().getAuthority());
         return "PuntoVenta"; // templates/PuntoVenta.html
     }
 

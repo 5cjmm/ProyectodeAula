@@ -24,14 +24,14 @@ public class TiendaRestController {
     // Obtener tiendas del usuario logueado
     @GetMapping
     public List<Tienda> listarTiendas(Principal principal) {
-        String username = principal.getName();
-    return tiendaService.obtenerTiendasDeUsuario(username);
+        String email = principal.getName();
+    return tiendaService.obtenerTiendasDeUsuario(email);
     }
 
     // Crear tienda
     @PostMapping
     public Usuario crearTienda(@RequestBody Tienda tienda, Principal principal) {
-        String username = principal.getName();
-        return tiendaService.agregarTiendaAlUsuario(username, tienda);
+        String email = principal.getName();
+        return tiendaService.agregarTiendaAlUsuario(email, tienda);
     }
 }
