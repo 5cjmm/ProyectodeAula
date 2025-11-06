@@ -13,6 +13,7 @@ public class Venta {
     private Date fecha;
     private double total;
     private String tiendaId;
+    private String usuarioId;
     private List<ProductoVendido> productos;
     
 
@@ -20,11 +21,12 @@ public class Venta {
     }
 
 
-    public Venta(String id, Date fecha, double total, String tiendaId, List<ProductoVendido> productos) {
+    public Venta(String id, Date fecha, double total, String tiendaId, String usuarioId, List<ProductoVendido> productos) {
         this.id = id;
         this.fecha = fecha;
         this.total = total;
         this.tiendaId = tiendaId;
+        this.usuarioId = usuarioId;
         this.productos = productos;
     }
 
@@ -61,6 +63,14 @@ public class Venta {
 
     public void setTiendaId(String tiendaId) {
         this.tiendaId = tiendaId;
+    }
+
+    public String getUsuarioId() {
+        return this.usuarioId;
+    }
+
+    public void setUsuarioId(String usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public List<ProductoVendido> getProductos() {
