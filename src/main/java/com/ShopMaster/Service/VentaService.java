@@ -18,7 +18,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.Venta;
+import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Repository.VentaRepository;
+import com.ShopMaster.Repository.UsuarioRepository;
+import com.ShopMaster.Repository.ProductosRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,8 @@ public class VentaService {
 
     private final VentaRepository ventaRepository;
     private final MongoTemplate mongoTemplate;
+    private final UsuarioRepository usuarioRepository;
+    private final ProductosRepository productosRepository;
 
     public List<Venta> obtenerTodaslasVentas() {
         return ventaRepository.findAll();
@@ -62,6 +67,35 @@ public class VentaService {
             // Si no se envió fecha, usar la del servidor (necesaria para métricas "ventas de hoy")
             if (venta.getFecha() == null) {
                 venta.setFecha(new java.util.Date());
+            }
+
+            // Asociar el usuario autenticado a la venta si no fue provisto
+            try {
+                if (venta.getUsuarioId() == null) {
+                    org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+                    if (auth != null && auth.getName() != null) {
+                        String username = auth.getName();
+                        usuarioRepository.findByUsername(username).ifPresent(u -> venta.setUsuarioId(u.getId()));
+                    }
+                }
+            } catch (Exception ex) {
+                // no hacer fallar el guardado de la venta si algo falla al resolver usuario
+            }
+        }
+
+        // Antes de guardar la venta, descontar el stock de los productos vendidos
+        if (venta != null && venta.getProductos() != null) {
+            for (com.ShopMaster.Model.ProductoVendido pv : venta.getProductos()) {
+                // Validar existencia y stock
+                Productos producto = productosRepository.findById(pv.getProductoId())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + pv.getProductoId()));
+
+                if (pv.getCantidad() > producto.getCantidad()) {
+                    throw new RuntimeException("Cantidad insuficiente para el producto: " + producto.getNombre());
+                }
+
+                producto.setCantidad(producto.getCantidad() - pv.getCantidad());
+                productosRepository.save(producto);
             }
         }
 
