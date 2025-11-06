@@ -410,9 +410,36 @@
                                     btnBuscar.addEventListener('click', ()=>{ page = 0; loadVentas(); loadResumen(); });
                   btnPrev.addEventListener('click', ()=>{ if(page>0){ page--; loadVentas(); } });
                   btnNext.addEventListener('click', ()=>{ if(page+1<totalPages){ page++; loadVentas(); } });
-                  btnGenPdf.addEventListener('click', ()=>{
-                    const fecha = fechaInput.value; window.open(`/api/ventas/tienda/${tiendaId}/informe/pdf?fecha=${fecha}`, '_blank');
-                  });
+                                    btnGenPdf.addEventListener('click', ()=>{
+                                        const fecha = fechaInput.value; window.open(`/api/ventas/tienda/${tiendaId}/informe/pdf?fecha=${fecha}`, '_blank');
+                                    });
+
+                                    // User menu dropdown toggle: show/hide on button click, hide on outside click
+                                    const userMenuButtonEl = document.getElementById('userMenuButton');
+                                    const userDropdownEl = document.getElementById('userDropdown');
+                                    if (userMenuButtonEl && userDropdownEl) {
+                                        const showDropdown = (show) => {
+                                            if (show) {
+                                                userDropdownEl.classList.remove('opacity-0','translate-y-[-10px]','scale-95','pointer-events-none');
+                                                userDropdownEl.classList.add('opacity-100','translate-y-0','scale-100','pointer-events-auto');
+                                            } else {
+                                                userDropdownEl.classList.add('opacity-0','translate-y-[-10px]','scale-95','pointer-events-none');
+                                                userDropdownEl.classList.remove('opacity-100','translate-y-0','scale-100','pointer-events-auto');
+                                            }
+                                        };
+
+                                        userMenuButtonEl.addEventListener('click', (ev) => {
+                                            ev.stopPropagation();
+                                            const isOpen = !userDropdownEl.classList.contains('opacity-0');
+                                            showDropdown(!isOpen);
+                                        });
+
+                                        // prevent clicks inside dropdown from closing it
+                                        userDropdownEl.addEventListener('click', (ev) => ev.stopPropagation());
+
+                                        // close when clicking outside
+                                        document.addEventListener('click', () => showDropdown(false));
+                                    }
 
                                     // init
                                     loadVentas();

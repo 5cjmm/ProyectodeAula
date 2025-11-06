@@ -40,34 +40,46 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username) != null;
     }*/
 
-   public void actualizarUsuario(Usuario usuario) {
-    Optional<Usuario> existenteOpt = usuarioRepository.findById(usuario.getId());
 
-    if (existenteOpt.isPresent()) {
-        Usuario existente = existenteOpt.get();
-        existente.setUsername(usuario.getUsername());
+    public Usuario actualizarAdmin(String id, Usuario datosActualizados) {
+    Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-       if (usuario.getPassword() != null && !usuario.getPassword().isBlank()) {
-            String encriptada = passwordEncoder.encode(usuario.getPassword());
-            existente.setPassword(encriptada);
+    // 🧩 Validar y actualizar username (solo si cambia)
+    if (datosActualizados.getUsername() != null && !datosActualizados.getUsername().isBlank()) {
+        String nuevoUsername = datosActualizados.getUsername().trim();
+
+        // Verificar si ya existe otro usuario con ese nombre
+        Optional<Usuario> existente = usuarioRepository.findByUsername(nuevoUsername);
+        if (existente.isPresent() && !existente.get().getId().equals(id)) {
+            throw new RuntimeException("El nombre de usuario ya está en uso");
         }
 
-        // No permitir cambiar roles si no eres admin (opcional)
-        if (usuario.getRoles() != null && !usuario.getRoles().isEmpty()) {
-            existente.setRoles(usuario.getRoles());
-        }
-
-        existente.setRoles(usuario.getRoles());
-
-
-        usuarioRepository.save(existente);
+        usuario.setUsername(nuevoUsername);
     }
+
+    if (datosActualizados.getEmail() != null && !datosActualizados.getEmail().isBlank()) {
+        usuario.setEmail(datosActualizados.getEmail().trim());
+    }
+
+    // 🧩 Actualizar contraseña solo si se proporciona una nueva
+    if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isBlank()) {
+        // Validar seguridad mínima
+        String password = datosActualizados.getPassword();
+        boolean valida = password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$");
+        if (!valida) {
+            throw new RuntimeException("La contraseña debe tener al menos 8 caracteres, " +
+                    "una mayúscula, una minúscula, un número y un símbolo.");
+        }
+
+        String nuevaPassword = passwordEncoder.encode(password);
+        usuario.setPassword(nuevaPassword);
+    }
+
+    return usuarioRepository.save(usuario);
 }
 
-
-    public void eliminarUsuario(String id) {
-        usuarioRepository.deleteById(id);
-    }
+    
 
     // 🔹 Registrar tendero
     public Usuario registrarTendero(Usuario tendero, String tiendaId) {

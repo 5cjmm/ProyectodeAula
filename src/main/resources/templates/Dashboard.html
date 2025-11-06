@@ -176,16 +176,13 @@
 
             <!-- Dashboard Content -->
             <main class="flex-1 p-6 space-y-6">
-                <div class="space-y-2">
-                    <h1 class="text-3xl font-bold">Dashboard de Administrador</h1>
-                    <p class="text-gray-600">Gestiona tu tienda comunitaria desde un solo lugar</p>
-                </div>
+                
 
                 <!-- Metrics Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-sm font-medium text-gray-600">Ventas Totales</h3>
+                            <h3 class="text-sm font-medium text-gray-600">Ventas Totales (COP)</h3>
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -302,7 +299,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="font-semibold"
-                                    th:text="${#numbers.formatDecimal(d.total, 1, 'COMMA', 2, 'POINT')}">$0.00</p>
+                                    th:text="${'$' + #numbers.formatDecimal(d.total, 1, 'COMMA', 0, 'POINT')}">$0</p>
                                 <span th:text="${d.estado != null ? d.estado : 'NO PAGADA'}"
                                     th:class="${'inline-block px-2 py-1 text-xs rounded-full ' + (d.estado != null && d.estado.toUpperCase() == 'PAGADA' ? 'bg-green-100 text-green-800' : (d.estado != null && d.estado.toUpperCase() == 'PARCIAL' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))}">
                                     Estado
@@ -323,6 +320,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         const tiendaId = document.getElementById("tiendaId")?.value;
         const rol = document.getElementById("rolUsuario")?.value;
+
+        // Formateador para enteros con separador de miles (usado solo para Productos en Stock)
+        function fmtInt(n) {
+            try { return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(Number(n) || 0); }
+            catch (e) { return '0'; }
+        }
 
         if (!tiendaId) {
             console.error("⚠️ tiendaId no encontrado");
@@ -519,6 +522,16 @@
         }
 
         // Inicializaciones
+        // Aplicar formateo sólo a Productos en Stock (no tocar Ventas Totales)
+        try {
+            const stockEl = document.getElementById('productosEnStock');
+            if (stockEl) {
+                const raw = (stockEl.textContent || '').replace(/[^0-9\-\.]/g, '');
+                const num = Number(raw) || 0;
+                stockEl.textContent = fmtInt(num);
+            }
+        } catch (e) { /* no bloquear la inicialización si falla el formateo */ }
+
         loadVentasMensuales();
         setButtonsState();
         // Padding inicial para mantener 5 filas visibles

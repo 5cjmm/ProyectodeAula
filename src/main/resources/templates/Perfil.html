@@ -19,7 +19,8 @@
       </div>
 
       <!-- Dropdown Usuario -->
-      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+       <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+       <input type="hidden" id="usuarioId" th:value="${usuario.id}">
       <div class="relative">
         <button id="userMenuButton"
           class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
@@ -85,7 +86,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-600">Contraseña</label>
-          <input id="passwordUsuario" type="password" value="********" readonly
+          <input id="passwordUsuario" type="password" placeholder="Si esta vacio, la contraseña sera la misma" readonly
             class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:ring-2 focus:ring-blue-500 transition" />
         </div>
       </div>
@@ -108,71 +109,143 @@
 
   </div>
 
-  <script>
-    const editarBtn = document.getElementById('editarBtn');
-    const guardarBtn = document.getElementById('guardarBtn');
-    const cancelarBtn = document.getElementById('cancelarBtn');
-    const inputs = document.querySelectorAll('#profileCard input');
-    const tiendaId = document.getElementById("tiendaId").value;
+ <script>
+  const editarBtn = document.getElementById('editarBtn');
+  const guardarBtn = document.getElementById('guardarBtn');
+  const cancelarBtn = document.getElementById('cancelarBtn');
+  const inputs = document.querySelectorAll('#profileCard input');
+  const tiendaId = document.getElementById("tiendaId").value;
+  const usuarioId = document.getElementById("usuarioId").value;
 
-    editarBtn.addEventListener('click', () => {
-      inputs.forEach(input => input.removeAttribute('readonly'));
-      inputs.forEach(input => input.classList.remove('bg-gray-100'));
-      editarBtn.classList.add('hidden');
-      guardarBtn.classList.remove('hidden');
-      cancelarBtn.classList.remove('hidden');
-    });
+  const rolUsuario = document.getElementById("rolUsuario").value.trim();
 
-    guardarBtn.addEventListener('click', () => {
-      inputs.forEach(input => input.setAttribute('readonly', true));
-      inputs.forEach(input => input.classList.add('bg-gray-100'));
-      editarBtn.classList.remove('hidden');
-      guardarBtn.classList.add('hidden');
-      cancelarBtn.classList.add('hidden');
-      alert('✅ Cambios guardados correctamente');
-    });
 
-    cancelarBtn.addEventListener('click', () => {
-      inputs.forEach(input => input.setAttribute('readonly', true));
-      inputs.forEach(input => input.classList.add('bg-gray-100'));
-      editarBtn.classList.remove('hidden');
-      guardarBtn.classList.add('hidden');
-      cancelarBtn.classList.add('hidden');
-    });
+  // 🔹 Si no es ADMIN → ocultar botón de editar
+  if (rolUsuario !== "Administrador") {
+    editarBtn.classList.add("hidden");
+  }
 
-    // Dropdown usuario
-    const button = document.getElementById("userMenuButton");
-    const dropdown = document.getElementById("userDropdown");
-    const logoutBtn = document.getElementById("logoutBtn");
+  // 🔹 Habilitar edición
+  editarBtn.addEventListener('click', () => {
+    if (rolUsuario !== "Administrador") return;
 
-    button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isVisible = dropdown.classList.contains("opacity-100");
-      dropdown.classList.toggle("opacity-100", !isVisible);
-      dropdown.classList.toggle("translate-y-0", !isVisible);
-      dropdown.classList.toggle("scale-100", !isVisible);
-      dropdown.classList.toggle("pointer-events-none", isVisible);
-      dropdown.classList.toggle("opacity-0", isVisible);
-      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-      dropdown.classList.toggle("scale-95", isVisible);
-    });
+    inputs.forEach(input => input.removeAttribute('readonly'));
+    inputs.forEach(input => input.classList.remove('bg-gray-100'));
+    editarBtn.classList.add('hidden');
+    guardarBtn.classList.remove('hidden');
+    cancelarBtn.classList.remove('hidden');
+  });
 
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+  // 🔹 Guardar cambios (solo admin)
+  guardarBtn.addEventListener('click', async () => {
+    const password = document.getElementById("passwordUsuario").value.trim();
+    const username = document.getElementById("nombreUsuario").value.trim();
+    const email = document.getElementById("correoUsuario").value.trim();
+
+    // Validar contraseña solo si fue modificada
+    if (password) {
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!strongPasswordRegex.test(password)) {
+        showNotification("⚠️ La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.", "warning");
+        return;
       }
-    });
+    }
 
-    logoutBtn.addEventListener("click", () => {
-      if (confirm("¿Deseas cerrar sesión?")) {
-        window.location.href = "/logout";
-      }
-    });
+    const updatedUser = {
+      username: username,
+      email: email,
+      password: password || null // si está vacía → mantener la actual
+    };
 
-    document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+    guardarBtn.disabled = true;
+    guardarBtn.textContent = "Guardando...";
 
-  </script>
+    try {
+  const response = await fetch(`/api/usuarios/admin/${usuarioId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedUser)
+  });
+
+  if (!response.ok) throw new Error("Error al guardar los cambios");
+
+  showNotification("✅ Perfil actualizado. Por favor, inicia sesión nuevamente.", "success");
+
+  setTimeout(() => {
+    window.location.href = "/logout";
+  }, 2000);
+} catch (error) {
+  showNotification("❌ Error al actualizar el perfil del administrador.", "error");
+  console.error(error);
+} finally {
+      guardarBtn.disabled = false;
+      guardarBtn.textContent = "Guardar cambios";
+    }
+  });
+
+  cancelarBtn.addEventListener('click', () => {
+    inputs.forEach(input => input.setAttribute('readonly', true));
+    inputs.forEach(input => input.classList.add('bg-gray-100'));
+    editarBtn.classList.remove('hidden');
+    guardarBtn.classList.add('hidden');
+    cancelarBtn.classList.add('hidden');
+  });
+
+  // 🔹 Dropdown usuario
+  const button = document.getElementById("userMenuButton");
+  const dropdown = document.getElementById("userDropdown");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isVisible = dropdown.classList.contains("opacity-100");
+    dropdown.classList.toggle("opacity-100", !isVisible);
+    dropdown.classList.toggle("translate-y-0", !isVisible);
+    dropdown.classList.toggle("scale-100", !isVisible);
+    dropdown.classList.toggle("pointer-events-none", isVisible);
+    dropdown.classList.toggle("opacity-0", isVisible);
+    dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+    dropdown.classList.toggle("scale-95", isVisible);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+      dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+      dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    }
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    if (confirm("¿Deseas cerrar sesión?")) {
+      window.location.href = "/logout";
+    }
+  });
+
+  document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+
+  // 🔹 Notificaciones flotantes
+  function showNotification(message, type = "info") {
+    const notification = document.createElement("div");
+    notification.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${
+      type === "success"
+        ? "bg-green-600"
+        : type === "error"
+        ? "bg-red-600"
+        : type === "warning"
+        ? "bg-yellow-500 text-gray-900"
+        : "bg-blue-600"
+    }`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.opacity = "0";
+      notification.style.transform = "translateY(-10px)";
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+</script>
+
 </body>
 
 </html>
