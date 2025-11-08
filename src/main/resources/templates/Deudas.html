@@ -239,9 +239,17 @@
         <!-- Filtros -->
         <div
           class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6 flex flex-wrap gap-4 items-center justify-between">
-          <!-- 🔍 Buscar cliente -->
-          <input id="buscarCliente" type="text" placeholder="Buscar cliente"
-            class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+
+          <!-- 🔍 Buscar cliente (con icono dentro) -->
+          <div class="relative flex-1 min-w-[200px]">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input id="buscarCliente" type="text" placeholder="Buscar cliente"
+                  class="w-full pl-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
 
           <!-- ⚙️ Filtro estado -->
           <select id="filtroEstado"
@@ -262,17 +270,18 @@
 
           <!-- 🔎 Botón filtrar -->
           <button onclick="filtrarDeudas()" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
-                 hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
-                 px-6 py-3 rounded-lg transition-all duration-200 transform 
-                 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
-                 focus:ring-blue-400 focus:ring-offset-2">
+                hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
+                px-6 py-3 rounded-lg transition-all duration-200 transform 
+                hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
+                focus:ring-blue-400 focus:ring-offset-2">
             <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <span>Filtrar</span>
           </button>
         </div>
+
 
 
         <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
