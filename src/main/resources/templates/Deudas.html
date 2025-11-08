@@ -291,7 +291,7 @@
                 <th class="px-6 py-3 text-left">Cliente</th>
                 <th class="px-6 py-3 text-left">Cédula</th>
                 <th class="px-6 py-3 text-left">Total (COP)</th>
-                <th class="px-6 py-3 text-left">Restante (COP)</th>
+                <th class="px-6 py-3 text-left">Restante</th>
                 <th class="px-6 py-3 text-left">Estado</th>
                 <th class="px-6 py-3 text-left">Fecha</th>
                 <th class="px-6 py-3 text-left">Acciones</th>
@@ -451,6 +451,15 @@
       setTimeout(() => div.remove(), 3000);
     }
 
+    // Formateador de moneda 
+    function fmtCOP(n) {
+      try {
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
+      } catch (e) {
+        return '$0';
+      }
+    }
+
     async function cargarDeudas() {
       try {
         const res = await fetch(`/api/deudas/tienda/${tiendaId}?page=${pagina}&size=5`);
@@ -473,8 +482,8 @@
           tr.innerHTML = `
         <td class="px-6 py-3">${d.nombreCliente}</td>
         <td class="px-6 py-3">${d.cedulaCliente}</td>
-        <td class="px-6 py-3">$${d.total.toFixed(2)}</td>
-        <td class="px-6 py-3">$${d.totalRestante.toFixed(2)}</td>
+        <td class="px-6 py-3">${fmtCOP(d.total)}</td>
+        <td class="px-6 py-3">${fmtCOP(d.totalRestante)}</td>
         <td class="px-6 py-3">${d.estado}</td>
         <td class="px-6 py-3">${new Date(d.fechaVenta).toLocaleDateString()}</td>
         <td class="px-6 py-3 flex gap-2">
@@ -562,7 +571,7 @@
 
       // 🔹 Validación: no permitir abonos mayores al total restante
       if (monto > totalRestanteActual) {
-        showNotification(`El abono no puede superar el total restante ($${totalRestanteActual.toFixed(2)})`, "error");
+        showNotification(`El abono no puede superar el total restante (${fmtCOP(totalRestanteActual)})`, "error");
         return;
       }
 
@@ -602,32 +611,31 @@
         const deuda = await response.json();
 
         // 🧾 Cabecera
-        let html = `
-      <p><strong>Cliente:</strong> ${deuda.nombreCliente || "N/A"}</p>
-      <p><strong>Cédula:</strong> ${deuda.cedulaCliente || "N/A"}</p>
-      <p><strong>Fecha:</strong> ${deuda.fechaVenta ? new Date(deuda.fechaVenta).toLocaleString() : "Sin fecha"}</p>
-      <p><strong>Estado:</strong> 
-        <span class="px-2 py-1 rounded ${deuda.estado === "PAGADA"
-            ? "bg-green-100 text-green-700"
-            : deuda.estado === "PARCIAL"
-              ? "bg-yellow-100 text-yellow-700"
-              : "bg-red-100 text-red-700"
-          }">${deuda.estado}</span>
-      </p>
-      <p><strong>Total:</strong> $${(deuda.total || 0).toFixed(2)}</p>
-      <p><strong>Total Restante:</strong> $${(deuda.totalRestante || 0).toFixed(2)}</p>
-      <hr class="my-3">
-    `;
+          let html = `
+        <p><strong>Cliente:</strong> ${deuda.nombreCliente || "N/A"}</p>
+        <p><strong>Cédula:</strong> ${deuda.cedulaCliente || "N/A"}</p>
+        <p><strong>Fecha:</strong> ${deuda.fechaVenta ? new Date(deuda.fechaVenta).toLocaleString() : "Sin fecha"}</p>
+        <p><strong>Estado:</strong> 
+          <span class="px-2 py-1 rounded ${deuda.estado === "PAGADA"
+              ? "bg-green-100 text-green-700"
+              : deuda.estado === "PARCIAL"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }">${deuda.estado}</span>
+        </p>
+        <p><strong>Total:</strong> ${fmtCOP(deuda.total || 0)}</p>
+        <p><strong>Total Restante:</strong> ${fmtCOP(deuda.totalRestante || 0)}</p>
+        <hr class="my-3">
+      `;
 
         // 🧩 Productos
         html += `<h3 class="font-semibold text-blue-600 mb-2">Productos:</h3>`;
         if (deuda.productos && deuda.productos.length > 0) {
           html += `<ul class="list-disc pl-6 space-y-1">`;
           deuda.productos.forEach(p => {
-            const precioUnitario = p.precioUnitario ? p.precioUnitario.toFixed(2) : "0";
-            const subtotal =
-              p.precioUnitario && p.cantidad ? (p.precioUnitario * p.cantidad).toFixed(2) : "0";
-            html += `<li>${p.nombre || "Producto"} — Cant: ${p.cantidad || 0} — $${precioUnitario} → <strong>$${subtotal}</strong></li>`;
+            const precioUnitarioNum = p.precioUnitario ? Number(p.precioUnitario) : 0;
+            const subtotalNum = precioUnitarioNum * (p.cantidad || 0);
+            html += `<li>${p.nombre || "Producto"} — Cant: ${p.cantidad || 0} — ${fmtCOP(precioUnitarioNum)} → <strong>${fmtCOP(subtotalNum)}</strong></li>`;
           });
           html += `</ul>`;
         } else {
@@ -639,11 +647,11 @@
         if (deuda.historialAbonos && deuda.historialAbonos.length > 0) {
           html += `<ul class="list-disc pl-6 space-y-1">`;
           deuda.historialAbonos.forEach(a => {
-            const monto = a.monto ? a.monto.toFixed(2) : "0";
+            const montoNum = a.monto ? Number(a.monto) : 0;
             const fecha = a.fecha
               ? new Date(a.fecha).toLocaleString()
               : "Fecha no disponible";
-            html += `<li>${fecha} → $${monto}</li>`;
+            html += `<li>${fecha} → ${fmtCOP(montoNum)}</li>`;
           });
           html += `</ul>`;
         } else {

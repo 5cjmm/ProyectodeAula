@@ -432,7 +432,7 @@
       }
     });
 
-    // 🔔 Notificación flotante
+    // Notificación flotante
     function showNotification(message, type = "info") {
       const notification = document.createElement("div");
       notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" :
@@ -450,7 +450,17 @@
       }, 3000);
     }
 
-    // ✅ Nueva función mejorada para cargar proveedores (sin límite de 5)
+    // Formateador de moneda (igual que en PuntoVenta) - muestra separador de miles y decimales
+    function fmtCOP(n) {
+      try {
+        // Usar 0 decimales para mostrar pesos sin centavos (consistente con PuntoVenta)
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
+      } catch (e) {
+        return '$0';
+      }
+    }
+
+    // Nueva función mejorada para cargar proveedores (sin límite de 5)
 
     async function cargarProveedoresSelect() {
       const res = await fetch(`/api/proveedores/buscar?tiendaId=${tiendaId}`);
@@ -506,7 +516,7 @@
           <td class="p-3">${p.codigo}</td>
           <td class="p-3">${p.nombre}</td>
           <td class="p-3">${p.cantidad}</td>
-          <td class="p-3">$${p.precio}</td>
+          <td class="p-3">${fmtCOP(p.precio)}</td>
           <td class="p-3">${provs}</td>
           <td class="p-3 flex gap-2">
             <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
