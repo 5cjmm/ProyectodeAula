@@ -264,9 +264,6 @@
           <input id="fechaInicio" type="date"
             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
 
-          <!-- 📅 Fecha fin -->
-          <input id="fechaFin" type="date"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
 
           <!-- 🔎 Botón filtrar -->
           <button onclick="filtrarDeudas()" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
@@ -379,107 +376,137 @@
 
 
   <script>
-    const logo = document.getElementById('logoContainer');
-    const sidebar = document.getElementById('sidebar');
+  const logo = document.getElementById('logoContainer');
+  const sidebar = document.getElementById('sidebar');
 
-    if (localStorage.getItem('sidebar-collapsed') === 'true') {
+  if (localStorage.getItem('sidebar-collapsed') === 'true') {
     sidebar.classList.add('collapsed');
   }
 
-    logo.addEventListener('click', () => {
+  logo.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
     const isCollapsed = sidebar.classList.contains('collapsed');
     localStorage.setItem('sidebar-collapsed', isCollapsed);
   });
 
-    // Tooltip dinámico (solo visible cuando está colapsado)
-    document.querySelectorAll('[data-tooltip]').forEach(el => {
-      const tooltip = document.createElement('div');
-      tooltip.textContent = el.dataset.tooltip;
-      tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
-      el.appendChild(tooltip);
-      el.classList.add('relative');
-      el.addEventListener('mouseenter', () => {
-        if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0');
-      });
-      el.addEventListener('mouseleave', () => {
-        tooltip.classList.add('opacity-0');
-      });
+  // Tooltip dinámico
+  document.querySelectorAll('[data-tooltip]').forEach(el => {
+    const tooltip = document.createElement('div');
+    tooltip.textContent = el.dataset.tooltip;
+    tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
+    el.appendChild(tooltip);
+    el.classList.add('relative');
+    el.addEventListener('mouseenter', () => {
+      if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0');
+    });
+    el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
+  });
+
+  const tiendaId = document.getElementById("tiendaId").value;
+  const buscarInput = document.getElementById("buscarCliente");
+  const filtroEstado = document.getElementById("filtroEstado");
+  const filtroFecha = document.getElementById("fechaInicio");
+
+  let deudas = [];
+  let pagina = 0;
+  const tamanoPagina = 5;
+
+  const button = document.getElementById("userMenuButton");
+  const dropdown = document.getElementById("userDropdown");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // Dropdown animado
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isVisible = dropdown.classList.contains("opacity-100");
+    dropdown.classList.toggle("opacity-100", !isVisible);
+    dropdown.classList.toggle("translate-y-0", !isVisible);
+    dropdown.classList.toggle("scale-100", !isVisible);
+    dropdown.classList.toggle("pointer-events-none", isVisible);
+    dropdown.classList.toggle("opacity-0", isVisible);
+    dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+    dropdown.classList.toggle("scale-95", isVisible);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+      dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+      dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    }
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    if (confirm("¿Deseas cerrar sesión?")) window.location.href = "/logout";
+  });
+
+  function showNotification(msg, type = "info") {
+    const div = document.createElement("div");
+    div.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : "bg-blue-600"}`;
+    div.textContent = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+  }
+
+  function fmtCOP(n) {
+    try {
+      return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
+    } catch {
+      return '$0';
+    }
+  }
+
+  // 🔹 Obtener todas las deudas
+  async function cargarDeudas() {
+    try {
+      const res = await fetch(`/api/deudas/tienda/${tiendaId}`);
+      if (!res.ok) throw new Error("Error al obtener deudas");
+      deudas = await res.json();
+      aplicarFiltros();
+    } catch {
+      showNotification("Error al cargar deudas", "error");
+    }
+  }
+
+  // 🔹 Filtro conjunto
+  function aplicarFiltros() {
+    const texto = buscarInput.value.toLowerCase().trim();
+    const estado = filtroEstado.value;
+    const fecha = filtroFecha.value;
+
+    const filtradas = deudas.filter(d => {
+      const coincideTexto = !texto ||
+        d.nombreCliente.toLowerCase().startsWith(texto) ||
+        d.cedulaCliente.toLowerCase().startsWith(texto);
+      const coincideEstado = !estado || d.estado === estado;
+      const coincideFecha = !fecha || (d.fechaVenta && d.fechaVenta.startsWith(fecha));
+      return coincideTexto && coincideEstado && coincideFecha;
     });
 
+    renderizarTabla(filtradas);
+  }
 
-    const tiendaId = document.getElementById("tiendaId").value;
-    let pagina = 0, totalPaginas = 0, deudaSeleccionada = null, totalRestanteActual = 0;
-    const button = document.getElementById("userMenuButton");
-    const dropdown = document.getElementById("userDropdown");
-    const logoutBtn = document.getElementById("logoutBtn");
+  // 🔹 Renderizar tabla + paginación local
+  function renderizarTabla(lista) {
+    const tbody = document.getElementById("tablaDeudas");
+    tbody.innerHTML = "";
 
-    // Mostrar/ocultar con animación
-    button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isVisible = dropdown.classList.contains("opacity-100");
-      dropdown.classList.toggle("opacity-100", !isVisible);
-      dropdown.classList.toggle("translate-y-0", !isVisible);
-      dropdown.classList.toggle("scale-100", !isVisible);
-      dropdown.classList.toggle("pointer-events-none", isVisible);
-      dropdown.classList.toggle("opacity-0", isVisible);
-      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-      dropdown.classList.toggle("scale-95", isVisible);
-    });
-
-    // Cerrar al hacer clic fuera
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
-      }
-    });
-
-    // Acción de cerrar sesión
-    logoutBtn.addEventListener("click", () => {
-      if (confirm("¿Deseas cerrar sesión?")) {
-        window.location.href = "/logout";
-      }
-    });
-
-    function showNotification(msg, type = "info") {
-      const div = document.createElement("div");
-      div.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : "bg-blue-600"
-        }`;
-      div.textContent = msg;
-      document.body.appendChild(div);
-      setTimeout(() => div.remove(), 3000);
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">No hay resultados</td></tr>`;
+      actualizarPaginacion(1, 1);
+      return;
     }
 
-    // Formateador de moneda 
-    function fmtCOP(n) {
-      try {
-        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
-      } catch (e) {
-        return '$0';
-      }
-    }
+    const totalPaginas = Math.ceil(lista.length / tamanoPagina);
+    if (pagina >= totalPaginas) pagina = totalPaginas - 1;
 
-    async function cargarDeudas() {
-      try {
-        const res = await fetch(`/api/deudas/tienda/${tiendaId}?page=${pagina}&size=5`);
-        if (!res.ok) throw new Error("Error al obtener deudas");
-        const data = await res.json();
-        const deudas = data.content || [];
-        totalPaginas = data.totalPages || 1;
+    const inicio = pagina * tamanoPagina;
+    const fin = inicio + tamanoPagina;
+    const paginaActual = lista.slice(inicio, fin);
 
-        const tbody = document.getElementById("tablaDeudas");
-        tbody.innerHTML = "";
-        if (deudas.length === 0) {
-          document.getElementById("emptyDeudas").classList.remove("hidden");
-          return;
-        }
-        document.getElementById("emptyDeudas").classList.add("hidden");
-
-        deudas.forEach(d => {
-          const tr = document.createElement("tr");
-          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition";
-          tr.innerHTML = `
+    paginaActual.forEach(d => {
+      const tr = document.createElement("tr");
+      tr.className = "border-b border-blue-100 hover:bg-blue-50 transition";
+      tr.innerHTML = `
         <td class="px-6 py-3">${d.nombreCliente}</td>
         <td class="px-6 py-3">${d.cedulaCliente}</td>
         <td class="px-6 py-3">${fmtCOP(d.total)}</td>
@@ -487,123 +514,81 @@
         <td class="px-6 py-3">${d.estado}</td>
         <td class="px-6 py-3">${new Date(d.fechaVenta).toLocaleDateString()}</td>
         <td class="px-6 py-3 flex gap-2">
-          <!-- 💰 Botón de abonar -->
-            <button onclick="abrirModalAbono('${d.id}', ${d.totalRestante})" 
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center"
-                    title="Registrar abono">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" class="h-5 w-5" fill="#ffffff">
-                <path d="M256 640v192h640V384H768v-64h150.976c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H233.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096c-2.688-5.184-4.224-10.368-4.224-24.576V640z"/>
-                <path d="M768 192H128v448h640zm64-22.976v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H105.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096C65.536 682.432 64 677.248 64 663.04V169.024c0-14.272 1.472-19.456 4.288-24.64a29.06 29.06 0 0 1 12.096-12.16C85.568 129.536 90.752 128 104.96 128h685.952c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64z"/>
-                <path d="M448 576a160 160 0 1 1 0-320a160 160 0 0 1 0 320m0-64a96 96 0 1 0 0-192a96 96 0 0 0 0 192"/>
-              </svg>
-            </button>
-
-            <!-- 👁️ Botón de ver detalle -->
-            <button onclick="verDetalle('${d.id}')" 
-                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center"
-                    title="Ver detalle">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none">
-                <g fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="1.5"/>
-                  <path stroke="#ffffff" stroke-linecap="round" stroke-width="1.5" d="M12 17v-6"/>
-                  <circle cx="1" cy="1" r="1" fill="#ffffff" transform="matrix(1 0 0 -1 11 9)"/>
-                </g>
-              </svg>
-            </button>
-          <button onclick="eliminarDeuda('${d.id}', '${d.estado}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" title="Eliminar tendero">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
-              <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/>
-              <path d="M9 10h2v8H9zm4 0h2v8h-2z"/>
-            </svg>
-          </button>
+          <button onclick="abrirModalAbono('${d.id}', ${d.totalRestante})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center" title="Registrar abono"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" class="h-5 w-5" fill="#ffffff"> <path d="M256 640v192h640V384H768v-64h150.976c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H233.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096c-2.688-5.184-4.224-10.368-4.224-24.576V640z"/> <path d="M768 192H128v448h640zm64-22.976v493.952c0 14.272-1.472 19.456-4.288 24.64a29.06 29.06 0 0 1-12.096 12.16c-5.184 2.752-10.368 4.224-24.64 4.224H105.024c-14.272 0-19.456-1.472-24.64-4.288a29.06 29.06 0 0 1-12.16-12.096C65.536 682.432 64 677.248 64 663.04V169.024c0-14.272 1.472-19.456 4.288-24.64a29.06 29.06 0 0 1 12.096-12.16C85.568 129.536 90.752 128 104.96 128h685.952c14.272 0 19.456 1.472 24.64 4.288a29.06 29.06 0 0 1 12.16 12.096c2.752 5.184 4.224 10.368 4.224 24.64z"/> <path d="M448 576a160 160 0 1 1 0-320a160 160 0 0 1 0 320m0-64a96 96 0 1 0 0-192a96 96 0 0 0 0 192"/> </svg> </button>
+          <button onclick="verDetalle('${d.id}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-all duration-200 flex items-center justify-center" title="Ver detalle"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"> <g fill="none"> <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="1.5"/> <path stroke="#ffffff" stroke-linecap="round" stroke-width="1.5" d="M12 17v-6"/> <circle cx="1" cy="1" r="1" fill="#ffffff" transform="matrix(1 0 0 -1 11 9)"/> </g> </svg> </button>
+          <button onclick="eliminarDeuda('${d.id}', '${d.estado}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" title="Eliminar tendero"> <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"> <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/> <path d="M9 10h2v8H9zm4 0h2v8h-2z"/> </svg> </button>
         </td>`;
-          tbody.appendChild(tr);
-        });
-        document.getElementById("paginaActual").textContent = pagina + 1;
-      } catch (e) {
-        showNotification("Error al cargar deudas", "error");
-      }
-    }
+      tbody.appendChild(tr);
+    });
 
-    function cambiarPagina(d) { if (d === -1 && pagina > 0) { pagina--; } if (d === 1 && pagina + 1 < totalPaginas) { pagina++; } cargarDeudas(); }
+    actualizarPaginacion(pagina + 1, totalPaginas);
+  }
 
-    function filtrarDeudas() {
-      const nombre = document.getElementById("buscarCliente").value.toLowerCase();
-      const estado = document.getElementById("filtroEstado").value;
-      const inicio = document.getElementById("fechaInicio").value;
-      const fin = document.getElementById("fechaFin").value;
-      const filas = document.querySelectorAll("#tablaDeudas tr");
-      filas.forEach(f => {
-        const cols = f.querySelectorAll("td");
-        const nombreCol = cols[0].textContent.toLowerCase();
-        const est = cols[4].textContent;
-        const fecha = cols[5].textContent;
-        const visible = (!nombre || nombreCol.includes(nombre)) && (!estado || est === estado) &&
-          (!inicio || new Date(fecha) >= new Date(inicio)) && (!fin || new Date(fecha) <= new Date(fin));
-        f.style.display = visible ? "" : "none";
-      });
-    }
+  function actualizarPaginacion(actual, total) {
+    const span = document.getElementById("paginaActual");
+    if (span) span.textContent = `${actual} de ${total}`;
+  }
 
-    function abrirModalAbono(id, totalRestante) {
-      deudaSeleccionada = id;
-      totalRestanteActual = parseFloat(totalRestante) || 0;
+  window.cambiarPagina = function (dir) {
+    const total = Math.ceil(deudas.length / tamanoPagina);
+    if (dir === -1 && pagina > 0) pagina--;
+    if (dir === 1 && pagina + 1 < total) pagina++;
+    aplicarFiltros();
+  };
 
-      const modal = document.getElementById("modalAbono");
-      modal.classList.remove("hidden", "opacity-0");
-      modal.classList.add("flex");
+  // Eventos de filtro
+  buscarInput.addEventListener("input", aplicarFiltros);
+  filtroEstado.addEventListener("change", aplicarFiltros);
+  filtroFecha.addEventListener("change", aplicarFiltros);
 
-      // Limpiar campo
-      document.getElementById("montoAbono").value = "";
-    }
+  // 🔹 Modal abono, ver, eliminar (sin cambios)
+  let deudaSeleccionada = null, totalRestanteActual = 0;
 
-    function cerrarModalAbono() {
-      const modal = document.getElementById("modalAbono");
-      modal.classList.add("hidden");
-    }
+  function abrirModalAbono(id, totalRestante) {
+    deudaSeleccionada = id;
+    totalRestanteActual = parseFloat(totalRestante) || 0;
+    const modal = document.getElementById("modalAbono");
+    modal.classList.remove("hidden", "opacity-0");
+    modal.classList.add("flex");
+    document.getElementById("montoAbono").value = "";
+  }
 
-    async function confirmarAbono() {
-      const monto = parseFloat(document.getElementById("montoAbono").value);
+  function cerrarModalAbono() {
+    document.getElementById("modalAbono").classList.add("hidden");
+  }
 
-      if (!monto || monto <= 0) {
-        showNotification("Monto inválido", "warning");
-        return;
-      }
-
-      // 🔹 Validación: no permitir abonos mayores al total restante
-      if (monto > totalRestanteActual) {
+  async function confirmarAbono() {
+    const monto = parseFloat(document.getElementById("montoAbono").value);
+    if (!monto || monto <= 0) return showNotification("Monto inválido", "warning");
+    if (monto > totalRestanteActual) {
         showNotification(`El abono no puede superar el total restante (${fmtCOP(totalRestanteActual)})`, "error");
         return;
       }
 
-      try {
-        const res = await fetch(`/api/deudas/${deudaSeleccionada}/abonar`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ monto })
-        });
-
-        if (!res.ok) throw new Error(await res.text());
-
-        cerrarModalAbono();
-        showNotification("Abono registrado con éxito", "success");
-        cargarDeudas();
-
-      } catch (e) {
-        console.error("Error al registrar abono:", e);
-        showNotification("Error al registrar abono", "error");
-      }
-    }
-
-    async function eliminarDeuda(id, estado) {
-      if (estado !== "PAGADA") { showNotification("Solo se pueden eliminar deudas pagadas", "warning"); return; }
-      if (!confirm("¿Eliminar deuda pagada?")) return;
-      await fetch(`/api/deudas/eliminar/${id}`, { method: "DELETE" });
-      showNotification("Deuda eliminada", "success");
+    try {
+      const res = await fetch(`/api/deudas/${deudaSeleccionada}/abonar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ monto })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      cerrarModalAbono();
+      showNotification("Abono registrado con éxito", "success");
       cargarDeudas();
+    } catch {
+      showNotification("Error al registrar abono", "error");
     }
+  }
 
+  async function eliminarDeuda(id, estado) {
+    if (estado !== "PAGADA") return showNotification("Solo se pueden eliminar deudas pagadas", "warning");
+    if (!confirm("¿Eliminar deuda pagada?")) return;
+    await fetch(`/api/deudas/eliminar/${id}`, { method: "DELETE" });
+    showNotification("Deuda eliminada", "success");
+    cargarDeudas();
+  }
 
-    async function verDetalle(id) {
+  async function verDetalle(id) {
       try {
         const response = await fetch(`/api/deudas/${id}`);
         if (!response.ok) throw new Error("Error al obtener detalle");
@@ -671,37 +656,32 @@
       }
     }
 
-    // 🔹 Cerrar modal
-    function cerrarModal() {
-      const modal = document.getElementById("detalleModal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
+
+  function cerrarModal() {
+    document.getElementById("detalleModal").classList.add("hidden");
+  }
+
+  // 🔹 Inicialización
+  document.addEventListener("DOMContentLoaded", () => {
+    const rol = document.getElementById("rolUsuario")?.value;
+    cargarDeudas();
+    document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
+    document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+    document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+    document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+    document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+    document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+    document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+    document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+    document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+    document.getElementById("linkTiendas").href = `/tiendas`;
+    if (rol === "ROLE_TENDERO") {
+      document.getElementById("linkTendero").style.display = "none";
+      document.getElementById("linkTiendas").style.display = "none";
     }
+  });
+</script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const rol = document.getElementById("rolUsuario")?.value;
-
-      cargarDeudas();
-      document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-      document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
-      document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
-      document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
-      document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
-      document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
-      document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
-      document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
-      document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
-      document.getElementById("linkTiendas").href = `/tiendas`;
-
-      if (rol === "ROLE_TENDERO") {
-        const tenderoMenu = document.getElementById("linkTendero");
-        const tiendasMenu = document.getElementById("linkTiendas");
-
-        if (tenderoMenu) tenderoMenu.style.display = "none";
-        if (tiendasMenu) tiendasMenu.style.display = "none";
-      }
-    });
-  </script>
 
 </body>
 

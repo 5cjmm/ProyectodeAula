@@ -1,11 +1,9 @@
 package com.ShopMaster.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.Abono;
@@ -85,9 +83,8 @@ Optional<Deuda> deudaExistenteOpt = deudaRepository.findByCedulaCliente(deuda.ge
     return deudaRepository.save(deuda);
 }
 
-    public Page<Deuda> obtenerDeudasPorTienda(String tiendaId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return deudaRepository.findByTiendaId(tiendaId, pageable);
+    public List<Deuda> obtenerDeudasPorTienda(String tiendaId) {
+        return deudaRepository.findByTiendaId(tiendaId);
     }
 
     // Nuevo: obtener todas las deudas para la vista
