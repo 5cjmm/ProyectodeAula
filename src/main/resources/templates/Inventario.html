@@ -334,69 +334,57 @@
                         d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
                     </svg>
                     <p class="text-lg">No hay productos registrados aún</p>
-                    <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario de arriba</p>
+                    <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario</p>
                   </div>
 
                 </div>
               </div>
               <div class="flex justify-center items-center space-x-4 mt-8">
-                <button onclick="cambiarPagina(-1)"
-                  class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                  <span class="flex items-center gap-2">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Anterior
-                  </span>
-                </button>
-                <span id="paginaActual"
-                  class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
-                  1
-                </span>
-                <button onclick="cambiarPagina(1)"
-                  class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-                  <span class="flex items-center gap-2">
-                    Siguiente
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+            <span class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              Anterior
+            </span>
+          </button>
+
+          <span id="paginaActual" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
+          <span class="text-sm text-gray-600">de</span>
+          <span id="totalPaginas" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
+
+          <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+            <span class="flex items-center gap-2">
+              Siguiente
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </span>
+          </button>
         </div>
-      </div>
+
+      </main>
     </div>
   </div>
 
   <script>
+    // ---------- UI helpers ----------
     const logo = document.getElementById('logoContainer');
     const sidebar = document.getElementById('sidebar');
 
     if (localStorage.getItem('sidebar-collapsed') === 'true') {
-    sidebar.classList.add('collapsed');
-  }
+      sidebar.classList.add('collapsed');
+    }
 
-    logo.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-    const isCollapsed = sidebar.classList.contains('collapsed');
-    localStorage.setItem('sidebar-collapsed', isCollapsed);
-  });
+    logo?.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+    });
 
-    // Tooltip dinámico (solo visible cuando está colapsado)
     document.querySelectorAll('[data-tooltip]').forEach(el => {
       const tooltip = document.createElement('div');
       tooltip.textContent = el.dataset.tooltip;
       tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
       el.appendChild(tooltip);
       el.classList.add('relative');
-      el.addEventListener('mouseenter', () => {
-        if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0');
-      });
-      el.addEventListener('mouseleave', () => {
-        tooltip.classList.add('opacity-0');
-      });
+      el.addEventListener('mouseenter', () => { if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0'); });
+      el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
     });
 
     const tiendaId = document.getElementById("tiendaId").value;
@@ -404,8 +392,7 @@
     const dropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // Mostrar/ocultar con animación
-    button.addEventListener("click", (e) => {
+    button?.addEventListener("click", (e) => {
       e.stopPropagation();
       const isVisible = dropdown.classList.contains("opacity-100");
       dropdown.classList.toggle("opacity-100", !isVisible);
@@ -417,63 +404,51 @@
       dropdown.classList.toggle("scale-95", isVisible);
     });
 
-    // Cerrar al hacer clic fuera
     document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+      if (dropdown && !dropdown.contains(e.target) && !button.contains(e.target)) {
         dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
         dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
       }
     });
 
-    // Acción de cerrar sesión
-    logoutBtn.addEventListener("click", () => {
-      if (confirm("¿Deseas cerrar sesión?")) {
-        window.location.href = "/logout";
-      }
-    });
+    logoutBtn?.addEventListener("click", () => { if (confirm("¿Deseas cerrar sesión?")) window.location.href = "/logout"; });
 
-    // Notificación flotante
     function showNotification(message, type = "info") {
       const notification = document.createElement("div");
-      notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" :
-        type === "error" ? "bg-red-600" :
-          type === "warning" ? "bg-yellow-500" :
-            "bg-blue-600"
-        }`;
+      notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : type === "warning" ? "bg-yellow-500" : "bg-blue-600" }`;
       notification.textContent = message;
       document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.opacity = "0";
-        notification.style.transform = "translateY(-10px)";
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
+      setTimeout(() => { notification.style.opacity = "0"; notification.style.transform = "translateY(-10px)"; setTimeout(() => notification.remove(), 300); }, 3000);
     }
 
-    // Formateador de moneda (igual que en PuntoVenta) - muestra separador de miles y decimales
     function fmtCOP(n) {
-      try {
-        // Usar 0 decimales para mostrar pesos sin centavos (consistente con PuntoVenta)
-        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
-      } catch (e) {
-        return '$0';
-      }
+      try { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0); }
+      catch (e) { return '$0'; }
     }
 
-    // Nueva función mejorada para cargar proveedores (sin límite de 5)
+    // ---------- Datos & paginación frontend ----------
+    let productos = [];   // source of truth
+    let filtrados = [];   // filtered list used to paginate
+    let pagina = 0;
+    const tamanoPagina = 5;
 
+    // Cargar proveedores para el select (igual que en ProductosService)
     async function cargarProveedoresSelect() {
-      const res = await fetch(`/api/proveedores/buscar?tiendaId=${tiendaId}`);
-      const proveedores = await res.json();
-
-      const select = document.getElementById("proveedorId");
-      select.innerHTML = "";
-      proveedores.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p.id;
-        opt.textContent = `${p.nombre} (${p.nit})`;
-        select.appendChild(opt);
-      });
+      try {
+        const res = await fetch(`/api/proveedores/buscar?tiendaId=${tiendaId}`);
+        if (!res.ok) return;
+        const proveedores = await res.json();
+        const select = document.getElementById("proveedorId");
+        select.innerHTML = "";
+        proveedores.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = `${p.nombre} (${p.nit || ''})`;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.warn("No se pudieron cargar proveedores:", err);
+      }
 
       new TomSelect("#proveedorId", {
         plugins: ['remove_button'],
@@ -484,79 +459,155 @@
       });
     }
 
-    // 🧾 Variables para paginación
-    let pagina = 0;
-    const tamanoPagina = 5;
-    let totalPaginas = 0;
-
+    // Intentar cargar /todos, si no existe usar fallback paginado
     async function cargarProductos() {
       try {
-        const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${pagina}&size=${tamanoPagina}`);
-        if (!res.ok) throw new Error("Error al obtener productos");
-
-        const data = await res.json();
-        const productos = data.content || [];
-        totalPaginas = data.totalPages || 1;
-
-        const tbody = document.querySelector("#tablaProductos tbody");
-        tbody.innerHTML = "";
-
-        if (productos.length === 0) {
-          document.getElementById("emptyProductos").classList.remove("hidden");
+        // intenta endpoint /todos
+        const resTodos = await fetch(`/api/productos/tienda/${tiendaId}/todos`);
+        if (resTodos.ok) {
+          productos = await resTodos.json();
+          filtrados = [...productos];
+          pagina = 0;
+          mostrarPagina();
           return;
         }
+      } catch (err) {
+        console.warn("Error al solicitar /todos:", err);
+      }
 
+      // Fallback: acumular páginas del endpoint paginado
+      productos = [];
+      let page = 0;
+      const size = 200; // traer bastante por request para reducir llamadas
+      while (true) {
+        try {
+          const r = await fetch(`/api/productos/tienda/${tiendaId}?page=${page}&size=${size}`);
+          if (!r.ok) break;
+          const data = await r.json();
+          const contenidos = data.content || [];
+          productos.push(...contenidos);
+          if ((data.totalPages !== undefined && page + 1 >= data.totalPages) || contenidos.length < size) break;
+          page++;
+        } catch (e) {
+          console.error("Error en fallback paginado:", e);
+          break;
+        }
+      }
+      filtrados = [...productos];
+      pagina = 0;
+      mostrarPagina();
+    }
+
+    function mostrarPagina() {
+      const tbody = document.querySelector("#tablaProductos tbody");
+      tbody.innerHTML = "";
+
+      const inicio = pagina * tamanoPagina;
+      const fin = inicio + tamanoPagina;
+      const paginaActual = filtrados.slice(inicio, fin);
+
+      if (paginaActual.length === 0) {
+        document.getElementById("emptyProductos").classList.remove("hidden");
+      } else {
         document.getElementById("emptyProductos").classList.add("hidden");
-
-        productos.forEach(p => {
-          const provs = p.proveedores ? p.proveedores.map(pr => pr.nombre).join(", ") : "";
+        paginaActual.forEach(p => {
+          const provs = p.proveedores ? p.proveedores.map(pr => escapeHtml(pr.nombre)).join(", ") : "";
           const tr = document.createElement("tr");
-          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors'";
+          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors";
           tr.innerHTML = `
-          <td class="p-3">${p.codigo}</td>
-          <td class="p-3">${p.nombre}</td>
-          <td class="p-3">${p.cantidad}</td>
-          <td class="p-3">${fmtCOP(p.precio)}</td>
-          <td class="p-3">${provs}</td>
-          <td class="p-3 flex gap-2">
-            <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-              data-id="${p.id}" data-codigo="${p.codigo}" data-nombre="${p.nombre}"
-              data-cantidad="${p.cantidad}" data-precio="${p.precio}" title="Editar producto">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
-                  <path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/>
-                </svg>
-            </button>
-            <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    data-id="${p.id}" title="Eliminar producto">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
-                  <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/>
-                  <path d="M9 10h2v8H9zm4 0h2v8h-2z"/>
-                </svg>
-            </button>
-          </td>
-        `;
+            <td class="p-3">${escapeHtml(p.codigo)}</td>
+            <td class="p-3">${escapeHtml(p.nombre)}</td>
+            <td class="p-3">${escapeHtml(String(p.cantidad || 0))}</td>
+            <td class="p-3">${fmtCOP(p.precio)}</td>
+            <td class="p-3">${provs}</td>
+            <td class="p-3 flex gap-2">
+              <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                data-id="${p.id}" data-codigo="${escapeAttr(p.codigo)}" data-nombre="${escapeAttr(p.nombre)}"
+                data-cantidad="${p.cantidad}" data-precio="${p.precio}" title="Editar producto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/></svg>
+              </button>
+              <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${p.id}" title="Eliminar producto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/><path d="M9 10h2v8H9zm4 0h2v8h-2z"/></svg>
+              </button>
+            </td>`;
           tbody.appendChild(tr);
         });
-
-        document.getElementById("paginaActual").textContent = pagina + 1;
-      } catch (error) {
-        console.error(error);
-        showNotification("Error al cargar productos", "error");
       }
+
+      const total = Math.max(1, Math.ceil(filtrados.length / tamanoPagina));
+      document.getElementById("paginaActual").textContent = (pagina + 1);
+      document.getElementById("totalPaginas").textContent = total;
     }
 
     function cambiarPagina(direccion) {
-      if (direccion === -1 && pagina > 0) {
-        pagina--;
-        cargarProductos();
-      }
-      if (direccion === 1 && pagina + 1 < totalPaginas) {
-        pagina++;
-        cargarProductos();
-      }
+      const total = Math.ceil(filtrados.length / tamanoPagina);
+      if (direccion === -1 && pagina > 0) { pagina--; mostrarPagina(); }
+      if (direccion === 1 && pagina + 1 < total) { pagina++; mostrarPagina(); }
     }
 
-    // 🧩 Manejo de botones de acción (editar / eliminar)
+    // Búsqueda por inicial (nombre o código)
+    function buscarProductos() {
+      const q = document.getElementById("buscar").value.trim().toLowerCase();
+      if (!q) {
+        filtrados = [...productos];
+        pagina = 0;
+        mostrarPagina();
+        return;
+      }
+      filtrados = productos.filter(p =>
+        (p.nombre || "").toLowerCase().startsWith(q) ||
+        (p.codigo || "").toLowerCase().startsWith(q)
+      );
+      pagina = 0;
+      mostrarPagina();
+    }
+
+    // Form submit (crear / actualizar)
+    document.getElementById("formProducto").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const selectedProvOptions = Array.from(document.getElementById("proveedorId").selectedOptions || [])
+    .map(o => o.value);
+
+  const producto = {
+    codigo: this.codigo.value.trim(),
+    nombre: this.nombre.value.trim(),
+    cantidad: Number(this.cantidad.value || 0),
+    precio: Number(this.precio.value || 0),
+    proveedorIdStrs: selectedProvOptions,
+    tiendaId: tiendaId
+  };
+
+  const isEdit = !!this.dataset.id;
+  const url = isEdit
+    ? `/api/productos/actualizar/${this.dataset.id}`
+    : `/api/productos/crear`;
+  const method = isEdit ? "PUT" : "POST";
+
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(producto)
+    });
+
+    if (!resp.ok) {
+      const msg = await resp.text();
+      if (msg.toLowerCase().includes("código")) showNotification("El código ya está registrado", "warning");
+      else showNotification("Error al guardar: " + msg, "error");
+      return;
+    }
+
+    this.reset();
+    delete this.dataset.id;
+    showNotification(isEdit ? "Producto actualizado" : "Producto creado", "success");
+    await cargarProductos();
+  } catch (err) {
+    console.error(err);
+    showNotification("Error de conexión con el servidor", "error");
+  }
+});
+    // Tabla actions (editar / eliminar)
     document.getElementById("tablaProductos").addEventListener("click", async (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
@@ -575,77 +626,28 @@
       if (btn.classList.contains("btn-delete")) {
         if (!confirm("¿Eliminar este producto?")) return;
         const id = btn.dataset.id;
-
         try {
-          const resp = await fetch(`/api/productos/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
+          const resp = await fetch(`/api/productos/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
           if (!resp.ok) throw new Error(await resp.text());
           showNotification("Producto eliminado correctamente", "success");
-          cargarProductos();
-        } catch (error) {
+          await cargarProductos();
+        } catch (err) {
+          console.error(err);
           showNotification("Error al eliminar producto", "error");
         }
       }
     });
 
-    // 🧾 Guardar producto
-    document.getElementById("formProducto").addEventListener("submit", async function (e) {
-      e.preventDefault();
+    // Utility escape functions
+    function escapeHtml(str = "") { return String(str).replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+    function escapeAttr(str = "") { return String(str).replace(/"/g, '&quot;'); }
 
-      const selectedProveedores = Array.from(document.getElementById("proveedorId").selectedOptions).map(o => o.value);
-      const producto = {
-        codigo: this.codigo.value.trim(),
-        nombre: this.nombre.value.trim(),
-        cantidad: parseInt(this.cantidad.value),
-        precio: parseFloat(this.precio.value),
-        proveedorIdStrs: selectedProveedores,
-        tiendaId: tiendaId
-      };
-
-      const isEdit = !!this.dataset.id;
-      const url = isEdit ? `/api/productos/${this.dataset.id}` : `/api/productos`;
-      const method = isEdit ? "PUT" : "POST";
-
-      try {
-        const resp = await fetch(url, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(producto)
-        });
-
-        if (!resp.ok) {
-          const msg = await resp.text();
-          if (msg.includes("código")) showNotification("El código ya está registrado", "warning");
-          else if (msg.includes("nombre")) showNotification("El nombre ya está registrado", "warning");
-          else showNotification("Error al guardar: " + msg, "error");
-          return;
-        }
-
-        this.reset();
-        delete this.dataset.id;
-        showNotification(isEdit ? "Producto actualizado" : "Producto creado", "success");
-        cargarProductos();
-      } catch (error) {
-        showNotification("Error de conexión", "error");
-      }
-    });
-
-    // 🔍 Búsqueda simple
-    function buscarProductos() {
-      const input = document.getElementById("buscar").value.toLowerCase();
-      const filas = document.querySelectorAll("#tablaProductos tbody tr");
-      filas.forEach(fila => {
-        const nombre = fila.cells[1].textContent.toLowerCase();
-        const codigo = fila.cells[0].textContent.toLowerCase();
-        fila.style.display = (nombre.includes(input) || codigo.includes(input)) ? "" : "none";
-      });
-    }
-
-    // 🚀 Cargar todo al inicio
-    document.addEventListener("DOMContentLoaded", function () {
-      const rol = document.getElementById("rolUsuario")?.value;
+    // Inicializar
+    window.addEventListener("DOMContentLoaded", () => {
       cargarProveedoresSelect();
       cargarProductos();
 
+      // Actualizar enlaces del sidebar
       document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
       document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
       document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
@@ -657,13 +659,14 @@
       document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
       document.getElementById("linkTiendas").href = `/tiendas`;
 
-      if (rol === "ROLE_TENDERO") {
-        const tenderoMenu = document.getElementById("linkTendero");
-        const tiendasMenu = document.getElementById("linkTiendas");
+        // 🧱 Ocultar elementos según el rol
+        if (rol === "ROLE_TENDERO") {
+            const tenderoMenu = document.getElementById("linkTendero");
+            const tiendasMenu = document.getElementById("linkTiendas");
 
-        if (tenderoMenu) tenderoMenu.style.display = "none";
-        if (tiendasMenu) tiendasMenu.style.display = "none";
-      }
+            if (tenderoMenu) tenderoMenu.style.display = "none";
+            if (tiendasMenu) tiendasMenu.style.display = "none";
+        }
     });
   </script>
 

@@ -446,7 +446,6 @@
 
       if (paginaActual.length === 0) {
         document.getElementById("emptyProveedores").classList.remove("hidden");
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500">No hay proveedores</td></tr>`;
       } else {
         document.getElementById("emptyProveedores").classList.add("hidden");
         paginaActual.forEach(p => {
