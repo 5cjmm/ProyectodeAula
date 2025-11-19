@@ -1,18 +1,12 @@
 # Etapa 1: Build de la aplicación con Maven
-FROM maven:3.9.3-eclipse-temurin-21 AS build
+FROM maven:3.9.4-eclipse-temurin-21-alpine AS build
 
 WORKDIR /app
 
-# Copiar pom.xml primero para cachear dependencias
 COPY pom.xml .
-
-# Descargar dependencias offline
 RUN mvn dependency:go-offline -B
 
-# Copiar el resto del proyecto
 COPY . .
-
-# Construir jar ejecutable (sin tests)
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Runtime ligero para producción
@@ -29,3 +23,4 @@ EXPOSE ${PORT}
 
 # Ejecutar la app
 ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT} -jar app.jar"]
+
