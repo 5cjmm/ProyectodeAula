@@ -2,6 +2,7 @@ package com.ShopMaster.Service;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,12 +11,16 @@ import java.util.Locale;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.ProductoVendido;
+import com.ShopMaster.Model.Tienda;
+import com.ShopMaster.Model.Usuario;
 import com.ShopMaster.Model.Venta;
+import com.ShopMaster.Repository.UsuarioRepository;
 import com.ShopMaster.Repository.VentaRepository;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
@@ -30,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class PdfService {
 
     private final VentaRepository ventaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public byte[] generarReciboVenta(String ventaId) {
         Venta venta = ventaRepository.findById(ventaId)
@@ -41,8 +47,9 @@ public class PdfService {
             PdfWriter.getInstance(doc, baos);
             doc.open();
 
+            Image logo = loadLogo();
+
             // Formatos
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.BLACK);
             Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.DARK_GRAY);
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
 
@@ -50,21 +57,97 @@ public class PdfService {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date fecha = venta.getFecha() != null ? venta.getFecha() : new Date();
 
-            // Encabezado
-            Paragraph title = new Paragraph("Recibo de Venta", titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            doc.add(title);
+            // Encabezado reorganizado: logo | (tienda nombre + título) centrados | metadata alineada a la derecha
+            String tiendaNombre = getTiendaNombre(venta.getTiendaId(), "-");
+
+            
+            PdfPTable topBar = new PdfPTable(2);
+            topBar.setWidthPercentage(100);
+            topBar.setWidths(new float[]{1f, 1f});
+            PdfPCell topLeft = new PdfPCell(new Phrase("ID Venta: " + venta.getId(), labelFont));
+            topLeft.setBorder(Rectangle.NO_BORDER);
+            topLeft.setHorizontalAlignment(Element.ALIGN_LEFT);
+            topBar.addCell(topLeft);
+            PdfPCell topRight = new PdfPCell(new Phrase(sdf.format(fecha), normalFont));
+            topRight.setBorder(Rectangle.NO_BORDER);
+            topRight.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            topBar.addCell(topRight);
+            doc.add(topBar);
             doc.add(new Paragraph("\n"));
 
-            PdfPTable meta = new PdfPTable(2);
-            meta.setWidthPercentage(100);
-            meta.setWidths(new float[]{1.2f, 3f});
+            PdfPTable header = new PdfPTable(3);
+            header.setWidthPercentage(100);
+            header.setWidths(new float[]{1.5f, 3f, 1.5f});
 
-            addMetaRow(meta, "ID Venta:", venta.getId(), labelFont, normalFont);
-            addMetaRow(meta, "Fecha:", sdf.format(fecha), labelFont, normalFont);
-            addMetaRow(meta, "Tienda:", venta.getTiendaId() != null ? venta.getTiendaId() : "-", labelFont, normalFont);
-            doc.add(meta);
+            // Left: logo
+            PdfPCell logoCell = new PdfPCell();
+            if (logo != null) {
+                logoCell = new PdfPCell(logo, false);
+            }
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            header.addCell(logoCell);
 
+            // Center: tienda nombre (arriba) y título centrado debajo
+            PdfPTable center = new PdfPTable(1);
+            center.setWidthPercentage(100);
+            Font storeFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
+            PdfPCell storeNameCell = new PdfPCell(new Phrase(tiendaNombre, storeFont));
+            storeNameCell.setBorder(Rectangle.NO_BORDER);
+            storeNameCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            center.addCell(storeNameCell);
+
+            Font receiptTitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.BLACK);
+            PdfPCell centerTitleCell = new PdfPCell(new Phrase("Recibo de Venta", receiptTitleFont));
+            centerTitleCell.setBorder(Rectangle.NO_BORDER);
+            centerTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            center.addCell(centerTitleCell);
+
+            // Mostrar el nombre del usuario que realizó la venta (vendedor)
+            Font vendorFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.DARK_GRAY);
+            String vendedor = "-";
+            try {
+                if (venta.getUsuarioId() != null) {
+                    java.util.Optional<Usuario> uOpt = usuarioRepository.findById(venta.getUsuarioId());
+                    if (uOpt.isPresent() && uOpt.get().getUsername() != null && !uOpt.get().getUsername().isBlank()) {
+                        vendedor = uOpt.get().getUsername();
+                    }
+                }
+                if ("-".equals(vendedor)) {
+                    // fallback: usuario que solicita el PDF (si está autenticado)
+                    org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+                    if (auth != null && auth.getName() != null) {
+                        // En este proyecto `auth.getName()` suele ser el email (CustomUserDetailsService usa email como username).
+                        // Intentamos resolver el Usuario por email y usar su `username` si existe.
+                        java.util.Optional<Usuario> authUser = usuarioRepository.findByEmail(auth.getName());
+                        if (authUser.isPresent() && authUser.get().getUsername() != null && !authUser.get().getUsername().isBlank()) {
+                            vendedor = authUser.get().getUsername();
+                        } else {
+                            // si no encontramos un username, usamos el valor del authentication (posible email)
+                            vendedor = auth.getName();
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                // ignore and leave vendedor as '-'
+            }
+            PdfPCell vendorCell = new PdfPCell(new Phrase("Atendido por: " + vendedor, vendorFont));
+            vendorCell.setBorder(Rectangle.NO_BORDER);
+            vendorCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            center.addCell(vendorCell);
+
+            PdfPCell centerCell = new PdfPCell(center);
+            centerCell.setBorder(Rectangle.NO_BORDER);
+            centerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            header.addCell(centerCell);
+
+            // Right: dejar espacio para metadata (ID/Fecha movidos al topBar)
+            PdfPCell rightCell = new PdfPCell(new Phrase(""));
+            rightCell.setBorder(Rectangle.NO_BORDER);
+            rightCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            header.addCell(rightCell);
+
+            doc.add(header);
             doc.add(new Paragraph("\n"));
 
             // Tabla de productos
@@ -129,14 +212,52 @@ public class PdfService {
             PdfWriter.getInstance(doc, baos);
             doc.open();
 
+            Image logo = loadLogo();
+
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.BLACK);
             Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
             NumberFormat cop = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("es-CO"));
-
             Paragraph title = new Paragraph("Informe de Ventas - " + (fechaLabel != null ? fechaLabel : ""), titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            doc.add(title);
+
+            // Construir encabezado con logo a la izquierda y tienda nombre + título centrado a la derecha
+            String tiendaNombre = getTiendaNombre(tiendaId, "-");
+
+            PdfPTable header = new PdfPTable(2);
+            header.setWidthPercentage(100);
+            header.setWidths(new float[]{1.5f, 4f});
+
+            PdfPCell logoCell = new PdfPCell();
+            if (logo != null) {
+                logoCell = new PdfPCell(logo, false);
+            }
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            header.addCell(logoCell);
+
+            // Right side: tienda nombre arriba, título centrado debajo
+            PdfPTable right = new PdfPTable(1);
+            right.setWidthPercentage(100);
+
+            Font storeFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
+            PdfPCell storeNameCell = new PdfPCell(new Phrase(tiendaNombre, storeFont));
+            storeNameCell.setBorder(Rectangle.NO_BORDER);
+            storeNameCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            right.addCell(storeNameCell);
+
+            PdfPCell titleCell = new PdfPCell(new Phrase(title));
+            titleCell.setBorder(Rectangle.NO_BORDER);
+            titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            right.addCell(titleCell);
+
+            // (opcional) info adicional de la tienda eliminada para evitar duplicado del nombre
+
+            PdfPCell rightCell = new PdfPCell(right);
+            rightCell.setBorder(Rectangle.NO_BORDER);
+            rightCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            header.addCell(rightCell);
+
+            doc.add(header);
             doc.add(new Paragraph("\n"));
 
             // Tabla: Producto | Cant. | P.Unit | Subtotal | Fecha
@@ -198,6 +319,7 @@ public class PdfService {
         return baos.toByteArray();
     }
 
+    @SuppressWarnings("unused")
     private void addMetaRow(PdfPTable meta, String label, String value, Font labelFont, Font valueFont) {
         PdfPCell l = new PdfPCell(new Phrase(label, labelFont));
         l.setBorder(Rectangle.NO_BORDER);
@@ -214,6 +336,48 @@ public class PdfService {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setPadding(6f);
         table.addCell(cell);
+    }
+
+    /**
+     * Carga el logo desde el classpath (/static/images/logo.png).
+     * Devuelve null si el recurso no existe o ocurre un error.
+     */
+    private Image loadLogo() {
+        try {
+            URL url = getClass().getResource("/static/images/logo.png");
+            if (url == null) return null;
+            Image img = Image.getInstance(url);
+            // Ajustar tamaño un poco más grande para encabezado
+            img.scaleToFit(180f, 90f);
+            img.setAlignment(Element.ALIGN_CENTER);
+            return img;
+        } catch (Exception e) {
+            // No hacer fallar la generación del PDF si no se puede cargar la imagen
+            return null;
+        }
+    }
+
+    /**
+     * Busca el nombre de la tienda por su id recorriendo los usuarios y sus tiendas embebidas.
+     * Si no encuentra nombre, devuelve el fallback proporcionado o el id.
+     */
+    private String getTiendaNombre(String tiendaId, String fallback) {
+        if (tiendaId == null) return fallback != null ? fallback : "-";
+        try {
+            java.util.List<Usuario> usuarios = usuarioRepository.findAll();
+            for (Usuario u : usuarios) {
+                if (u.getTiendas() == null) continue;
+                for (Tienda t : u.getTiendas()) {
+                    if (t == null || t.getId() == null) continue;
+                    if (tiendaId.equals(t.getId())) {
+                        return t.getNombre() != null ? t.getNombre() : (fallback != null ? fallback : t.getId());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Si algo falla, retornamos fallback
+        }
+        return fallback != null ? fallback : tiendaId;
     }
 
     private void addCell(PdfPTable table, String text, Font font) {

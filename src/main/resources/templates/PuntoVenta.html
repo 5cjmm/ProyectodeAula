@@ -8,93 +8,140 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
 
+    /* Sidebar collapse behavior */
+    #sidebar.collapsed {
+      width: 5rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    #sidebar.collapsed .sidebar-text {
+      display: none;
+    }
+
+    #sidebar.collapsed img {
+      height: 2.5rem;
+      width: auto;
+    }
+
+    /* Tooltip position */
+    .tooltip {
+      left: 3.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+</style>
 <body class="bg-gray-50">
 
   <div class="flex min-h-screen">
-    <aside class="w-64 bg-white border-r border-gray-200 p-6">
-      <div class="flex flex-col items-center mb-10">
-        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+    <aside id="sidebar"
+      class="transition-all duration-300 w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
+      <div id="logoContainer" class="flex flex-col items-center mb-10 cursor-pointer">
+        <div class="p-4 rounded-xl shadow-sm border border-gray-100 hover:scale-105 transition">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster"
+            class="h-28 w-auto object-contain drop-shadow-md">
         </div>
       </div>
 
       <input type="hidden" id="tiendaId" th:value="${tiendaId}">
       <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
-      <nav class="space-y-2">
-        <!-- Dashboard -->
-        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <nav id="navLinks" class="space-y-2">
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Dashboard">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
           </svg>
-          Dashboard
+          <span class="sidebar-text">Dashboard</span>
         </a>
 
-        <!-- Inventario -->
-        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkInventario"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Inventario">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
           </svg>
-          Inventario
+          <span class="sidebar-text">Inventario</span>
         </a>
 
-        <!-- Proveedores -->
-        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkProveedores"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Proveedores">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
           </svg>
-          Proveedores
+          <span class="sidebar-text">Proveedores</span>
         </a>
 
-        <!-- Deudas -->
-        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkDeudas"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Deudas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
           </svg>
-          Deudas
+          <span class="sidebar-text">Deudas</span>
         </a>
 
-        <!-- Punto de Venta -->
-        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+        <a id="linkPuntoVenta"
+          class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg"
+          data-tooltip="Punto de Venta">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
           </svg>
-          Punto de Venta
+          <span class="sidebar-text">Punto de Venta</span>
         </a>
 
-        <!-- Informe de Ventas -->
-        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+        <a id="linkInforme"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Informe de Ventas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
           </svg>
-          Informe de Ventas
+          <span class="sidebar-text">Informe</span>
         </a>
 
-        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <a id="linkPrediccion"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Predicción">
+          <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
           </svg>
-          Predicción
+          <span class="sidebar-text">Predicción</span>
         </a>
-
-        <!-- Gestión de Tenderos -->
-        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkTendero"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Gestión de Tenderos">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
           </svg>
-          Gestión de Tenderos
+          <span class="sidebar-text">Gestión de Tenderos</span>
         </a>
 
         <!-- Tiendas -->
-        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        <a id="linkTiendas"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Tiendas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
-          Tiendas
+          <span class="sidebar-text">Tiendas</span>
         </a>
       </nav>
     </aside>
@@ -169,31 +216,32 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
               <div class="flex items-center gap-3">
-                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
-                  class="w-full pl-2 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500" />
-                <button id="refrescarProducts" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
-                          hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
-                          px-6 py-3 rounded-lg transition-all duration-200 transform 
-                          hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
-                          focus:ring-blue-400 focus:ring-offset-2">
+                <div class="relative w-full">
+                  <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input id="buscarProducts" type="text" placeholder="Buscar producto por nombre o código..."
+                        class="w-full pl-10 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-cyan-500 focus:outline-none" />
+                </div>
 
-                  <!-- SVG de refrescar -->
+                <button id="refrescarProducts" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
+                      hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
+                      px-6 py-3 rounded-lg transition-all duration-200 transform 
+                      hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
+                      focus:ring-blue-400 focus:ring-offset-2">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21" class="h-5 w-5" fill="none"
-                    stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+                      stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
                     <g fill="none" fill-rule="evenodd">
                       <path d="M3.578 6.487A8 8 0 1 1 2.5 10.5" />
                       <path d="M7.5 6.5h-4v-4" />
                     </g>
                   </svg>
-
                   Refrescar
                 </button>
-
               </div>
+
 
               <!-- Productos disponibles -->
               <div class="mt-4">
@@ -204,7 +252,7 @@
                         <th class="px-4 py-3 text-left">Código</th>
                         <th class="px-4 py-3 text-left">Nombre</th>
                         <th class="px-4 py-3 text-left">Stock</th>
-                        <th class="px-4 py-3 text-left">Precio</th>
+                        <th class="px-4 py-3 text-left">Precio (COP)</th>
                         <th class="px-4 py-3 text-left">Acción</th>
                       </tr>
                     </thead>
@@ -230,7 +278,7 @@
                     Anterior
                   </button>
                   <span id="paginaActualProducts" class="px-4 py-2 bg-gray-100 rounded-lg font-semibold text-gray-700">
-                    1
+                    1 de 1
                   </span>
                   <button onclick="cambiarPaginaProducts(1)"
                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
@@ -251,8 +299,8 @@
                       <th class="px-3 py-2 text-left">Código</th>
                       <th class="px-3 py-2 text-left">Nombre</th>
                       <th class="px-3 py-2 text-left">Cant.</th>
-                      <th class="px-3 py-2 text-left">Precio U.</th>
-                      <th class="px-3 py-2 text-left">Subtotal</th>
+                      <th class="px-3 py-2 text-left">Precio U. (COP)</th>
+                      <th class="px-3 py-2 text-left">Subtotal (COP)</th>
                       <th class="px-3 py-2 text-left">Acción</th>
                     </tr>
                   </thead>
@@ -348,241 +396,284 @@
   <!-- SCRIPT -->
   <script>
     (function () {
-      // helpers
-      function fmtCOP(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n); }
-      function showNotification(msg, type = 'info') {
-        const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500', info: 'bg-blue-600' };
-        const d = document.createElement('div');
-        d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
-        d.textContent = msg;
-        document.body.appendChild(d);
-        setTimeout(() => { d.style.opacity = 0; d.style.transform = 'translateY(-8px)'; setTimeout(() => d.remove(), 300); }, 3000);
+    // helpers
+    function fmtCOP(n) {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+      }).format(n);
+    }
+
+    function showNotification(msg, type = 'info') {
+      const colors = {
+        success: 'bg-green-600',
+        error: 'bg-red-600',
+        warning: 'bg-yellow-500',
+        info: 'bg-blue-600'
+      };
+      const d = document.createElement('div');
+      d.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${colors[type] || colors.info}`;
+      d.textContent = msg;
+      document.body.appendChild(d);
+      setTimeout(() => {
+        d.style.opacity = 0;
+        d.style.transform = 'translateY(-8px)';
+        setTimeout(() => d.remove(), 300);
+      }, 3000);
+    }
+
+    // DOM
+    const tiendaId = document.getElementById('tiendaId').value;
+    const productsBody = document.getElementById('productsBody');
+    const emptyProducts = document.getElementById('emptyProducts');
+    const buscar = document.getElementById('buscarProducts');
+    const refrescarBtn = document.getElementById('refrescarProducts');
+
+    const cartBody = document.getElementById('cartBody');
+    const subtotalDisplay = document.getElementById('subtotalDisplay');
+    const totalDisplay = document.getElementById('totalDisplay');
+
+    const btnRegisterSale = document.getElementById('btnRegisterSale');
+    const btnDownloadReceipt = document.getElementById('btnDownloadReceipt');
+    const btnRegisterDebt = document.getElementById('btnRegisterDebt');
+
+    const modalDebt = document.getElementById('modalDebt');
+    const cancelDebt = document.getElementById('cancelDebt');
+    const confirmDebt = document.getElementById('confirmDebt');
+    const debtNombre = document.getElementById('debtNombre');
+    const debtCedula = document.getElementById('debtCedula');
+
+    const button = document.getElementById("userMenuButton");
+    const dropdown = document.getElementById("userDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const logo = document.getElementById('logoContainer');
+    const sidebar = document.getElementById('sidebar');
+
+    if (localStorage.getItem('sidebar-collapsed') === 'true')
+      sidebar.classList.add('collapsed');
+
+    logo.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      localStorage.setItem('sidebar-collapsed', isCollapsed);
+    });
+
+    // Tooltip dinámico
+    document.querySelectorAll('[data-tooltip]').forEach(el => {
+      const tooltip = document.createElement('div');
+      tooltip.textContent = el.dataset.tooltip;
+      tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
+      el.appendChild(tooltip);
+      el.classList.add('relative');
+      el.addEventListener('mouseenter', () => {
+        if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0');
+      });
+      el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
+    });
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.classList.contains("opacity-100");
+      dropdown.classList.toggle("opacity-100", !isVisible);
+      dropdown.classList.toggle("translate-y-0", !isVisible);
+      dropdown.classList.toggle("scale-100", !isVisible);
+      dropdown.classList.toggle("pointer-events-none", isVisible);
+      dropdown.classList.toggle("opacity-0", isVisible);
+      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+      dropdown.classList.toggle("scale-95", isVisible);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
       }
+    });
 
-      // DOM
-      const tiendaId = document.getElementById('tiendaId').value;
-      const productsBody = document.getElementById('productsBody');
-      const emptyProducts = document.getElementById('emptyProducts');
-      const buscar = document.getElementById('buscarProducts');
-      const refrescarBtn = document.getElementById('refrescarProducts');
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("¿Deseas cerrar sesión?")) window.location.href = "/logout";
+    });
 
-      const cartBody = document.getElementById('cartBody');
-      const subtotalDisplay = document.getElementById('subtotalDisplay');
-      const totalDisplay = document.getElementById('totalDisplay');
+    // ===============================
+    // 📦 PRODUCTOS (BUSCADOR + PAGINACIÓN LOCAL)
+    // ===============================
+    let allProducts = [];
+    let products = [];
+    let paginaProducts = 0;
+    const tamanoPaginaProducts = 8;
 
-      const btnRegisterSale = document.getElementById('btnRegisterSale');
-  const btnDownloadReceipt = document.getElementById('btnDownloadReceipt');
-      const btnRegisterDebt = document.getElementById('btnRegisterDebt');
-
-      const modalDebt = document.getElementById('modalDebt');
-      const cancelDebt = document.getElementById('cancelDebt');
-      const confirmDebt = document.getElementById('confirmDebt');
-      const debtNombre = document.getElementById('debtNombre');
-      const debtCedula = document.getElementById('debtCedula');
-
-      const button = document.getElementById("userMenuButton");
-      const dropdown = document.getElementById("userDropdown");
-      const logoutBtn = document.getElementById("logoutBtn");
-
-      button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const isVisible = dropdown.classList.contains("opacity-100");
-        dropdown.classList.toggle("opacity-100", !isVisible);
-        dropdown.classList.toggle("translate-y-0", !isVisible);
-        dropdown.classList.toggle("scale-100", !isVisible);
-        dropdown.classList.toggle("pointer-events-none", isVisible);
-        dropdown.classList.toggle("opacity-0", isVisible);
-        dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-        dropdown.classList.toggle("scale-95", isVisible);
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-          dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-          dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
-        }
-      });
-
-      logoutBtn.addEventListener("click", () => {
-        if (confirm("¿Deseas cerrar sesión?")) {
-          window.location.href = "/logout";
-        }
-      });
-
-      // state
-      let products = []; // productos disponibles (página actual)
-      let cart = [];     // { productoId, codigo, nombre, cantidad, precioUnitario, subtotal }
-  let lastSaleId = null;
-
-      // paginación
-      let paginaProducts = 0;
-      const tamanoPaginaProducts = 7; // items por página
-      let totalPaginasProducts = 1;
-
-      // load products (paginated)
-      async function loadProducts() {
-        try {
-          productsBody.innerHTML = '';
-          const res = await fetch(`/api/productos/tienda/${tiendaId}?page=${paginaProducts}&size=${tamanoPaginaProducts}`);
-          if (!res.ok) {
-            const txt = await res.text().catch(() => 'Error');
-            showNotification('❌ ' + txt, 'error');
-            return;
-          }
-          const data = await res.json();
-          // soporta respuesta paginada (content + totalPages) o lista plana
-          products = data.content || data || [];
-          totalPaginasProducts = data.totalPages || 1;
-
-          if (!products.length) {
-            emptyProducts.classList.remove('hidden');
-            document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
-            return;
-          } else emptyProducts.classList.add('hidden');
-
-          products.forEach(p => {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-blue-100 hover:bg-blue-100 transition-colors';
-            tr.innerHTML = `
-            <td class="px-4 py-3">${p.codigo}</td>
-            <td class="px-4 py-3">${p.nombre}</td>
-            <td class="px-4 py-3">${p.cantidad}</td>
-            <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
-            <td class="px-4 py-3">
-              <button title="Agregar al carrito" class="add-to-cart bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" data-id="${p.id}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg></button>
-            </td>`;
-            productsBody.appendChild(tr);
-          });
-
-          // actualizar paginador
-          document.getElementById('paginaActualProducts').textContent = (paginaProducts + 1);
-        } catch (err) {
-          console.error(err);
-          showNotification('❌ Error al cargar productos', 'error');
-        }
+    async function loadProducts() {
+      try {
+        productsBody.innerHTML = '';
+        const res = await fetch(`/api/productos/tienda/${tiendaId}/todos`);
+        if (!res.ok) throw new Error('Error al cargar productos');
+        allProducts = await res.json();
+        products = [...allProducts];
+        paginaProducts = 0;
+        renderPage();
+      } catch (err) {
+        console.error(err);
+        showNotification('❌ Error al cargar productos', 'error');
       }
+    }
 
-      // search
-      buscar.addEventListener('input', () => {
-        const q = buscar.value.trim().toLowerCase();
-        Array.from(productsBody.querySelectorAll('tr')).forEach(row => {
-          const codigo = row.cells[0].textContent.toLowerCase();
-          const nombre = row.cells[1].textContent.toLowerCase();
-          row.style.display = (codigo.includes(q) || nombre.includes(q)) ? '' : 'none';
+    function renderPage() {
+      const inicio = paginaProducts * tamanoPaginaProducts;
+      const fin = inicio + tamanoPaginaProducts;
+      const visibles = products.slice(inicio, fin);
+
+      productsBody.innerHTML = '';
+      if (visibles.length === 0) {
+        emptyProducts.classList.remove('hidden');
+        return;
+      }
+      emptyProducts.classList.add('hidden');
+
+      visibles.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-blue-100 hover:bg-blue-100 transition-colors';
+        tr.innerHTML = `
+          <td class="px-4 py-3">${p.codigo}</td>
+          <td class="px-4 py-3">${p.nombre}</td>
+          <td class="px-4 py-3">${p.cantidad}</td>
+          <td class="px-4 py-3">${fmtCOP(p.precio)}</td>
+          <td class="px-4 py-3">
+            <button title="Agregar al carrito" class="add-to-cart bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" data-id="${p.id}">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+            </button>
+          </td>`;
+        productsBody.appendChild(tr);
+      });
+
+      // 🧮 Mostrar "Página X de Y"
+      const total = Math.max(1, Math.ceil(products.length / tamanoPaginaProducts));
+      document.getElementById('paginaActualProducts').textContent = `${paginaProducts + 1} de ${total}`;
+    }
+
+    window.cambiarPaginaProducts = function (dir) {
+  const total = Math.ceil(products.length / tamanoPaginaProducts);
+  if (dir === -1 && paginaProducts > 0) paginaProducts--;
+  if (dir === 1 && paginaProducts + 1 < total) paginaProducts++;
+  renderPage();
+};
+
+    // 🔍 Buscar por inicial
+    buscar.addEventListener('input', () => {
+      const q = buscar.value.trim().toLowerCase();
+      if (!q) {
+        products = [...allProducts];
+      } else {
+        products = allProducts.filter(p =>
+          (p.nombre || '').toLowerCase().startsWith(q) ||
+          (p.codigo || '').toLowerCase().startsWith(q)
+        );
+      }
+      paginaProducts = 0;
+      renderPage();
+    });
+
+    refrescarBtn.addEventListener('click', () => loadProducts());
+
+    // ===============================
+    // 🛒 CARRITO (TODO IGUAL)
+    // ===============================
+    let cart = [];
+    let lastSaleId = null;
+
+    // add to cart
+    productsBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.add-to-cart');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const prod = allProducts.find(x => x.id === id);
+      if (!prod) return showNotification('Producto no encontrado', 'error');
+      if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
+
+      const existing = cart.find(c => c.productoId === id);
+      if (existing) {
+        if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
+        existing.cantidad += 1;
+        existing.subtotal = existing.cantidad * existing.precioUnitario;
+      } else {
+        cart.push({
+          productoId: prod.id,
+          codigo: prod.codigo,
+          nombre: prod.nombre,
+          cantidad: 1,
+          precioUnitario: prod.precio,
+          subtotal: prod.precio
         });
-      });
-
-      refrescarBtn.addEventListener('click', () => loadProducts());
-
-      // paginación productos
-      window.cambiarPaginaProducts = function (direccion) {
-        if (direccion === -1 && paginaProducts > 0) paginaProducts--;
-        if (direccion === 1 && paginaProducts + 1 < totalPaginasProducts) paginaProducts++;
-        loadProducts();
       }
+      renderCart();
+    });
 
-      // add to cart (delegation)
-      productsBody.addEventListener('click', (e) => {
-        const btn = e.target.closest('button.add-to-cart');
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const prod = products.find(x => x.id === id);
-        if (!prod) return showNotification('Producto no encontrado', 'error');
-        if (prod.cantidad <= 0) return showNotification('Stock insuficiente', 'warning');
-
-        const existing = cart.find(c => c.productoId === id);
-        if (existing) {
-          if (existing.cantidad + 1 > prod.cantidad) return showNotification('No hay suficiente stock', 'warning');
-          existing.cantidad += 1;
-          existing.subtotal = existing.cantidad * existing.precioUnitario;
-        } else {
-          cart.push({
-            productoId: prod.id,
-            codigo: prod.codigo,
-            nombre: prod.nombre,
-            cantidad: 1,
-            precioUnitario: prod.precio,
-            subtotal: prod.precio
-          });
-        }
-        renderCart();
-      });
-
-      // render cart
-      function renderCart() {
-        cartBody.innerHTML = '';
-        if (cart.length === 0) {
-          cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
-        } else {
-          cart.forEach((c, idx) => {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b';
-            tr.innerHTML = `
+    function renderCart() {
+      cartBody.innerHTML = '';
+      if (cart.length === 0) {
+        cartBody.innerHTML = `<tr><td colspan="6" class="px-3 py-6 text-center text-gray-500">Carrito vacío</td></tr>`;
+      } else {
+        cart.forEach((c, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b';
+          tr.innerHTML = `
             <td class="px-3 py-2">${c.codigo}</td>
             <td class="px-3 py-2">${c.nombre}</td>
-            <td class="px-3 py-2">
-              <input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}">
-            </td>
+            <td class="px-3 py-2"><input data-idx="${idx}" class="w-16 px-2 py-1 border rounded cantidad-input" type="number" min="1" value="${c.cantidad}"></td>
             <td class="px-3 py-2">${fmtCOP(c.precioUnitario)}</td>
             <td class="px-3 py-2 subtotal-cell">${fmtCOP(c.subtotal)}</td>
-            <td class="px-3 py-2">
-              <button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button>
-            </td>`;
-            cartBody.appendChild(tr);
-          });
-        }
-        recalcTotals();
+            <td class="px-3 py-2"><button class="remove-item px-2 py-1 bg-red-500 text-white rounded" data-idx="${idx}">Eliminar</button></td>`;
+          cartBody.appendChild(tr);
+        });
       }
+      recalcTotals();
+    }
 
-      // handle cart interactions
-      cartBody.addEventListener('input', (e) => {
-        const input = e.target.closest('input.cantidad-input');
-        if (!input) return;
-        const idx = Number(input.dataset.idx);
-        const val = Math.max(1, parseInt(input.value || '1'));
-        const item = cart[idx];
-        const prod = products.find(p => p.id === item.productoId);
-        if (val > prod.cantidad) {
-          showNotification('No hay suficiente stock', 'warning');
-          input.value = item.cantidad;
-          return;
-        }
-        item.cantidad = val;
-        item.subtotal = item.cantidad * item.precioUnitario;
-        renderCart();
-      });
-
-      cartBody.addEventListener('click', (e) => {
-        const btn = e.target.closest('button.remove-item');
-        if (!btn) return;
-        const idx = Number(btn.dataset.idx);
-        cart.splice(idx, 1);
-        renderCart();
-      });
-
-      // totals
-      function recalcTotals() {
-        const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
-        const iva = 0; // si luego aplicas IVA, cámbialo
-        const total = subtotal + iva;
-        subtotalDisplay.textContent = fmtCOP(subtotal);
-        document.getElementById('ivaDisplay').textContent = fmtCOP(iva);
-        totalDisplay.textContent = fmtCOP(total);
+    cartBody.addEventListener('input', (e) => {
+      const input = e.target.closest('input.cantidad-input');
+      if (!input) return;
+      const idx = Number(input.dataset.idx);
+      const val = Math.max(1, parseInt(input.value || '1'));
+      const item = cart[idx];
+      const prod = allProducts.find(p => p.id === item.productoId);
+      if (val > prod.cantidad) {
+        showNotification('No hay suficiente stock', 'warning');
+        input.value = item.cantidad;
+        return;
       }
+      item.cantidad = val;
+      item.subtotal = item.cantidad * item.precioUnitario;
+      renderCart();
+    });
 
-      // prepare payload: map cart -> ProductoVendido
-      function buildProductosVendido() {
-        return cart.map(i => ({
-          productoId: i.productoId,
-          codigo: i.codigo,
-          nombre: i.nombre,
-          cantidad: i.cantidad,
-          precioUnitario: i.precioUnitario,
-          subtotal: i.subtotal
-        }));
-      }
+    cartBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.remove-item');
+      if (!btn) return;
+      const idx = Number(btn.dataset.idx);
+      cart.splice(idx, 1);
+      renderCart();
+    });
+
+    function recalcTotals() {
+      const subtotal = cart.reduce((s, i) => s + (i.subtotal || 0), 0);
+      subtotalDisplay.textContent = fmtCOP(subtotal);
+      document.getElementById('ivaDisplay').textContent = fmtCOP(0);
+      totalDisplay.textContent = fmtCOP(subtotal);
+    }
+
+    function buildProductosVendido() {
+      return cart.map(i => ({
+        productoId: i.productoId,
+        codigo: i.codigo,
+        nombre: i.nombre,
+        cantidad: i.cantidad,
+        precioUnitario: i.precioUnitario,
+        subtotal: i.subtotal
+      }));
+    }
 
       // register sale
       btnRegisterSale.addEventListener('click', async () => {
@@ -728,10 +819,10 @@
       });
 
       document.addEventListener('DOMContentLoaded', () => {
-        loadProducts();
-        renderCart();
-        loadRecentSales();
-      });
+      loadProducts();
+      renderCart();
+      loadRecentSales();
+    });
 
     })();
   </script>
