@@ -8,93 +8,140 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
 
+    /* Sidebar collapse behavior */
+    #sidebar.collapsed {
+      width: 5rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    #sidebar.collapsed .sidebar-text {
+      display: none;
+    }
+
+    #sidebar.collapsed img {
+      height: 2.5rem;
+      width: auto;
+    }
+
+    /* Tooltip position */
+    .tooltip {
+      left: 3.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+</style>
 <body class="bg-gray-50">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-gray-200 p-6">
-      <div class="flex flex-col items-center mb-10">
-        <div class=" p-4 rounded-xl shadow-sm border border-gray-100">
-          <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+    <aside id="sidebar"
+      class="transition-all duration-300 w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
+      <div id="logoContainer" class="flex flex-col items-center mb-10 cursor-pointer">
+        <div class="p-4 rounded-xl shadow-sm border border-gray-100 hover:scale-105 transition">
+          <img th:src="@{/images/logo.png}" alt="ShopMaster"
+            class="h-28 w-auto object-contain drop-shadow-md">
         </div>
       </div>
 
-
       <input type="hidden" id="tiendaId" th:value="${tiendaId}">
       <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
-      <nav class="space-y-2">
-        <!-- Dashboard -->
-        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <nav id="navLinks" class="space-y-2">
+        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Dashboard">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
           </svg>
-          Dashboard
+          <span class="sidebar-text">Dashboard</span>
         </a>
 
-        <!-- Inventario -->
-        <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkInventario"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Inventario">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
           </svg>
-          Inventario
+          <span class="sidebar-text">Inventario</span>
         </a>
 
-        <!-- Proveedores -->
-        <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkProveedores"
+          class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg"
+          data-tooltip="Proveedores">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
           </svg>
-          Proveedores
+          <span class="sidebar-text">Proveedores</span>
         </a>
 
-        <!-- Deudas -->
-        <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkDeudas"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Deudas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
           </svg>
-          Deudas
+          <span class="sidebar-text">Deudas</span>
         </a>
 
-        <!-- Punto de Venta -->
-        <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+        <a id="linkPuntoVenta"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Punto de Venta">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
           </svg>
-          Punto de Venta
+          <span class="sidebar-text">Punto de Venta</span>
         </a>
 
-        <!-- Informe de Ventas -->
-        <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+        <a id="linkInforme"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Informe de Ventas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
           </svg>
-          Informe de Ventas
+          <span class="sidebar-text">Informe</span>
         </a>
-        <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+
+        <a id="linkPrediccion"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Predicción">
+          <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
           </svg>
-          Predicción
+          <span class="sidebar-text">Predicción</span>
         </a>
-
-        <!-- Gestión de Tenderos -->
-        <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a id="linkTendero"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Gestión de Tenderos">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
           </svg>
-          Gestión de Tenderos
+          <span class="sidebar-text">Gestión de Tenderos</span>
         </a>
 
         <!-- Tiendas -->
-        <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        <a id="linkTiendas"
+          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+          data-tooltip="Tiendas">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
-          Tiendas
+          <span class="sidebar-text">Tiendas</span>
         </a>
       </nav>
     </aside>
@@ -214,26 +261,21 @@
 
         <!-- Card de proveedores -->
         <div class="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden mt-6">
-          <!-- Encabezado -->
           <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4">
             <h2 class="text-lg font-semibold flex items-center gap-2">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
-              </svg>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"/></svg>
               Proveedores Registrados
             </h2>
           </div>
 
-          <!-- Contenido -->
           <div class="p-6 overflow-x-auto">
+            <!-- BUSCADOR: mantuve la posición actual -->
             <div class="relative mb-4">
-              <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input id="buscar" onkeyup="buscarProveedores()" type="text" placeholder="Buscar proveedor..."
+              <!-- cambié el id al nuevo input para integrarlo con la paginación frontend -->
+              <input id="buscarProveedorInput" onkeyup="onBuscarKeyup()" type="text" placeholder="Buscar proveedor (por inicial)..."
                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
             </div>
 
@@ -251,272 +293,302 @@
             </table>
 
             <div id="emptyProveedores" class="text-center py-10 text-gray-500 hidden">
-              <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
-              </svg>
+              <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18"/></svg>
               <p class="text-lg">No hay proveedores registrados aún</p>
               <p class="text-gray-400 text-sm mt-2">Agrega un proveedor usando el formulario de arriba</p>
             </div>
           </div>
         </div>
 
-        <!-- 🔽 Paginación fuera del card -->
-        <div class="flex justify-center items-center space-x-4 mt-6">
-          <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 
-                          text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform 
-                          hover:scale-[1.02] hover:shadow-lg">
+        <!-- Paginador frontend -->
+        <div id="paginadorProveedores" class="flex justify-center items-center space-x-4 mt-6">
+          <button onclick="anteriorPagina()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
             <span class="flex items-center gap-2">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
               Anterior
             </span>
           </button>
 
-          <span id="paginaActual"
-            class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">
-            1
-          </span>
+          <span id="paginaActual" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
+          <span class="text-sm text-gray-600">de</span>
+          <span id="totalPaginas" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
 
-          <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
-                          text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform 
-                          hover:scale-[1.02] hover:shadow-lg">
+          <button onclick="siguientePagina()" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
             <span class="flex items-center gap-2">
               Siguiente
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </span>
           </button>
         </div>
+
       </main>
+    </div>
+    
 </body>
 
 </html>
 
 
 <script>
-  const tiendaId = document.getElementById("tiendaId").value;
-  const button = document.getElementById("userMenuButton");
-  const dropdown = document.getElementById("userDropdown");
-  const logoutBtn = document.getElementById("logoutBtn");
+    // ---------- UI helpers (mantienen tu comportamiento original) ----------
+    const logo = document.getElementById('logoContainer');
+    const sidebar = document.getElementById('sidebar');
 
-  // Mostrar/ocultar con animación
-  button.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const isVisible = dropdown.classList.contains("opacity-100");
-    dropdown.classList.toggle("opacity-100", !isVisible);
-    dropdown.classList.toggle("translate-y-0", !isVisible);
-    dropdown.classList.toggle("scale-100", !isVisible);
-    dropdown.classList.toggle("pointer-events-none", isVisible);
-    dropdown.classList.toggle("opacity-0", isVisible);
-    dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-    dropdown.classList.toggle("scale-95", isVisible);
-  });
-
-  // Cerrar al hacer clic fuera
-  document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-      dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-      dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    if (localStorage.getItem('sidebar-collapsed') === 'true') {
+      sidebar.classList.add('collapsed');
     }
-  });
 
-  // Acción de cerrar sesión
-  logoutBtn.addEventListener("click", () => {
-    if (confirm("¿Deseas cerrar sesión?")) {
-      window.location.href = "/logout";
+    logo?.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      localStorage.setItem('sidebar-collapsed', isCollapsed);
+    });
+
+    document.querySelectorAll('[data-tooltip]').forEach(el => {
+      const tooltip = document.createElement('div');
+      tooltip.textContent = el.dataset.tooltip;
+      tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
+      el.appendChild(tooltip);
+      el.classList.add('relative');
+      el.addEventListener('mouseenter', () => { if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0'); });
+      el.addEventListener('mouseleave', () => { tooltip.classList.add('opacity-0'); });
+    });
+
+    const tiendaId = document.getElementById("tiendaId").value;
+    const button = document.getElementById("userMenuButton");
+    const dropdown = document.getElementById("userDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    button?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.classList.contains("opacity-100");
+      dropdown.classList.toggle("opacity-100", !isVisible);
+      dropdown.classList.toggle("translate-y-0", !isVisible);
+      dropdown.classList.toggle("scale-100", !isVisible);
+      dropdown.classList.toggle("pointer-events-none", isVisible);
+      dropdown.classList.toggle("opacity-0", isVisible);
+      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+      dropdown.classList.toggle("scale-95", isVisible);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (dropdown && !dropdown.contains(e.target) && !button.contains(e.target)) {
+        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+      }
+    });
+
+    logoutBtn?.addEventListener("click", () => {
+      if (confirm("¿Deseas cerrar sesión?")) window.location.href = "/logout";
+    });
+
+    function showNotification(message, type = "info") {
+      const notification = document.createElement("div");
+      notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : type === "warning" ? "bg-yellow-500" : "bg-blue-600" }`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => { notification.style.opacity = "0"; notification.style.transform = "translateY(-10px)"; setTimeout(() => notification.remove(), 300); }, 3000);
     }
-  });
 
-  let pagina = 0;
-  const tamanoPagina = 5;
-  let totalPaginas = 0;
+    // ---------- Datos & paginación frontend ----------
+    let proveedores = [];        // lista completa cargada desde backend (source of truth)
+    let filtrados = [];         // lista actual luego del filtro (se paginará)
+    let pagina = 0;
+    const tamanoPagina = 5;
 
+    // Try to fetch 'todos' endpoint. If not available, fallback to paged accumulation.
+    async function cargarProveedores() {
+      // intenta primero endpoint /tienda/{id}/todos
+      try {
+        const res = await fetch(`/api/proveedores/tienda/${tiendaId}/todos`);
+        if (res.ok) {
+          proveedores = await res.json();
+          filtrados = [...proveedores];
+          pagina = 0;
+          document.getElementById("paginadorProveedores").classList.remove("hidden");
+          mostrarPagina();
+          return;
+        }
+        // si 404 u otro, caemos al fallback
+        console.warn("Endpoint /todos no disponible, usando fallback paginado.");
+      } catch (e) {
+        console.warn("Error al solicitar /todos, fallback paginado:", e);
+      }
 
-  function showNotification(message, type = "info") {
-    const notification = document.createElement("div");
-    notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" :
-        type === "error" ? "bg-red-600" :
-          type === "warning" ? "bg-yellow-500" :
-            "bg-blue-600"
-      }`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    setTimeout(() => {
-      notification.style.opacity = "0";
-      notification.style.transform = "translateY(-10px)";
-      setTimeout(() => notification.remove(), 300);
-    }, 3000);
-  }
+      // Fallback: ir acumulando páginas desde el endpoint paginado
+      proveedores = [];
+      let page = 0;
+      const size = 100; // intenta traer en bloques grandes para reducir requests (ajusta si es necesario)
+      while (true) {
+        try {
+          const r = await fetch(`/api/proveedores/tienda/${tiendaId}?page=${page}&size=${size}`);
+          if (!r.ok) break;
+          const data = await r.json();
+          const contenidos = data.content || [];
+          proveedores.push(...contenidos);
+          if ((data.totalPages !== undefined && page + 1 >= data.totalPages) || contenidos.length < size) break;
+          page++;
+        } catch (err) { console.error("Error paginado fallback:", err); break; }
+      }
+      filtrados = [...proveedores];
+      pagina = 0;
+      document.getElementById("paginadorProveedores").classList.remove("hidden");
+      mostrarPagina();
+    }
 
-  async function cargarProveedores() {
-    try {
-      const res = await fetch(`/api/proveedores/tienda/${tiendaId}?page=${pagina}&size=${tamanoPagina}`);
-      if (!res.ok) throw new Error("Error al obtener proveedores");
-
-      const data = await res.json();
-      const proveedores = data.content || [];
-      totalPaginas = data.totalPages || 1;
-
+    function mostrarPagina() {
       const tbody = document.querySelector("#tablaProveedores tbody");
       tbody.innerHTML = "";
 
-      if (proveedores.length === 0) {
+      const inicio = pagina * tamanoPagina;
+      const fin = inicio + tamanoPagina;
+      const paginaActual = filtrados.slice(inicio, fin);
+
+      if (paginaActual.length === 0) {
         document.getElementById("emptyProveedores").classList.remove("hidden");
-        return;
+      } else {
+        document.getElementById("emptyProveedores").classList.add("hidden");
+        paginaActual.forEach(p => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors";
+          tr.innerHTML = `
+            <td class="px-6 py-3">${escapeHtml(p.nombre)}</td>
+            <td class="px-6 py-3">${escapeHtml(p.nit || "")}</td>
+            <td class="px-6 py-3">${escapeHtml(p.telefono || "")}</td>
+            <td class="px-6 py-3">${escapeHtml(p.direccion || "")}</td>
+            <td class="px-6 py-3 flex gap-2">
+              <button class="btn-edit bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
+                  data-id="${p.id}" data-nombre="${escapeAttr(p.nombre)}" data-nit="${escapeAttr(p.nit || "")}"
+                  data-telefono="${escapeAttr(p.telefono || "")}" data-direccion="${escapeAttr(p.direccion || "")}" title="Editar proveedor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/></svg>
+              </button>
+              <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${p.id}" title="Eliminar proveedor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/><path d="M9 10h2v8H9zm4 0h2v8h-2z"/></svg>
+              </button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
       }
 
-      document.getElementById("emptyProveedores").classList.add("hidden");
+      // actualizar paginador
+      const total = Math.max(1, Math.ceil(filtrados.length / tamanoPagina));
+      document.getElementById("paginaActual").textContent = (pagina + 1);
+      document.getElementById("totalPaginas").textContent = total;
 
-      proveedores.forEach(p => {
-        const tr = document.createElement("tr");
-        tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors";
-        tr.innerHTML = `
-        <td class="px-6 py-3">${p.nombre}</td>
-        <td class="px-6 py-3">${p.nit}</td>
-        <td class="px-6 py-3">${p.telefono}</td>
-        <td class="px-6 py-3">${p.direccion}</td>
-        <td class="px-6 py-3 flex gap-2">
-          <button class="btn-edit bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
-              data-id="${p.id}" data-nombre="${p.nombre}" data-nit="${p.nit}"
-              data-telefono="${p.telefono}" data-direccion="${p.direccion}" title="Editar proveedor">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
-                  <path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/>
-                </svg>
-          </button>
-          <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" 
-              data-id="${p.id}" title="Eliminar proveedor">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff">
-                  <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/>
-                  <path d="M9 10h2v8H9zm4 0h2v8h-2z"/>
-                </svg>
-          </button>
-        </td>
-      `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById("paginaActual").textContent = pagina + 1;
-    } catch (error) {
-      console.error(error);
-      showNotification("Error al cargar proveedores", "error");
+      // si solo hay 1 página, opcionalmente ocultar paginador (tu preferencia)
+      if (total <= 1) {
+        //document.getElementById("paginadorProveedores").classList.add("hidden");
+      } else {
+        document.getElementById("paginadorProveedores").classList.remove("hidden");
+      }
     }
-  }
 
-  document.getElementById("formProveedor").addEventListener("submit", async function (e) {
-    e.preventDefault();
+    function siguientePagina() { if ((pagina + 1) * tamanoPagina < filtrados.length) { pagina++; mostrarPagina(); } }
+    function anteriorPagina() { if (pagina > 0) { pagina--; mostrarPagina(); } }
 
-    const proveedor = {
-      nombre: this.nombre.value.trim(),
-      nit: this.nit.value.trim(),
-      telefono: this.telefono.value.trim(),
-      direccion: this.direccion.value.trim(),
-      tiendaId: tiendaId
-    };
-
-    const isEdit = !!this.dataset.id;
-    const url = isEdit
-      ? `/api/proveedores/actualizar/${this.dataset.id}`
-      : `/api/proveedores/crear`;
-
-    const method = isEdit ? "PUT" : "POST";
-
-    try {
-      const resp = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(proveedor)
-      });
-
-      if (!resp.ok) {
-        const msg = await resp.text();
-        showNotification("Error: " + msg, "error");
+    // ---------- Búsqueda por inicial (real-time) ----------
+    function onBuscarKeyup() {
+      const q = document.getElementById("buscarProveedorInput").value.trim().toLowerCase();
+      if (!q) {
+        // restaurar lista completa y mostrar primera página
+        filtrados = [...proveedores];
+        pagina = 0;
+        mostrarPagina();
         return;
       }
-
-      this.reset();
-      delete this.dataset.id;
-      showNotification(isEdit ? "Proveedor actualizado" : "Proveedor creado", "success");
-      cargarProveedores();
-    } catch (error) {
-      console.error(error);
-      showNotification("❌ Error de conexión", "error");
-    }
-  });
-
-  document.getElementById("tablaProveedores").addEventListener("click", async (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-
-    if (btn.classList.contains("btn-edit")) {
-      const form = document.getElementById("formProveedor");
-      form.dataset.id = btn.dataset.id;
-      form.nombre.value = btn.dataset.nombre;
-      form.nit.value = btn.dataset.nit;
-      form.telefono.value = btn.dataset.telefono;
-      form.direccion.value = btn.dataset.direccion;
-      showNotification("Editando proveedor...", "info");
-      return;
+      // búsqueda por inicial: startsWith
+      filtrados = proveedores.filter(p => (p.nombre || "").toLowerCase().startsWith(q));
+      pagina = 0;
+      mostrarPagina();
     }
 
-    if (btn.classList.contains("btn-delete")) {
-      if (!confirm("¿Eliminar este proveedor?")) return;
-      const id = btn.dataset.id;
+    // ---------- Form submit (crear/actualizar) ----------
+    document.getElementById("formProveedor").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const proveedor = {
+        nombre: this.nombre.value.trim(),
+        nit: this.nit.value.trim(),
+        telefono: this.telefono.value.trim(),
+        direccion: this.direccion.value.trim(),
+        tiendaId: tiendaId
+      };
+
+      const isEdit = !!this.dataset.id;
+      const url = isEdit ? `/api/proveedores/actualizar/${this.dataset.id}` : `/api/proveedores/crear`;
+      const method = isEdit ? "PUT" : "POST";
+
       try {
-        const resp = await fetch(`/api/proveedores/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
-        if (!resp.ok) throw new Error(await resp.text());
-        showNotification("Proveedor eliminado", "success");
-        cargarProveedores();
+        const resp = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(proveedor) });
+        if (!resp.ok) { const msg = await resp.text(); showNotification("Error: " + msg, "error"); return; }
+        this.reset(); delete this.dataset.id;
+        showNotification(isEdit ? "Proveedor actualizado" : "Proveedor creado", "success");
+        await cargarProveedores();
       } catch (error) {
-        showNotification("Error al eliminar", "error");
+        console.error(error); showNotification("❌ Error de conexión", "error");
       }
-    }
-  });
-
-  function cambiarPagina(direccion) {
-    if (direccion === -1 && pagina > 0) pagina--;
-    if (direccion === 1 && pagina + 1 < totalPaginas) pagina++;
-    cargarProveedores();
-  }
-
-  function buscarProveedores() {
-    const input = document.getElementById("buscar").value.toLowerCase();
-    const filas = document.querySelectorAll("#tablaProveedores tbody tr");
-    filas.forEach(fila => {
-      const nombre = fila.cells[0].textContent.toLowerCase();
-      fila.style.display = nombre.includes(input) ? "" : "none";
     });
-  }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    cargarProveedores();
-  });
+    // ---------- Tabla actions (editar, eliminar) ----------
+    document.getElementById("tablaProveedores").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const rol = document.getElementById("rolUsuario")?.value;
+      if (btn.classList.contains("btn-edit")) {
+        const form = document.getElementById("formProveedor");
+        form.dataset.id = btn.dataset.id;
+        form.nombre.value = btn.dataset.nombre;
+        form.nit.value = btn.dataset.nit;
+        form.telefono.value = btn.dataset.telefono;
+        form.direccion.value = btn.dataset.direccion;
+        showNotification("Editando proveedor...", "info");
+        return;
+      }
+
+      if (btn.classList.contains("btn-delete")) {
+        if (!confirm("¿Eliminar este proveedor?")) return;
+        const id = btn.dataset.id;
+        try {
+          const resp = await fetch(`/api/proveedores/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
+          if (!resp.ok) throw new Error(await resp.text());
+          showNotification("Proveedor eliminado", "success");
+          await cargarProveedores();
+        } catch (error) {
+          console.error(error); showNotification("Error al eliminar", "error");
+        }
+      }
+    });
+
+    
+
+    // ---------- Utilities ----------
+    function escapeHtml(str = "") { return String(str).replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+    function escapeAttr(str = "") { return String(str).replace(/"/g, '&quot;'); }
+
+    // Inicializar la carga
+    window.addEventListener("DOMContentLoaded", () => {
+      cargarProveedores();
+    });
 
     document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-    document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
-    document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
-    document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
-    document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
-    document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
-    document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
-    document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
-    document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
-    document.getElementById("linkTiendas").href = `/tiendas`;
+        document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+        document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
+        document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
+        document.getElementById("linkTiendas").href = `/tiendas`;
 
-    if (rol === "ROLE_TENDERO") {
-      const tenderoMenu = document.getElementById("linkTendero");
-      const tiendasMenu = document.getElementById("linkTiendas");
+        // 🧱 Ocultar elementos según el rol
+        if (rol === "ROLE_TENDERO") {
+            const tenderoMenu = document.getElementById("linkTendero");
+            const tiendasMenu = document.getElementById("linkTiendas");
 
-      if (tenderoMenu) tenderoMenu.style.display = "none";
-      if (tiendasMenu) tiendasMenu.style.display = "none";
-    }
-  });
-</script>
+            if (tenderoMenu) tenderoMenu.style.display = "none";
+            if (tiendasMenu) tiendasMenu.style.display = "none";
+        }
+  </script>
 
 </body>
 

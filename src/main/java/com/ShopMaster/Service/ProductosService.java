@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.ProductoConProveedores;
@@ -40,28 +38,28 @@ public class ProductosService {
 
     // Actualizar producto asegurando que pertenece a la tienda
     public Productos actualizarProducto(String id, Productos producto) {
-    Productos existente = productosRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        Productos existente = productosRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-    // 🧩 Validar código duplicado solo si pertenece a otro producto en la misma tienda
-    boolean codigoDuplicado = productosRepository
-        .existsByCodigoAndTiendaIdAndIdNot(producto.getCodigo(), existente.getTiendaId(), id);
+        // 🧩 Validar código duplicado solo si pertenece a otro producto en la misma tienda
+        boolean codigoDuplicado = productosRepository
+            .existsByCodigoAndTiendaIdAndIdNot(producto.getCodigo(), existente.getTiendaId(), id);
 
-    if (codigoDuplicado) {
-        throw new RuntimeException("El código ya está registrado 🚫");
+        if (codigoDuplicado) {
+            throw new RuntimeException("El código ya está registrado 🚫");
+        }
+
+        // 🧠 Mantener la tienda original
+        producto.setId(id);
+        producto.setTiendaId(existente.getTiendaId());
+
+        // 🧩 Si no se envían proveedores nuevos, mantener los actuales
+        if (producto.getProveedorIds() == null || producto.getProveedorIds().isEmpty()) {
+            producto.setProveedorIds(existente.getProveedorIds());
+        }
+
+        return productosRepository.save(producto);
     }
-
-    // 🧠 Mantener la tienda original
-    producto.setId(id);
-    producto.setTiendaId(existente.getTiendaId());
-
-    // 🧩 Si no se envían proveedores nuevos, mantener los actuales
-    if (producto.getProveedorIds() == null || producto.getProveedorIds().isEmpty()) {
-        producto.setProveedorIds(existente.getProveedorIds());
-    }
-
-    return productosRepository.save(producto);
-}
 
 
     // Eliminar producto asegurando que pertenece a la tienda
@@ -77,10 +75,10 @@ public class ProductosService {
     }
 
 
-    public Page<ProductoConProveedores> listarPorTienda(String tiendaId, Pageable pageable) {
-        Page<Productos> productosPage = productosRepository.findByTiendaId(tiendaId, pageable);
+    public List<ProductoConProveedores> listarTodosPorTienda(String tiendaId) {
+        List<Productos> productos = productosRepository.findByTiendaId(tiendaId);
 
-        return productosPage.map(producto -> {
+        return productos.stream().map(producto -> {
             ProductoConProveedores dto = new ProductoConProveedores();
             dto.setId(producto.getId());
             dto.setCodigo(producto.getCodigo());
@@ -103,6 +101,8 @@ public class ProductosService {
             }
 
             return dto;
-        });
+        }).toList();
+
+
     }
 }

@@ -61,8 +61,7 @@ public class SecurityConfig {
                 // Recursos estáticos y páginas públicas
                         .requestMatchers("/login", "/home", "/", "/favicon.ico", "/api/auth/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**",
-                    "/fonts/**").permitAll() // AÑADIDO
-                        .requestMatchers("/features", "/pricing", "/contacto", "/register").permitAll() // AÑADIDO
+                    "/fonts/**", "/register").permitAll() // AÑADIDO
 
                         .requestMatchers("/login", "/register", "/success", "/home", "/favicon.ico", "/api/auth/**", "/api/pqrs").permitAll()
                         .requestMatchers("/tiendas", "/tiendas/RegistroTendero", "/tiendas/{id}/tendero").hasAuthority("ROLE_ADMIN")
@@ -77,6 +76,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .usernameParameter("email") // <--- importante: campo del formulario
+                        .passwordParameter("password") // opcional, por claridad
                         .successHandler(customAuthenticationSuccessHandler)
                         .permitAll()
                 )
@@ -88,4 +89,6 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 }
