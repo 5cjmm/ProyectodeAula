@@ -54,7 +54,7 @@ public class TiendaViewController {
 
         if (usuario == null) {
             // no autenticado/usuario no encontrado: redirigir al login (o a home según tu app)
-            return "redirect:/login";
+            return "redirect:/Login";
         }
 
         if (usuario.getRoles() != null && usuario.getRoles().contains("ROLE_TENDERO")) {
