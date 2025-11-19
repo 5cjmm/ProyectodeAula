@@ -26,7 +26,7 @@ public class AuthController {
         if (error != null) {
             model.addAttribute("errorMessage", "Usuario o contraseña incorrectos.");
         }
-        return "login";
+        return "Login";
     }
 
     @GetMapping("/register")
