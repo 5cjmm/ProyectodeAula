@@ -2,6 +2,7 @@ package com.ShopMaster.Service;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,23 +11,22 @@ import java.util.Locale;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.ProductoVendido;
-import com.ShopMaster.Model.Venta;
-import com.ShopMaster.Repository.VentaRepository;
-import com.ShopMaster.Repository.UsuarioRepository;
 import com.ShopMaster.Model.Tienda;
 import com.ShopMaster.Model.Usuario;
+import com.ShopMaster.Model.Venta;
+import com.ShopMaster.Repository.UsuarioRepository;
+import com.ShopMaster.Repository.VentaRepository;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.Image;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.net.URL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -109,12 +109,24 @@ public class PdfService {
             try {
                 if (venta.getUsuarioId() != null) {
                     java.util.Optional<Usuario> uOpt = usuarioRepository.findById(venta.getUsuarioId());
-                    if (uOpt.isPresent()) vendedor = uOpt.get().getUsername();
+                    if (uOpt.isPresent() && uOpt.get().getUsername() != null && !uOpt.get().getUsername().isBlank()) {
+                        vendedor = uOpt.get().getUsername();
+                    }
                 }
                 if ("-".equals(vendedor)) {
                     // fallback: usuario que solicita el PDF (si está autenticado)
                     org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
-                    if (auth != null && auth.getName() != null) vendedor = auth.getName();
+                    if (auth != null && auth.getName() != null) {
+                        // En este proyecto `auth.getName()` suele ser el email (CustomUserDetailsService usa email como username).
+                        // Intentamos resolver el Usuario por email y usar su `username` si existe.
+                        java.util.Optional<Usuario> authUser = usuarioRepository.findByEmail(auth.getName());
+                        if (authUser.isPresent() && authUser.get().getUsername() != null && !authUser.get().getUsername().isBlank()) {
+                            vendedor = authUser.get().getUsername();
+                        } else {
+                            // si no encontramos un username, usamos el valor del authentication (posible email)
+                            vendedor = auth.getName();
+                        }
+                    }
                 }
             } catch (Exception ex) {
                 // ignore and leave vendedor as '-'
