@@ -321,20 +321,20 @@
 
                                 if (!resp.ok) {
                                     if (msg.toLowerCase().includes("nit")) {
-                                        showNotification("⚠️ El NIT ya está registrado", "warning");
+                                        showNotification("El NIT ya está registrado", "warning");
                                     } else {
-                                        showNotification("❌ Error al guardar: " + msg, "error");
+                                        showNotification("Error al guardar: " + msg, "error");
                                     }
                                     return;
                                 }
 
                                 form.reset();
                                 await cargarTiendas();
-                                showNotification("✅ Tienda creada exitosamente", "success");
+                                showNotification("Tienda creada exitosamente", "success");
 
                             } catch (error) {
                                 console.error("Error de conexión:", error);
-                                showNotification("🌐 Error de conexión con el servidor", "error");
+                                showNotification("Error de conexión con el servidor", "error");
                             } finally {
                                 if (btnText && btnLoading) {
                                     btnText.style.display = 'inline';
@@ -386,7 +386,7 @@
 
                             } catch (error) {
                                 console.error(error);
-                                showNotification("❌ No se pudieron cargar las tiendas", "error");
+                                showNotification("No se pudieron cargar las tiendas", "error");
                             }
                         }
 
