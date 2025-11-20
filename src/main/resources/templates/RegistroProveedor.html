@@ -521,10 +521,10 @@
         const resp = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(proveedor) });
         if (!resp.ok) { const msg = await resp.text(); showNotification("Error: " + msg, "error"); return; }
         this.reset(); delete this.dataset.id;
-        showNotification(isEdit ? "Proveedor actualizado" : "Proveedor creado", "success");
+        showNotification(isEdit ? "Proveedor actualizado exitosamente" : "Proveedor creado exitosamente", "success");
         await cargarProveedores();
       } catch (error) {
-        console.error(error); showNotification("❌ Error de conexión", "error");
+        console.error(error); showNotification("Error de conexión", "error");
       }
     });
 
@@ -550,7 +550,7 @@
         try {
           const resp = await fetch(`/api/proveedores/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
           if (!resp.ok) throw new Error(await resp.text());
-          showNotification("Proveedor eliminado", "success");
+          showNotification("Proveedor eliminado exitosamente", "success");
           await cargarProveedores();
         } catch (error) {
           console.error(error); showNotification("Error al eliminar", "error");
