@@ -600,7 +600,7 @@
 
     this.reset();
     delete this.dataset.id;
-    showNotification(isEdit ? "Producto actualizado" : "Producto creado", "success");
+    showNotification(isEdit ? "Producto actualizado exitosamente" : "Producto creado exitosamente", "success");
     await cargarProductos();
   } catch (err) {
     console.error(err);
@@ -629,7 +629,7 @@
         try {
           const resp = await fetch(`/api/productos/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
           if (!resp.ok) throw new Error(await resp.text());
-          showNotification("Producto eliminado correctamente", "success");
+          showNotification("Producto eliminado exitosamente", "success");
           await cargarProductos();
         } catch (err) {
           console.error(err);
