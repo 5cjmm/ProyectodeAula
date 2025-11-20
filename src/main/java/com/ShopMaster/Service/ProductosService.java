@@ -46,7 +46,7 @@ public class ProductosService {
             .existsByCodigoAndTiendaIdAndIdNot(producto.getCodigo(), existente.getTiendaId(), id);
 
         if (codigoDuplicado) {
-            throw new RuntimeException("El código ya está registrado 🚫");
+            throw new RuntimeException("El código ya está registrado");
         }
 
         // 🧠 Mantener la tienda original
