@@ -515,7 +515,7 @@
         renderPage();
       } catch (err) {
         console.error(err);
-        showNotification('❌ Error al cargar productos', 'error');
+        showNotification('Error al cargar productos', 'error');
       }
     }
 
@@ -698,7 +698,7 @@
           const ventaCreada = await res.json().catch(() => null);
           lastSaleId = ventaCreada?.id || null;
           // Mostrar primero el mensaje de confirmación
-          showNotification('✅ Venta registrada', 'success');
+          showNotification('Venta registrada', 'success');
           // Habilitar el botón de recibo y preguntar si desea abrir ahora
           if (lastSaleId) {
             btnDownloadReceipt.disabled = false;
@@ -713,7 +713,7 @@
           loadProducts(); // recargar stock
         } catch (err) {
           console.error(err);
-          showNotification('❌ Error de conexión', 'error');
+          showNotification('Error de conexión', 'error');
         }
       });
 
@@ -767,7 +767,7 @@
             showNotification(msg || 'Error al crear deuda', 'error');
             return;
           }
-          showNotification('✅ Deuda registrada', 'success');
+          showNotification('Deuda registrada', 'success');
           cart = [];
           renderCart();
           modalDebt.classList.add('hidden');
@@ -775,7 +775,7 @@
           loadProducts();
         } catch (err) {
           console.error(err);
-          showNotification('❌ Error de conexión', 'error');
+          showNotification('Error de conexión', 'error');
         }
       });
 
