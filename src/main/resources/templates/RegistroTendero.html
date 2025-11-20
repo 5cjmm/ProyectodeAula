@@ -505,7 +505,7 @@
               showNotification(txt || 'Error al eliminar', 'error');
               return;
             }
-            showNotification('🗑️ Tendero eliminado', 'success');
+            showNotification('Tendero eliminado exitosamente', 'success');
             cargarTenderos();
           } catch (err) {
             console.error(err);
@@ -555,7 +555,7 @@
             return;
           }
 
-          showNotification(editId ? 'Tendero actualizado' : 'Tendero creado', 'success');
+          showNotification(editId ? 'Tendero actualizado exitosamente' : 'Tendero creado exitosamente', 'success');
           form.reset();
           editId = null;
           cargarTenderos();
