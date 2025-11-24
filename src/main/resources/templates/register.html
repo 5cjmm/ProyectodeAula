@@ -10,6 +10,92 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        /* Estilos del modal moderno */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeInOverlay 0.3s ease;
+        }
+
+        @keyframes fadeInOverlay {
+            from {
+                background: rgba(0, 0, 0, 0);
+            }
+
+            to {
+                background: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideInModal 0.3s ease forwards;
+        }
+
+        @keyframes slideInModal {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-muted);
+        }
+
+        .modal-close:hover {
+            color: var(--color-text);
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            text-align: right;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .modal-footer .btn {
+            min-width: 100px;
+        }
+
         :root {
             --color-primary: #3b5bff;
             --color-primary-hover: #334bdb;
@@ -259,6 +345,32 @@
         }
     </style>
 </head>
+<!-- Modal de Términos y Condiciones -->
+<div id="termsModal" class="modal-overlay">
+    <div class="modal-card">
+        <header class="modal-header">
+            <h2 class="modal-title">Términos y Condiciones</h2>
+            <button id="closeTerms" class="modal-close">&times;</button>
+        </header>
+        <div class="modal-content">
+            <p>
+                Al registrarte, autorizas el tratamiento de tus datos personales conforme a lo establecido en la
+                <strong>Ley 1581 de 2012</strong> de Colombia,
+                la cual garantiza tu derecho a conocer, actualizar, rectificar y suprimir los datos que hemos recogido
+                sobre ti.<br><br>
+                Tus datos serán usados únicamente para fines operativos del servicio, comunicación, y mejoras del
+                sistema. Nos comprometemos a aplicar
+                medidas técnicas y administrativas para proteger tu información y evitar accesos no autorizados.<br><br>
+                También reconoces tu derecho a presentar consultas o reclamos sobre el tratamiento de tus datos, y que
+                puedes revocar tu autorización
+                cuando lo desees, siempre que no afecte obligaciones legales o contractuales.
+            </p>
+        </div>
+        <footer class="modal-footer">
+            <button id="agreeTerms" class="btn btn-primary">Aceptar</button>
+        </footer>
+    </div>
+</div>
 
 <body>
     <div class="auth-wrapper">
@@ -313,6 +425,16 @@
                     Crear cuenta
                 </button>
             </form>
+            <div class="form-group" style="margin-top: 1rem;">
+                <label class="flex items-center text-base" style="gap: 0.5rem;">
+                    <input type="checkbox" id="termsCheckbox" required class="mr-2" />
+                    Acepto los
+                    <a href="#" id="openTerms" class="text-primary hover:underline">
+                        términos y condiciones
+                    </a>
+                </label>
+            </div>
+
 
             <div class="divider">O</div>
 
@@ -323,6 +445,55 @@
 
         <script src="https://unpkg.com/lucide@latest"></script>
         <script>
+            // Elementos del modal
+            const termsModal = document.getElementById("termsModal");
+            const openTerms = document.getElementById("openTerms");
+            const closeTerms = document.getElementById("closeTerms");
+            const agreeTerms = document.getElementById("agreeTerms");
+            const termsCheckbox = document.getElementById("termsCheckbox");
+            const submitBtn = document.getElementById("submitBtn");
+
+            // Abrir modal
+            openTerms.addEventListener("click", (e) => {
+                e.preventDefault();
+                termsModal.style.display = "flex";
+            });
+
+            // Cerrar modal por botón X
+            closeTerms.addEventListener("click", () => {
+                termsModal.style.display = "none";
+            });
+
+            // Cerrar si hacen clic fuera del modal-card
+            termsModal.addEventListener("click", (e) => {
+                if (e.target === termsModal) {
+                    termsModal.style.display = "none";
+                }
+            });
+
+            // Al hacer clic en "Aceptar" dentro del modal, cierra y marca el checkbox
+            agreeTerms.addEventListener("click", () => {
+                termsModal.style.display = "none";
+                termsCheckbox.checked = true;
+                // habilitar el botón de submit si ya tiene consentimiento
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            });
+
+            // Inicial: deshabilita el submit si no está el checkbox
+            submitBtn.disabled = !termsCheckbox.checked;
+            submitBtn.style.opacity = termsCheckbox.checked ? "1" : "0.5";
+            submitBtn.style.cursor = termsCheckbox.checked ? "pointer" : "not-allowed";
+
+            // Si cambia manualmente el checkbox fuera del modal
+            termsCheckbox.addEventListener("change", () => {
+                const checked = termsCheckbox.checked;
+                submitBtn.disabled = !checked;
+                submitBtn.style.opacity = checked ? "1" : "0.5";
+                submitBtn.style.cursor = checked ? "pointer" : "not-allowed";
+            });
+
 
             function validatePassword(password) {
                 const hasLength = password.length >= 8;
