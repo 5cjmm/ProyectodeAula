@@ -17,13 +17,14 @@ public class PQRSService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private static final String DESTINO = "soporte.shopmaster@gmail.com"; // 📧 Correo receptor fijo
-
+    private static final String DESTINO = "soporte.shopmaster@gmail.com"; 
+    private static final String REMITENTE = "soporte.shopmaster@gmail.com"; 
     public PQRS enviarPQRS(PQRS pqrs) {
         pqrsRepository.save(pqrs);
 
         // Enviar correo
         SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setFrom(REMITENTE);  
         mensaje.setTo(DESTINO);
         mensaje.setSubject("[PQRS] " + pqrs.getTipo() + " - " + pqrs.getAsunto());
         mensaje.setText(
