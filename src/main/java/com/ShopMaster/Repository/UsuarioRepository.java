@@ -10,10 +10,15 @@ import com.ShopMaster.Model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
-    Optional<Usuario> findByUsername(String username);
-    boolean existsByUsername(String username);
-    boolean existsByEmail(String email);
-    List<Usuario> findByRolesContainingAndTiendasId(String rol, String tiendaId);
-    Optional<Usuario> findByEmail(String email);
+    // ── Consultas con Soft Delete ──
+    Optional<Usuario> findByEmailAndActivoTrue(String email);
+    Optional<Usuario> findByUsernameAndActivoTrue(String username);
+    boolean           existsByEmailAndActivoTrue(String email);
 
+    // ── Métodos legacy ──
+    Optional<Usuario> findByEmail(String email);
+    Optional<Usuario> findByUsername(String username);
+    boolean           existsByEmail(String email);
+
+    List<Usuario> findByRolesContainingAndTiendasId(String rol, String tiendaId);
 }

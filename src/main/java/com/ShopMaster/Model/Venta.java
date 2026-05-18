@@ -15,71 +15,104 @@ public class Venta {
     private String tiendaId;
     private String usuarioId;
     private List<ProductoVendido> productos;
-    
+
+    private boolean activo = true;  // false = eliminado lógicamente
 
     public Venta() {
     }
 
-
-    public Venta(String id, Date fecha, double total, String tiendaId, String usuarioId, List<ProductoVendido> productos) {
+    public Venta(String id, Date fecha, double total, String tiendaId,
+                 String usuarioId, List<ProductoVendido> productos) {
         this.id = id;
         this.fecha = fecha;
         this.total = total;
         this.tiendaId = tiendaId;
         this.usuarioId = usuarioId;
         this.productos = productos;
+        this.activo = true;
     }
 
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
 
-    public String getId() {
-        return this.id;
-    }
+    public double getTotal() { return total; }
+    public void setTotal(double total) { this.total = total; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    
+    public String getTiendaId() { return tiendaId; }
+    public void setTiendaId(String tiendaId) { this.tiendaId = tiendaId; }
 
-    public Date getFecha() {
-        return this.fecha;
-    }
+    public String getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+    public List<ProductoVendido> getProductos() { return productos; }
+    public void setProductos(List<ProductoVendido> productos) { this.productos = productos; }
 
-    public double getTotal() {
-        return this.total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public String getTiendaId() {
-        return this.tiendaId;
-    }
-
-    public void setTiendaId(String tiendaId) {
-        this.tiendaId = tiendaId;
-    }
-
-    public String getUsuarioId() {
-        return this.usuarioId;
-    }
-
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public List<ProductoVendido> getProductos() {
-        return this.productos;
-    }
-
-    public void setProductos(List<ProductoVendido> productos) {
-        this.productos = productos;
-    }
-    
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }
+
+//    public Venta(String id, Date fecha, double total, String tiendaId, String usuarioId, List<ProductoVendido> productos) {
+//        this.id = id;
+//        this.fecha = fecha;
+//        this.total = total;
+//        this.tiendaId = tiendaId;
+//        this.usuarioId = usuarioId;
+//        this.productos = productos;
+//    }
+//
+//
+//
+//    public String getId() {
+//        return this.id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//
+//    public Date getFecha() {
+//        return this.fecha;
+//    }
+//
+//    public void setFecha(Date fecha) {
+//        this.fecha = fecha;
+//    }
+//
+//    public double getTotal() {
+//        return this.total;
+//    }
+//
+//    public void setTotal(double total) {
+//        this.total = total;
+//    }
+//
+//    public String getTiendaId() {
+//        return this.tiendaId;
+//    }
+//
+//    public void setTiendaId(String tiendaId) {
+//        this.tiendaId = tiendaId;
+//    }
+//
+//    public String getUsuarioId() {
+//        return this.usuarioId;
+//    }
+//
+//    public void setUsuarioId(String usuarioId) {
+//        this.usuarioId = usuarioId;
+//    }
+//
+//    public List<ProductoVendido> getProductos() {
+//        return this.productos;
+//    }
+//
+//    public void setProductos(List<ProductoVendido> productos) {
+//        this.productos = productos;
+//    }
+//
+//}
 

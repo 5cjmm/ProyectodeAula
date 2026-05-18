@@ -1,7 +1,7 @@
 package com.ShopMaster.Model;
 
 import java.util.List;
-
+import java.math.BigDecimal;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -20,18 +20,22 @@ public class Productos {
     private String nombre;
     private int cantidad;
     private double precio;
+    // NUEVO: precio al que se le compra al proveedor
+    // Si no se registra, el modelo usará un margen estimado del 40%
+    private BigDecimal costoCompra;
     private String tiendaId;
     private List<ObjectId> proveedorIds;
 
     @Transient
     private List<String> proveedorIdStrs;
 
+    private boolean activo = true;  // false = eliminado lógicamente
 
     public Productos() {
     }
 
-
-    public Productos(String id, String codigo, String nombre, int cantidad, double precio, String tiendaId, List<ObjectId> proveedorIds) {
+    public Productos(String id, String codigo, String nombre, int cantidad, double precio,
+                     String tiendaId, List<ObjectId> proveedorIds) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -39,76 +43,121 @@ public class Productos {
         this.precio = precio;
         this.tiendaId = tiendaId;
         this.proveedorIds = proveedorIds;
+        this.activo = true;
     }
 
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getId() {
-        return this.id;
-    }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getCodigo() {
-        return this.codigo;
-    }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
 
-    public String getNombre() {
-        return this.nombre;
-    }
+    public String getTiendaId() { return tiendaId; }
+    public void setTiendaId(String tiendaId) { this.tiendaId = tiendaId; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public List<ObjectId> getProveedorIds() { return proveedorIds; }
+    public void setProveedorIds(List<ObjectId> proveedorIds) { this.proveedorIds = proveedorIds; }
 
-    public int getCantidad() {
-        return this.cantidad;
-    }
+    public List<String> getProveedorIdStrs() { return proveedorIdStrs; }
+    public void setProveedorIdStrs(List<String> proveedorIdStrs) { this.proveedorIdStrs = proveedorIdStrs; }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public double getPrecio() {
-        return this.precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
-    public String getTiendaId() {
-        return this.tiendaId;
-    }
-
-    public void setTiendaId(String tiendaId) {
-        this.tiendaId = tiendaId;
-    }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 
 
-    public List<ObjectId> getProveedorIds() {
-        return this.proveedorIds;
-    }
-
-    public void setProveedorIds(List<ObjectId> proveedorIds) {
-        this.proveedorIds = proveedorIds;
-    }
-
-    
-
-    public List<String> getProveedorIdStrs() {
-        return this.proveedorIdStrs;
-    }
-
-    public void setProveedorIdStrs(List<String> proveedorIdStrs) {
-        this.proveedorIdStrs = proveedorIdStrs;
-    }
-
-    
+    public BigDecimal getCostoCompra() { return costoCompra; }
+    public void setCostoCompra(BigDecimal costoCompra) { this.costoCompra = costoCompra; }
 }
+
+
+
+//    public Productos(String id, String codigo, String nombre, int cantidad, double precio, String tiendaId, List<ObjectId> proveedorIds) {
+//        this.id = id;
+//        this.codigo = codigo;
+//        this.nombre = nombre;
+//        this.cantidad = cantidad;
+//        this.precio = precio;
+//        this.tiendaId = tiendaId;
+//        this.proveedorIds = proveedorIds;
+//    }
+//
+//
+//    public String getId() {
+//        return this.id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//
+//    public String getCodigo() {
+//        return this.codigo;
+//    }
+//
+//    public void setCodigo(String codigo) {
+//        this.codigo = codigo;
+//    }
+//
+//    public String getNombre() {
+//        return this.nombre;
+//    }
+//
+//    public void setNombre(String nombre) {
+//        this.nombre = nombre;
+//    }
+//
+//    public int getCantidad() {
+//        return this.cantidad;
+//    }
+//
+//    public void setCantidad(int cantidad) {
+//        this.cantidad = cantidad;
+//    }
+//
+//    public double getPrecio() {
+//        return this.precio;
+//    }
+//
+//    public void setPrecio(double precio) {
+//        this.precio = precio;
+//    }
+//
+//    public String getTiendaId() {
+//        return this.tiendaId;
+//    }
+//
+//    public void setTiendaId(String tiendaId) {
+//        this.tiendaId = tiendaId;
+//    }
+//
+//
+//    public List<ObjectId> getProveedorIds() {
+//        return this.proveedorIds;
+//    }
+//
+//    public void setProveedorIds(List<ObjectId> proveedorIds) {
+//        this.proveedorIds = proveedorIds;
+//    }
+//
+//
+//
+//    public List<String> getProveedorIdStrs() {
+//        return this.proveedorIdStrs;
+//    }
+//
+//    public void setProveedorIdStrs(List<String> proveedorIdStrs) {
+//        this.proveedorIdStrs = proveedorIdStrs;
+//    }
+//
+//
+//}

@@ -1,7 +1,7 @@
 package com.ShopMaster.Model;
 
 import java.util.List;
-
+import java.math.BigDecimal;
 import org.bson.types.ObjectId;
 
 public class ProductoConProveedores {
@@ -11,6 +11,7 @@ public class ProductoConProveedores {
     private String nombre;
     private int cantidad;
     private double precio;
+    private BigDecimal costoCompra;
     private String tiendaId;
 
     private List<ObjectId> proveedorIds;
@@ -99,6 +100,9 @@ public class ProductoConProveedores {
     public void setTiendaId(String tiendaId) {
         this.tiendaId = tiendaId;
     }
+
+    public BigDecimal getCostoCompra() { return costoCompra; }
+    public void setCostoCompra(BigDecimal costoCompra) { this.costoCompra = costoCompra; }
     
 
 }
