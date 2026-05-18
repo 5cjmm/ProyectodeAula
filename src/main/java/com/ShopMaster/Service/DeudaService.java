@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.Abono;
@@ -13,87 +14,88 @@ import com.ShopMaster.Model.Productos;
 import com.ShopMaster.Repository.DeudaRepository;
 import com.ShopMaster.Repository.ProductosRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class DeudaService {
 
-    private final DeudaRepository deudaRepository;
-    private final ProductosRepository productosRepository;
+    @Autowired
+    private DeudaRepository deudaRepository;
+
+    @Autowired
+    private ProductosRepository productosRepository;
 
     public Deuda registrarDeuda(Deuda deuda) {
-Optional<Deuda> deudaExistenteOpt = deudaRepository.findByCedulaCliente(deuda.getCedulaCliente());
 
-    if (deudaExistenteOpt.isPresent()) {
-        Deuda deudaExistente = deudaExistenteOpt.get();
+        Optional<Deuda> deudaExistenteOpt = deudaRepository
+                .findByCedulaClienteAndTiendaIdAndActivoTrue(
+                        deuda.getCedulaCliente(), deuda.getTiendaId());
 
-        if (!deudaExistente.getNombreCliente().equalsIgnoreCase(deuda.getNombreCliente())) {
-            throw new RuntimeException("La cédula ya está registrada con otro cliente");
+        if (deudaExistenteOpt.isPresent()) {
+            Deuda deudaExistente = deudaExistenteOpt.get();
+
+            if (!deudaExistente.getNombreCliente().equalsIgnoreCase(deuda.getNombreCliente())) {
+                throw new RuntimeException("La cédula ya está registrada con otro cliente");
+            }
+
+            double totalNuevo = 0;
+            for (ProductoVendido pv : deuda.getProductos()) {
+                Productos producto = productosRepository.findById(pv.getProductoId())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+                if (pv.getCantidad() > producto.getCantidad()) {
+                    throw new RuntimeException("Cantidad insuficiente para: " + producto.getNombre());
+                }
+
+                producto.setCantidad(producto.getCantidad() - pv.getCantidad());
+                productosRepository.save(producto);
+
+                pv.setSubtotal(pv.getCantidad() * pv.getPrecioUnitario());
+                totalNuevo += pv.getSubtotal();
+            }
+
+            deudaExistente.getProductos().addAll(deuda.getProductos());
+            deudaExistente.setTotal(deudaExistente.getTotal() + totalNuevo);
+            deudaExistente.setTotalRestante(deudaExistente.getTotalRestante() + totalNuevo);
+            deudaExistente.setEstado("NO PAGADA");
+            deudaExistente.setFechaVenta(LocalDateTime.now());
+            deudaRepository.save(deudaExistente);
+
+            throw new RuntimeException("ACTUALIZADA");
         }
 
-        double totalNuevo = 0;
+        double total = 0;
         for (ProductoVendido pv : deuda.getProductos()) {
             Productos producto = productosRepository.findById(pv.getProductoId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
             if (pv.getCantidad() > producto.getCantidad()) {
-                throw new RuntimeException("Cantidad insuficiente para el producto: " + producto.getNombre());
+                throw new RuntimeException("Cantidad insuficiente para: " + producto.getNombre());
             }
 
             producto.setCantidad(producto.getCantidad() - pv.getCantidad());
             productosRepository.save(producto);
 
             pv.setSubtotal(pv.getCantidad() * pv.getPrecioUnitario());
-            totalNuevo += pv.getSubtotal();
+            total += pv.getSubtotal();
         }
 
-        deudaExistente.getProductos().addAll(deuda.getProductos());
-        deudaExistente.setTotal(deudaExistente.getTotal() + totalNuevo);
-        deudaExistente.setTotalRestante(deudaExistente.getTotalRestante() + totalNuevo);
-        deudaExistente.setEstado("NO PAGADA");
-        deudaExistente.setFechaVenta(LocalDateTime.now());
+        deuda.setTotal(total);
+        deuda.setTotalRestante(total);
+        deuda.setEstado("NO PAGADA");
+        deuda.setFechaVenta(LocalDateTime.now());
+        deuda.setActivo(true);
 
-        deudaRepository.save(deudaExistente);
-
-        throw new RuntimeException("ACTUALIZADA");
+        return deudaRepository.save(deuda);
     }
-
-    double total = 0;
-    for (ProductoVendido pv : deuda.getProductos()) {
-        Productos producto = productosRepository.findById(pv.getProductoId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        if (pv.getCantidad() > producto.getCantidad()) {
-            throw new RuntimeException("Cantidad insuficiente para el producto: " + producto.getNombre());
-        }
-
-        producto.setCantidad(producto.getCantidad() - pv.getCantidad());
-        productosRepository.save(producto);
-
-        pv.setSubtotal(pv.getCantidad() * pv.getPrecioUnitario());
-        total += pv.getSubtotal();
-    }
-
-    deuda.setTotal(total);
-    deuda.setTotalRestante(total);
-    deuda.setEstado("NO PAGADA");
-    deuda.setFechaVenta(LocalDateTime.now());
-
-    return deudaRepository.save(deuda);
-}
 
     public List<Deuda> obtenerDeudasPorTienda(String tiendaId) {
-        return deudaRepository.findByTiendaId(tiendaId);
+        return deudaRepository.findByTiendaIdAndActivoTrue(tiendaId);
     }
 
-    // Nuevo: obtener todas las deudas para la vista
-    public java.util.List<Deuda> obtenerTodasLasDeudas() {
+    public List<Deuda> obtenerTodasLasDeudas() {
         return deudaRepository.findAll();
     }
 
-    // Nuevo: obtener deuda por id (devuelve Optional para que el controlador lo maneje)
-    public java.util.Optional<Deuda> obtenerDeudaPorId(String id) {
+    public Optional<Deuda> obtenerDeudaPorId(String id) {
         return deudaRepository.findById(id);
     }
 
@@ -104,15 +106,12 @@ Optional<Deuda> deudaExistenteOpt = deudaRepository.findByCedulaCliente(deuda.ge
         if (abono.getFecha() == null) {
             abono.setFecha(LocalDateTime.now());
         }
-
         if (abono.getMonto() > deuda.getTotalRestante()) {
             throw new RuntimeException("El monto del abono no puede superar la deuda restante");
         }
 
-                
         deuda.getHistorialAbonos().add(abono);
         deuda.setTotalRestante(deuda.getTotalRestante() - abono.getMonto());
-        
 
         if (deuda.getTotalRestante() <= 0) {
             deuda.setEstado("PAGADA");
@@ -124,7 +123,6 @@ Optional<Deuda> deudaExistenteOpt = deudaRepository.findByCedulaCliente(deuda.ge
         return deudaRepository.save(deuda);
     }
 
-    // Sobrecarga usada por el controlador que pasa sólo un monto (double)
     public Deuda registrarAbono(String deudaId, double monto) {
         Abono abono = new Abono();
         abono.setMonto(monto);
@@ -133,7 +131,9 @@ Optional<Deuda> deudaExistenteOpt = deudaRepository.findByCedulaCliente(deuda.ge
     }
 
     public void eliminarDeuda(String id) {
-        deudaRepository.deleteById(id);
+        Deuda d = deudaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Deuda no encontrada: " + id));
+        d.setActivo(false);
+        deudaRepository.save(d);
     }
 }
-

@@ -178,6 +178,13 @@ public class TiendaViewController {
         return "Perfil"; // templates/Perfil.html
     }
 
+    @GetMapping("/{id}/optimizacion")
+    @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
+    public String verOptimizacion(@PathVariable String id, Model model) {
+        model.addAttribute("tiendaId", id);
+        return "Optimizacion"; // templates/Optimizacion.html
+    }
+
     @GetMapping({"/{id}/prediccion", "/tendero/tiendas/{id}/prediccion"})
     public String verPrediccion(@PathVariable String id, Model model) {
         model.addAttribute("tiendaId", id); // se pasa a Prediccion.html
