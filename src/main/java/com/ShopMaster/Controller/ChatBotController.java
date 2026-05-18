@@ -2,6 +2,7 @@ package com.ShopMaster.Controller;
 
 import com.ShopMaster.Service.ChatBotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/chatbot")
-@RequiredArgsConstructor
 public class ChatBotController {
-
-    private final ChatBotService chatBotService;
+    @Autowired
+    private  ChatBotService chatBotService;
 
     @PostMapping("/mensaje")
     @PreAuthorize("hasAnyRole('ADMIN','TENDERO')")
