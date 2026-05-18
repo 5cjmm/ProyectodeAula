@@ -24,12 +24,23 @@ public class ProductosService {
 
     // Crear producto asociado a una tienda
     public Productos guardarProducto(Productos producto, String tiendaId) {
-        if (productosRepository.existsByCodigoAndTiendaId(producto.getCodigo(), producto.getTiendaId())) {
+        // Asignar la tienda al producto
+        producto.setTiendaId(tiendaId);
+        // Validar duplicado
+        if (productosRepository.existsByCodigoAndTiendaId(
+                producto.getCodigo(),
+                tiendaId)) {
             throw new RuntimeException("Ya existe un producto con ese código en esta tienda");
         }
-
         return productosRepository.save(producto);
     }
+//    public Productos guardarProducto(Productos producto, String tiendaId) {
+//        if (productosRepository.existsByCodigoAndTiendaId(producto.getCodigo(), producto.getTiendaId())) {
+//            throw new RuntimeException("Ya existe un producto con ese código en esta tienda");
+//        }
+//
+//        return productosRepository.save(producto);
+//    }
 
     // Listar productos de una tienda
    /*  public Page<Productos> obtenerProductosPorTienda(String tiendaId, int page, int size) {
@@ -64,19 +75,25 @@ public class ProductosService {
 
     // Eliminar producto asegurando que pertenece a la tienda
     public void eliminarProducto(String id, String tiendaId) {
-        Productos existente = productosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        if (!existente.getTiendaId().equals(tiendaId)) {
-            throw new RuntimeException("No tienes permiso para eliminar este producto");
-        }
-
-        productosRepository.deleteById(id);
+        Productos p = productosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + id));
+        p.setActivo(false);
+        productosRepository.save(p);
     }
+//    public void eliminarProducto(String id, String tiendaId) {
+//        Productos existente = productosRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+//
+//        if (!existente.getTiendaId().equals(tiendaId)) {
+//            throw new RuntimeException("No tienes permiso para eliminar este producto");
+//        }
+//
+//        productosRepository.deleteById(id);
+//    }
 
 
     public List<ProductoConProveedores> listarTodosPorTienda(String tiendaId) {
-        List<Productos> productos = productosRepository.findByTiendaId(tiendaId);
+        List<Productos> productos = productosRepository.findByTiendaIdAndActivoTrue(tiendaId);
 
         return productos.stream().map(producto -> {
             ProductoConProveedores dto = new ProductoConProveedores();
@@ -85,6 +102,7 @@ public class ProductosService {
             dto.setNombre(producto.getNombre());
             dto.setCantidad(producto.getCantidad());
             dto.setPrecio(producto.getPrecio());
+            dto.setCostoCompra(producto.getCostoCompra());
             dto.setTiendaId(producto.getTiendaId());
             dto.setProveedorIds(producto.getProveedorIds());
 

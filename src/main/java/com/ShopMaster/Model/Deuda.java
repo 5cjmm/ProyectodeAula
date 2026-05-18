@@ -13,7 +13,7 @@ public class Deuda {
 
     @Id
     private String id;
-    
+
     @Indexed(unique = true)
     private String cedulaCliente;
 
@@ -21,111 +21,56 @@ public class Deuda {
     private List<ProductoVendido> productos;
     private double total;
     private double totalRestante;
-    private String estado; // Ej: NO PAGADA, PARCIAL, PAGADA
+    private String estado;
     private LocalDateTime fechaVenta;
     private String tiendaId;
     private List<Abono> historialAbonos = new ArrayList<>();
 
-    public Deuda() {
-    }
+    // ── Soft Delete ──────────────────────────────
+    private boolean activo = true;
 
-    // Constructor con parámetros principales
+    public Deuda() {}
+
     public Deuda(String cedulaCliente, String nombreCliente, List<ProductoVendido> productos,
                  double total, LocalDateTime fechaVenta, String tiendaId) {
-        this.cedulaCliente = cedulaCliente;
-        this.nombreCliente = nombreCliente;
-        this.productos = productos;
-        this.total = total;
-        this.totalRestante = total;
-        this.estado = "NO PAGADA";
-        this.tiendaId = tiendaId;
-        this.fechaVenta = fechaVenta;
+        this.cedulaCliente  = cedulaCliente;
+        this.nombreCliente  = nombreCliente;
+        this.productos      = productos;
+        this.total          = total;
+        this.totalRestante  = total;
+        this.estado         = "NO PAGADA";
+        this.tiendaId       = tiendaId;
+        this.fechaVenta     = fechaVenta;
+        this.activo         = true;
     }
 
-    public String getId() {
-        return id;
-    }
+    // Getters
+    public String              getId()              { return id; }
+    public String              getCedulaCliente()   { return cedulaCliente; }
+    public String              getNombreCliente()   { return nombreCliente; }
+    public List<ProductoVendido> getProductos()     { return productos; }
+    public double              getTotal()           { return total; }
+    public double              getTotalRestante()   { return totalRestante; }
+    public String              getEstado()          { return estado; }
+    public LocalDateTime       getFechaVenta()      { return fechaVenta; }
+    public String              getTiendaId()        { return tiendaId; }
+    public List<Abono>         getHistorialAbonos() { return historialAbonos; }
+    public boolean             isActivo()           { return activo; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    // Setters
+    public void setId(String id)                              { this.id              = id; }
+    public void setCedulaCliente(String cedulaCliente)        { this.cedulaCliente   = cedulaCliente; }
+    public void setNombreCliente(String nombreCliente)        { this.nombreCliente   = nombreCliente; }
+    public void setProductos(List<ProductoVendido> productos) { this.productos       = productos; }
+    public void setTotal(double total)                        { this.total           = total; }
+    public void setTotalRestante(double totalRestante)        { this.totalRestante   = totalRestante; }
+    public void setEstado(String estado)                      { this.estado          = estado; }
+    public void setFechaVenta(LocalDateTime fechaVenta)       { this.fechaVenta      = fechaVenta; }
+    public void setTiendaId(String tiendaId)                  { this.tiendaId        = tiendaId; }
+    public void setHistorialAbonos(List<Abono> historial)     { this.historialAbonos = historial; }
+    public void setActivo(boolean activo)                     { this.activo          = activo; }
 
-    public String getCedulaCliente() {
-        return cedulaCliente;
-    }
-
-    public void setCedulaCliente(String cedulaCliente) {
-        this.cedulaCliente = cedulaCliente;
-    }
-
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public List<ProductoVendido> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductoVendido> productos) {
-        this.productos = productos;
-    }
-
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public double getTotalRestante() {
-        return totalRestante;
-    }
-
-    public void setTotalRestante(double totalRestante) {
-        this.totalRestante = totalRestante;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public LocalDateTime getFechaVenta() {
-        return fechaVenta;
-    }
-
-    public void setFechaVenta(LocalDateTime fechaVenta) {
-        this.fechaVenta = fechaVenta;
-    }
-
-
-    public String getTiendaId() {
-        return this.tiendaId;
-    }
-
-    public void setTiendaId(String tiendaId) {
-        this.tiendaId = tiendaId;
-    }
-
-
-    public List<Abono> getHistorialAbonos() {
-        return historialAbonos;
-    }
-
-    public void setHistorialAbonos(List<Abono> historialAbonos) {
-        this.historialAbonos = historialAbonos;
-    }
-
-    public void registrarAbono(double monto) {
+    public void registrarAbono(double monto, LocalDateTime fecha) {
         this.totalRestante -= monto;
         if (this.totalRestante <= 0) {
             this.totalRestante = 0;
@@ -133,6 +78,6 @@ public class Deuda {
         } else {
             this.estado = "PARCIAL";
         }
-        this.historialAbonos.add( new Abono(monto, LocalDateTime.now()));
+        this.historialAbonos.add(new Abono(monto, fecha));
     }
 }

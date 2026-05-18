@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ShopMaster.Model.ProductoVendido;
@@ -31,11 +32,11 @@ import com.lowagie.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class PdfService {
 
-    private final VentaRepository ventaRepository;
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    private VentaRepository ventaRepository;
+    private UsuarioRepository usuarioRepository;
 
     public byte[] generarReciboVenta(String ventaId) {
         Venta venta = ventaRepository.findById(ventaId)

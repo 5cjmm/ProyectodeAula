@@ -21,18 +21,20 @@ public class Usuario {
     private String password;
     private Set<String> roles;
     private List<Tienda> tiendas = new ArrayList<>();
-    
+
+    private boolean activo = true;  // false = eliminado lógicamente
 
     public Usuario() {}
 
-
-    public Usuario(String id, String username, String email, String password, Set<String> roles, List<Tienda> tiendas) {
+    public Usuario(String id, String username, String email, String password,
+                   Set<String> roles, List<Tienda> tiendas) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
         this.tiendas = tiendas;
+        this.activo = true;
     }
 
     public String getId() { return id; }
@@ -41,15 +43,8 @@ public class Usuario {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
@@ -57,17 +52,57 @@ public class Usuario {
     public Set<String> getRoles() { return roles; }
     public void setRoles(Set<String> roles) { this.roles = roles; }
 
+    public List<Tienda> getTiendas() { return tiendas; }
+    public void setTiendas(List<Tienda> tiendas) { this.tiendas = tiendas; }
 
-    public List<Tienda> getTiendas() {
-        return this.tiendas;
-    }
-
-    public void setTiendas(List<Tienda> tiendas) {
-        this.tiendas = tiendas;
-    }
-
-    
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }
+
+
+
+//    public Usuario(String id, String username, String email, String password, Set<String> roles, List<Tienda> tiendas) {
+//        this.id = id;
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//        this.roles = roles;
+//        this.tiendas = tiendas;
+//    }
+//
+//    public String getId() { return id; }
+//    public void setId(String id) { this.id = id; }
+//
+//    public String getUsername() { return username; }
+//    public void setUsername(String username) { this.username = username; }
+//
+//
+//    public String getEmail() {
+//        return this.email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//
+//    public String getPassword() { return password; }
+//    public void setPassword(String password) { this.password = password; }
+//
+//    public Set<String> getRoles() { return roles; }
+//    public void setRoles(Set<String> roles) { this.roles = roles; }
+//
+//
+//    public List<Tienda> getTiendas() {
+//        return this.tiendas;
+//    }
+//
+//    public void setTiendas(List<Tienda> tiendas) {
+//        this.tiendas = tiendas;
+//    }
+//
+//
+//}
 
 
     

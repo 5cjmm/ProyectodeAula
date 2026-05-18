@@ -1,4 +1,5 @@
 package com.ShopMaster.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,11 +21,12 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/ventas")
-@RequiredArgsConstructor
-public class VentaRestController {
 
-    private final VentaService ventaService;
-    private final PdfService pdfService;
+public class VentaRestController {
+    @Autowired
+    private VentaService ventaService;
+    @Autowired
+    private PdfService pdfService;
 
     // 🔹 Registrar una nueva venta
     @PostMapping("/crear")

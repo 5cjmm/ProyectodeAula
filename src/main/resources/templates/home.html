@@ -69,9 +69,19 @@
           class="text-gray-800 hover:text-blue-700 hover:scale-105 transition-all duration-200">PQRS</a>
       </nav>
 
-      <!-- Botón de login -->
+      <!-- Botón hamburguesa (visible en móviles) -->
+      <button id="menu-button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none" aria-expanded="false" aria-label="Abrir menú">
+        <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Botón de login (oculto en móviles; accesible desde el menú hamburguesa) -->
       <a th:href="@{/login}"
-        class="inline-flex items-center justify-center gap-2 bg-white text-[#05314D] border border-[#042443] rounded-lg px-4 py-2 text-sm md:text-base hover:bg-gray-100 font-medium transition-colors duration-200"
+        class="hidden md:inline-flex items-center justify-center gap-2 bg-white text-[#05314D] border border-[#042443] rounded-lg px-4 py-2 text-sm md:text-base hover:bg-gray-100 font-medium transition-colors duration-200"
         data-aos="fade-up" data-aos-duration="1200">
         <span>Iniciar sesión</span>
         <svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -84,12 +94,20 @@
     </div>
   </header>
 
+  <!-- Menú móvil desplegable (oculto por defecto) -->
+  <div id="mobile-menu" class="absolute right-6 top-[64px] mt-2 w-56 bg-white shadow-md rounded-lg py-2 z-50 hidden md:hidden">
+    <a th:href="@{/home}" id="inicio-link-mobile" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Inicio</a>
+    <a href="#" id="about-link-mobile" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">¿Quiénes somos?</a>
+    <a href="#" id="pqrs-link-mobile" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">PQRS</a>
+    <a th:href="@{/login}" id="login-link-mobile" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Iniciar sesión</a>
+  </div>
+
   <!-- Espaciador para evitar que el contenido suba debajo del header fijo -->
   <div class="h-20 md:h-24"></div>
 
   <!-- MAIN -->
   <main id="hero-section"
-    class="relative flex flex-col md:flex-row items-center justify-between px-8 md:px-16 lg:px-20 xl:px-28 py-12 md:py-10 bg-white">
+    class="max-w-7xl mx-auto relative flex flex-col md:flex-row items-center justify-between px-8 md:px-16 lg:px-20 xl:px-28 py-12 md:py-10 bg-white">
     <!-- Texto -->
     <div class="flex-1 text-center md:text-left md:pr-10 lg:pr-16 xl:pr-20 z-10">
       <h1 class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-gray-800 leading-tight"
@@ -114,9 +132,9 @@
         </svg>
       </a>
     </div>
-    <div class="relative flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
+      <div class="relative flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
       <img th:src="@{/images/Bolsa.svg}" alt="Ilustración ShopMaster"
-        class="w-[70vw] sm:w-[100vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-auto opacity-95 relative bottom-0"
+        class="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-[600px] h-auto opacity-95 relative bottom-0"
         data-aos="fade-left" data-aos-duration="1800" data-aos-delay="500" />
     </div>
   </main>
@@ -286,21 +304,29 @@
 
       // Ajustes opcionales: altura mínima para empezar a ocultar (px)
       const hideOffset = 100;
+      const isMobile = () => window.innerWidth <= 768;
 
       window.addEventListener('scroll', () => {
         const current = window.pageYOffset || document.documentElement.scrollTop;
 
-        // Mostrar / ocultar según dirección del scroll
-        if (current > lastScroll && current > hideOffset) {
-          // scroll down -> ocultar
-          header.classList.add('-translate-y-full');
+        // En pantallas pequeñas NO ocultar el header al hacer scroll
+        if (!isMobile()) {
+          // Mostrar / ocultar según dirección del scroll (solo desktop/tablet mayores a 768px)
+          if (current > lastScroll && current > hideOffset) {
+            // scroll down -> ocultar
+            header.classList.add('-translate-y-full');
+          } else {
+            // scroll up -> mostrar
+            header.classList.remove('-translate-y-full');
+          }
         } else {
-          // scroll up -> mostrar
+          // Asegurar que esté visible en móviles
           header.classList.remove('-translate-y-full');
         }
+
         lastScroll = Math.max(current, 0);
 
-        // Añadir fondo translúcido y sombra después de un pequeño scroll
+        // Añadir fondo translúcido y sombra después de un pequeño scroll (válido en todos los tamaños)
         if (current > 20) {
           header.classList.add('bg-white/90', 'backdrop-blur-sm', 'shadow-md');
         } else {
@@ -348,6 +374,61 @@
       if (volverPQRS) {
         volverPQRS.addEventListener('click', (e) => { e.preventDefault(); showSection('hero'); });
       }
+    })();
+  </script>
+  <script>
+    // Script para menú hamburguesa móvil
+    (function () {
+      const menuButton = document.getElementById('menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const openIcon = document.getElementById('menu-open-icon');
+      const closeIcon = document.getElementById('menu-close-icon');
+      if (!menuButton || !mobileMenu) return;
+
+      function closeMenu() {
+        mobileMenu.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      }
+      function openMenu() {
+        mobileMenu.classList.remove('hidden');
+        menuButton.setAttribute('aria-expanded', 'true');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      }
+
+      menuButton.addEventListener('click', (e) => {
+        const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+        if (isOpen) closeMenu(); else openMenu();
+      });
+
+      // Cerrar al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!mobileMenu.classList.contains('hidden')) {
+          const target = e.target;
+          if (!mobileMenu.contains(target) && !menuButton.contains(target)) {
+            closeMenu();
+          }
+        }
+      });
+
+      // Al redimensionar, ocultar menú cuando se vuelve a desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          closeMenu();
+        }
+      });
+
+      // También cerrar cuando se seleccionan enlaces móviles que muestran secciones
+      const inicioMobile = document.getElementById('inicio-link-mobile');
+      const aboutMobile = document.getElementById('about-link-mobile');
+      const pqrsMobile = document.getElementById('pqrs-link-mobile');
+      const loginMobile = document.getElementById('login-link-mobile');
+      if (inicioMobile) inicioMobile.addEventListener('click', (e) => { e.preventDefault(); const desktop = document.getElementById('inicio-link'); if (desktop) desktop.click(); closeMenu(); });
+      if (aboutMobile) aboutMobile.addEventListener('click', (e) => { e.preventDefault(); const desktop = document.getElementById('about-link'); if (desktop) desktop.click(); closeMenu(); });
+      if (pqrsMobile) pqrsMobile.addEventListener('click', (e) => { e.preventDefault(); const desktop = document.getElementById('pqrs-link'); if (desktop) desktop.click(); closeMenu(); });
+      if (loginMobile) loginMobile.addEventListener('click', () => closeMenu());
     })();
   </script>
   <script>
