@@ -2,675 +2,592 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShopMaster - Inventario</title>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-  <!-- Librería -->
-  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopMaster - Inventario</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/chatbot.js}" th:data-tienda-id="${tiendaId}"></script>
+    <style>
+        #sidebar.collapsed { width: 5rem; padding-left: 0.75rem; padding-right: 0.75rem; }
+        #sidebar.collapsed .sidebar-text { display: none; }
+        #sidebar.collapsed img { height: 2.5rem; width: auto; }
+        .tooltip { left: 3.5rem; top: 50%; transform: translateY(-50%); white-space: nowrap; z-index: 10; pointer-events: none; }
+    </style>
 </head>
-<style>
-    /* Sidebar collapse behavior */
-    #sidebar.collapsed {
-      width: 5rem;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
 
-    #sidebar.collapsed .sidebar-text {
-      display: none;
-    }
-
-    #sidebar.collapsed img {
-      height: 2.5rem;
-      width: auto;
-    }
-
-    /* Tooltip position */
-    .tooltip {
-      left: 3.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      white-space: nowrap;
-      z-index: 10;
-      pointer-events: none;
-    }
-  </style>
 <body class="bg-gray-50">
-  <div class="flex min-h-screen">
+<div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside id="sidebar"
-      class="transition-all duration-300 w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
-      <div id="logoContainer" class="flex flex-col items-center mb-10 cursor-pointer">
-        <div class="p-4 rounded-xl shadow-sm border border-gray-100 hover:scale-105 transition">
-          <img th:src="@{/images/logo.png}" alt="ShopMaster"
-            class="h-28 w-auto object-contain drop-shadow-md">
+    <aside id="sidebar" class="transition-all duration-300 w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
+        <div id="logoContainer" class="flex flex-col items-center mb-10 cursor-pointer">
+            <div class="p-4 rounded-xl shadow-sm border border-gray-100 hover:scale-105 transition">
+                <img th:src="@{/images/logo.png}" alt="ShopMaster" class="h-28 w-auto object-contain drop-shadow-md">
+            </div>
         </div>
-      </div>
 
-      <input type="hidden" id="tiendaId" th:value="${tiendaId}">
-      <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
-      <nav id="navLinks" class="space-y-2">
-        <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Dashboard">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
-          </svg>
-          <span class="sidebar-text">Dashboard</span>
-        </a>
+        <input type="hidden" id="tiendaId" th:value="${tiendaId}">
+        <input type="hidden" id="rolUsuario" th:value="${session.rolUsuario}">
+        <nav id="navLinks" class="space-y-2">
+            <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Dashboard">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
+                </svg>
+                <span class="sidebar-text">Dashboard</span>
+            </a>
 
-        <a id="linkInventario"
-          class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg"
-          data-tooltip="Inventario">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
-          </svg>
-          <span class="sidebar-text">Inventario</span>
-        </a>
+            <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg" data-tooltip="Inventario">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+                </svg>
+                <span class="sidebar-text">Inventario</span>
+            </a>
 
-        <a id="linkProveedores"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Proveedores">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
-          </svg>
-          <span class="sidebar-text">Proveedores</span>
-        </a>
+            <a id="linkOptimizacion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Optimización PL">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span class="sidebar-text">Optimización PL</span>
+            </a>
 
-        <a id="linkDeudas"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Deudas">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
-          </svg>
-          <span class="sidebar-text">Deudas</span>
-        </a>
+            <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Proveedores">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
+                </svg>
+                <span class="sidebar-text">Proveedores</span>
+            </a>
 
-        <a id="linkPuntoVenta"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Punto de Venta">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
-          </svg>
-          <span class="sidebar-text">Punto de Venta</span>
-        </a>
+            <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Deudas">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
+                </svg>
+                <span class="sidebar-text">Deudas</span>
+            </a>
 
-        <a id="linkInforme"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Informe de Ventas">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
-          </svg>
-          <span class="sidebar-text">Informe</span>
-        </a>
+            <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Punto de Venta">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
+                </svg>
+                <span class="sidebar-text">Punto de Venta</span>
+            </a>
 
-        <a id="linkPrediccion"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Predicción">
-          <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
-          </svg>
-          <span class="sidebar-text">Predicción</span>
-        </a>
-        <a id="linkTendero"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Gestión de Tenderos">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
-          </svg>
-          <span class="sidebar-text">Gestión de Tenderos</span>
-        </a>
+            <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Informe de Ventas">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
+                </svg>
+                <span class="sidebar-text">Informe</span>
+            </a>
 
-        <!-- Tiendas -->
-        <a id="linkTiendas"
-          class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-          data-tooltip="Tiendas">
-          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-          </svg>
-          <span class="sidebar-text">Tiendas</span>
-        </a>
-      </nav>
+            <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Predicción">
+                <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
+                </svg>
+                <span class="sidebar-text">Predicción</span>
+            </a>
+
+            <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Gestión de Tenderos">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+                </svg>
+                <span class="sidebar-text">Gestión de Tenderos</span>
+            </a>
+
+            <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Tiendas">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                <span class="sidebar-text">Tiendas</span>
+            </a>
+        </nav>
     </aside>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
-      <!-- Header -->
-      <header class="bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 class="text-xl font-semibold text-gray-800">Inventario</h1>
-
-          <div class="relative">
-            <button id="userMenuButton"
-              class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-
-              <!-- ⚪ SVG Avatar con círculo gris -->
-              <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
-                  <path fill="none"
-                    d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
-                  <path fill="#0891b2"
-                    d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
-                </svg>
-              </div>
-
-              <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}"
-                class="text-sm font-medium text-gray-700">
-                Hola, Usuario
-              </span>
-
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="m6 9l6 6l6-6" />
-              </svg>
-            </button>
-
-            <!-- 🔽 Menú desplegable -->
-            <div id="userDropdown"
-              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
-
-              <div class="px-4 py-3 border-b border-gray-100">
-                <p class="text-sm text-gray-700">Rol:</p>
-                <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
-                  class="font-semibold text-gray-900">
-                  Administrador
-                </p>
-              </div>
-
-              <a id="linkPerfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
-                Perfil
-              </a>
-
-              <button id="logoutBtn"
-                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                  <g fill="none">
-                    <path fill="#f00034"
-                      d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
-                  </g>
-                </svg>
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-      <!-- Contenido principal con margen para el sidebar -->
-      <div class="lg:ml-30 pt-3">
-        <div class="container mx-auto px-4 py-8">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Formulario Agregar Producto -->
-
-            <div class="lg:col-span-1">
-              <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-300 to-blue-700 text-white p-6">
-                  <h2 class="text-xl font-semibold flex items-center gap-2">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Agregar Producto
-                  </h2>
-                </div>
-                <form id="formProducto">
-                  <div class="p-6 space-y-6">
-                    <div class="space-y-2">
-                      <label class="text-sm font-medium text-gray-700">Código:</label>
-                      <input type="text" name="codigo" id="codigo" placeholder="Ingrese código del producto"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        required>
-                    </div>
-
-                    <div class="space-y-2">
-                      <label class="text-sm font-medium text-gray-700">Nombre:</label>
-                      <input type="text" name="nombre" id="nombre" placeholder="Ingrese nombre del producto"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        required>
-                    </div>
-
-                    <div class="space-y-2">
-                      <label class="text-sm font-medium text-gray-700">Cantidad:</label>
-                      <input type="number" name="cantidad" id="cantidad" placeholder="0"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        required>
-                    </div>
-
-                    <div class="space-y-2">
-                      <label class="text-sm font-medium text-gray-700">Precio (COP):</label>
-                      <input type="number" name="precio" id="precio" placeholder="0.00"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        required>
-                    </div>
-
-                    <div class="space-y-2">
-                      <label class="text-sm font-medium text-gray-700">Proveedor:</label>
-                      <select multiple id="proveedorId" name="proveedorId" placeholder="Buscar proveedores..."
-                        class="w-full border-gray-300 rounded-md"></select>
-                    </div>
-
-                    <!-- ✅ Contenedor centrado -->
-                    <div class="flex justify-center pt-4">
-                      <button type="submit" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
-                                      hover:from-blue-600 hover:to-blue-700 text-white font-semibold 
-                                      px-6 py-3 rounded-lg transition-all duration-200 transform 
-                                      hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 
-                                      focus:ring-blue-400 focus:ring-offset-2">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6">
-                          </path>
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 shadow-sm">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold text-gray-800">Inventario</h1>
+                <div class="relative">
+                    <button id="userMenuButton" class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+                        <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
+                                <path fill="none" d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
+                                <path fill="#0891b2" d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
+                            </svg>
+                        </div>
+                        <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}" class="text-sm font-medium text-gray-700">Hola, Usuario</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6 9l6 6l6-6" />
                         </svg>
-                        <span>Guardar Producto</span>
-                      </button>
+                    </button>
+
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+                        <div class="px-4 py-3 border-b border-gray-100">
+                            <p class="text-sm text-gray-700">Rol:</p>
+                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}" class="font-semibold text-gray-900">Administrador</p>
+                        </div>
+                        <a id="linkPerfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Perfil</a>
+                        <button id="logoutBtn" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                <g fill="none">
+                                    <path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
+                                </g>
+                            </svg>
+                            Cerrar sesión
+                        </button>
                     </div>
-                  </div>
-                </form>
-              </div>
+                </div>
             </div>
+        </header>
 
-            <!-- Lista de Productos -->
-            <div class="lg:col-span-2">
-              <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
-                <div class="bg-gradient-to-r from-gray-700 to-gray-800 text-white p-6">
-                  <h2 class="text-xl font-semibold flex items-center gap-2">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                    Productos Registrados
-                  </h2>
+        <main class="lg:ml-30 pt-3">
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                    <!-- ===== FORMULARIO AGREGAR/EDITAR PRODUCTO ===== -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-300 to-blue-700 text-white p-6">
+                                <h2 class="text-xl font-semibold flex items-center gap-2">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    Agregar Producto
+                                </h2>
+                            </div>
+                            <form id="formProducto">
+                                <div class="p-6 space-y-6">
+
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700">Código:</label>
+                                        <input type="text" name="codigo" id="codigo" placeholder="Ingrese código del producto"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700">Nombre:</label>
+                                        <input type="text" name="nombre" id="nombre" placeholder="Ingrese nombre del producto"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700">Cantidad:</label>
+                                        <input type="number" name="cantidad" id="cantidad" placeholder="0"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700">Precio de venta (COP):</label>
+                                        <input type="number" name="precio" id="precio" placeholder="0.00"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
+                                    </div>
+
+                                    <!-- ✅ NUEVO: Costo de compra para el modelo PL -->
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700 flex items-center gap-1">
+                                            Costo de compra (COP):
+                                            <span class="group relative cursor-help">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4m0-4h.01"/>
+                                                </svg>
+                                                <span class="group-hover:block hidden absolute left-6 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 w-48 z-10">
+                                                    Precio al que compras este producto al proveedor. Se usa para calcular la ganancia real en la Optimización PL.
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <input type="number" name="costoCompra" id="costoCompra" placeholder="0.00" min="0"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                        <p class="text-xs text-gray-400">Opcional — si no se ingresa, el modelo estimará un margen del 40%</p>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium text-gray-700">Proveedor:</label>
+                                        <select multiple id="proveedorId" name="proveedorId" placeholder="Buscar proveedores..."
+                                                class="w-full border-gray-300 rounded-md"></select>
+                                    </div>
+
+                                    <div class="flex justify-center pt-4">
+                                        <button type="submit" class="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600
+                                          hover:from-blue-600 hover:to-blue-700 text-white font-semibold
+                                          px-6 py-3 rounded-lg transition-all duration-200 transform
+                                          hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2
+                                          focus:ring-blue-400 focus:ring-offset-2">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                                            </svg>
+                                            <span>Guardar Producto</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ===== LISTA DE PRODUCTOS ===== -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-lg shadow-xl border-0 overflow-hidden">
+                            <div class="bg-gradient-to-r from-gray-700 to-gray-800 text-white p-6">
+                                <h2 class="text-xl font-semibold flex items-center gap-2">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                    Productos Registrados
+                                </h2>
+                            </div>
+                            <div class="p-6">
+                                <div class="relative mb-6">
+                                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <input type="text" id="buscar" placeholder="Buscar producto..." onkeyup="buscarProductos()"
+                                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                </div>
+
+                                <div class="rounded-lg overflow-hidden border border-gray-200">
+                                    <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden" id="tablaProductos">
+                                        <thead class="bg-blue-500 text-white">
+                                        <tr>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Código</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Nombre</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Cantidad</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Precio venta</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Costo compra</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Proveedor</th>
+                                            <th class="text-white font-semibold px-4 py-3 text-left">Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tbodyProductos"></tbody>
+                                    </table>
+                                </div>
+
+                                <div id="emptyProductos" class="text-center py-10 text-gray-500 hidden">
+                                    <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
+                                    </svg>
+                                    <p class="text-lg">No hay productos registrados aún</p>
+                                    <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paginador -->
+                        <div class="flex justify-center items-center space-x-4 mt-8">
+                            <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                    Anterior
+                                </span>
+                            </button>
+                            <span id="paginaActual" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
+                            <span class="text-sm text-gray-600">de</span>
+                            <span id="totalPaginas" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
+                            <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
+                                <span class="flex items-center gap-2">
+                                    Siguiente
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-6">
-                  <!-- Barra de búsqueda -->
-                  <div class="relative mb-6">
-                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" fill="none"
-                      stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input type="text" id="buscar" placeholder="Buscar producto..." onkeyup="buscarProductos()"
-                      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                  </div>
-
-                  <!-- 📋 Tabla -->
-                  <div class="rounded-lg overflow-hidden border border-gray-200">
-                    <table class="min-w-full bg-blue-50 text-blue-900 rounded-lg overflow-hidden" id="tablaProductos">
-                      <thead class="bg-blue-500 text-white">
-                        <tr class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                          <th class="text-white font-semibold px-4 py-3 text-left">Código</th>
-                          <th class="text-white font-semibold px-4 py-3 text-left">Nombre</th>
-                          <th class="text-white font-semibold px-4 py-3 text-left">Cantidad</th>
-                          <th class="text-white font-semibold px-4 py-3 text-left">Precio (COP)</th>
-                          <th class="text-white font-semibold px-4 py-3 text-left">Proveedor</th>
-                          <th class="text-white font-semibold px-4 py-3 text-left">Acción</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tbodyProductos">
-                        <!-- Aquí se cargarán los productos dinámicamente -->
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <!-- Estado vacío -->
-                  <div id="emptyProductos" class="text-center py-10 text-gray-500 hidden">
-                    <svg class="mx-auto h-16 w-16 text-gray-300 mb-4" fill="none" stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3h18M9 3v18m6-18v18M3 9h18m-18 6h18" />
-                    </svg>
-                    <p class="text-lg">No hay productos registrados aún</p>
-                    <p class="text-gray-400 text-sm mt-2">Agrega un producto usando el formulario</p>
-                  </div>
-
-                </div>
-              </div>
-              <div class="flex justify-center items-center space-x-4 mt-8">
-          <button onclick="cambiarPagina(-1)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-            <span class="flex items-center gap-2">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-              Anterior
-            </span>
-          </button>
-
-          <span id="paginaActual" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
-          <span class="text-sm text-gray-600">de</span>
-          <span id="totalPaginas" class="bg-white border-2 border-blue-200 text-blue-700 font-bold px-4 py-3 rounded-lg shadow-sm">1</span>
-
-          <button onclick="cambiarPagina(1)" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg">
-            <span class="flex items-center gap-2">
-              Siguiente
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </span>
-          </button>
-        </div>
-
-      </main>
+            </div>
+        </main>
     </div>
-  </div>
+</div>
 
-  <script>
-    // ---------- UI helpers ----------
-    const logo = document.getElementById('logoContainer');
+<script>
+    const logo    = document.getElementById('logoContainer');
     const sidebar = document.getElementById('sidebar');
 
-    if (localStorage.getItem('sidebar-collapsed') === 'true') {
-      sidebar.classList.add('collapsed');
-    }
+    if (localStorage.getItem('sidebar-collapsed') === 'true') sidebar.classList.add('collapsed');
 
     logo?.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        sidebar.classList.toggle('collapsed');
+        localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
     });
 
     document.querySelectorAll('[data-tooltip]').forEach(el => {
-      const tooltip = document.createElement('div');
-      tooltip.textContent = el.dataset.tooltip;
-      tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
-      el.appendChild(tooltip);
-      el.classList.add('relative');
-      el.addEventListener('mouseenter', () => { if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0'); });
-      el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
+        const tooltip = document.createElement('div');
+        tooltip.textContent = el.dataset.tooltip;
+        tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
+        el.appendChild(tooltip);
+        el.classList.add('relative');
+        el.addEventListener('mouseenter', () => { if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0'); });
+        el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
     });
 
-    const tiendaId = document.getElementById("tiendaId").value;
-    const button = document.getElementById("userMenuButton");
-    const dropdown = document.getElementById("userDropdown");
+    const tiendaId  = document.getElementById("tiendaId").value;
+    const button    = document.getElementById("userMenuButton");
+    const dropdown  = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
 
     button?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isVisible = dropdown.classList.contains("opacity-100");
-      dropdown.classList.toggle("opacity-100", !isVisible);
-      dropdown.classList.toggle("translate-y-0", !isVisible);
-      dropdown.classList.toggle("scale-100", !isVisible);
-      dropdown.classList.toggle("pointer-events-none", isVisible);
-      dropdown.classList.toggle("opacity-0", isVisible);
-      dropdown.classList.toggle("translate-y-[-10px]", isVisible);
-      dropdown.classList.toggle("scale-95", isVisible);
+        e.stopPropagation();
+        const isVisible = dropdown.classList.contains("opacity-100");
+        dropdown.classList.toggle("opacity-100",        !isVisible);
+        dropdown.classList.toggle("translate-y-0",      !isVisible);
+        dropdown.classList.toggle("scale-100",          !isVisible);
+        dropdown.classList.toggle("pointer-events-none", isVisible);
+        dropdown.classList.toggle("opacity-0",           isVisible);
+        dropdown.classList.toggle("translate-y-[-10px]", isVisible);
+        dropdown.classList.toggle("scale-95",            isVisible);
     });
 
     document.addEventListener("click", (e) => {
-      if (dropdown && !dropdown.contains(e.target) && !button.contains(e.target)) {
-        dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
-        dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
-      }
+        if (dropdown && !dropdown.contains(e.target) && !button.contains(e.target)) {
+            dropdown.classList.add("opacity-0", "translate-y-[-10px]", "scale-95", "pointer-events-none");
+            dropdown.classList.remove("opacity-100", "translate-y-0", "scale-100");
+        }
     });
 
     logoutBtn?.addEventListener("click", () => { if (confirm("¿Deseas cerrar sesión?")) window.location.href = "/logout"; });
 
+    // ── Utilidades ────────────────────────────────────────────────
     function showNotification(message, type = "info") {
-      const notification = document.createElement("div");
-      notification.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : type === "warning" ? "bg-yellow-500" : "bg-blue-600" }`;
-      notification.textContent = message;
-      document.body.appendChild(notification);
-      setTimeout(() => { notification.style.opacity = "0"; notification.style.transform = "translateY(-10px)"; setTimeout(() => notification.remove(), 300); }, 3000);
+        const n = document.createElement("div");
+        n.className = `fixed top-20 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition transform duration-300 ${type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : type === "warning" ? "bg-yellow-500" : "bg-blue-600"}`;
+        n.textContent = message;
+        document.body.appendChild(n);
+        setTimeout(() => { n.style.opacity = "0"; n.style.transform = "translateY(-10px)"; setTimeout(() => n.remove(), 300); }, 3000);
     }
 
     function fmtCOP(n) {
-      try { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0); }
-      catch (e) { return '$0'; }
+        try { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0); }
+        catch (e) { return '$0'; }
     }
 
-    // ---------- Datos & paginación frontend ----------
-    let productos = [];   // source of truth
-    let filtrados = [];   // filtered list used to paginate
-    let pagina = 0;
+    function escapeHtml(str = "") { return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m])); }
+    function escapeAttr(str = "") { return String(str).replace(/"/g, '&quot;'); }
+
+    // ── Estado ────────────────────────────────────────────────────
+    let productos = [], filtrados = [], pagina = 0;
     const tamanoPagina = 5;
 
-    // Cargar proveedores para el select (igual que en ProductosService)
+    // ── Proveedores ───────────────────────────────────────────────
     async function cargarProveedoresSelect() {
-      try {
-        const res = await fetch(`/api/proveedores/buscar?tiendaId=${tiendaId}`);
-        if (!res.ok) return;
-        const proveedores = await res.json();
-        const select = document.getElementById("proveedorId");
-        select.innerHTML = "";
-        proveedores.forEach(p => {
-          const opt = document.createElement("option");
-          opt.value = p.id;
-          opt.textContent = `${p.nombre} (${p.nit || ''})`;
-          select.appendChild(opt);
-        });
-      } catch (err) {
-        console.warn("No se pudieron cargar proveedores:", err);
-      }
-
-      new TomSelect("#proveedorId", {
-        plugins: ['remove_button'],
-        persist: false,
-        create: false,
-        maxOptions: 1000,
-        placeholder: "Selecciona o busca proveedores...",
-      });
-    }
-
-    // Intentar cargar /todos, si no existe usar fallback paginado
-    async function cargarProductos() {
-      try {
-        // intenta endpoint /todos
-        const resTodos = await fetch(`/api/productos/tienda/${tiendaId}/todos`);
-        if (resTodos.ok) {
-          productos = await resTodos.json();
-          filtrados = [...productos];
-          pagina = 0;
-          mostrarPagina();
-          return;
-        }
-      } catch (err) {
-        console.warn("Error al solicitar /todos:", err);
-      }
-
-      // Fallback: acumular páginas del endpoint paginado
-      productos = [];
-      let page = 0;
-      const size = 200; // traer bastante por request para reducir llamadas
-      while (true) {
         try {
-          const r = await fetch(`/api/productos/tienda/${tiendaId}?page=${page}&size=${size}`);
-          if (!r.ok) break;
-          const data = await r.json();
-          const contenidos = data.content || [];
-          productos.push(...contenidos);
-          if ((data.totalPages !== undefined && page + 1 >= data.totalPages) || contenidos.length < size) break;
-          page++;
-        } catch (e) {
-          console.error("Error en fallback paginado:", e);
-          break;
-        }
-      }
-      filtrados = [...productos];
-      pagina = 0;
-      mostrarPagina();
-    }
+            const res = await fetch(`/api/proveedores/buscar?tiendaId=${tiendaId}`);
+            if (!res.ok) return;
+            const proveedores = await res.json();
+            const select = document.getElementById("proveedorId");
+            select.innerHTML = "";
+            proveedores.forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p.id;
+                opt.textContent = `${p.nombre} (${p.nit || ''})`;
+                select.appendChild(opt);
+            });
+        } catch (err) { console.warn("No se pudieron cargar proveedores:", err); }
 
-    function mostrarPagina() {
-      const tbody = document.querySelector("#tablaProductos tbody");
-      tbody.innerHTML = "";
-
-      const inicio = pagina * tamanoPagina;
-      const fin = inicio + tamanoPagina;
-      const paginaActual = filtrados.slice(inicio, fin);
-
-      if (paginaActual.length === 0) {
-        document.getElementById("emptyProductos").classList.remove("hidden");
-      } else {
-        document.getElementById("emptyProductos").classList.add("hidden");
-        paginaActual.forEach(p => {
-          const provs = p.proveedores ? p.proveedores.map(pr => escapeHtml(pr.nombre)).join(", ") : "";
-          const tr = document.createElement("tr");
-          tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors";
-          tr.innerHTML = `
-            <td class="p-3">${escapeHtml(p.codigo)}</td>
-            <td class="p-3">${escapeHtml(p.nombre)}</td>
-            <td class="p-3">${escapeHtml(String(p.cantidad || 0))}</td>
-            <td class="p-3">${fmtCOP(p.precio)}</td>
-            <td class="p-3">${provs}</td>
-            <td class="p-3 flex gap-2">
-              <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                data-id="${p.id}" data-codigo="${escapeAttr(p.codigo)}" data-nombre="${escapeAttr(p.nombre)}"
-                data-cantidad="${p.cantidad}" data-precio="${p.precio}" title="Editar producto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/></svg>
-              </button>
-              <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${p.id}" title="Eliminar producto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/><path d="M9 10h2v8H9zm4 0h2v8h-2z"/></svg>
-              </button>
-            </td>`;
-          tbody.appendChild(tr);
+        new TomSelect("#proveedorId", {
+            plugins: ['remove_button'],
+            persist: false,
+            create: false,
+            maxOptions: 1000,
+            placeholder: "Selecciona o busca proveedores...",
         });
-      }
-
-      const total = Math.max(1, Math.ceil(filtrados.length / tamanoPagina));
-      document.getElementById("paginaActual").textContent = (pagina + 1);
-      document.getElementById("totalPaginas").textContent = total;
     }
 
-    function cambiarPagina(direccion) {
-      const total = Math.ceil(filtrados.length / tamanoPagina);
-      if (direccion === -1 && pagina > 0) { pagina--; mostrarPagina(); }
-      if (direccion === 1 && pagina + 1 < total) { pagina++; mostrarPagina(); }
-    }
+    // ── Cargar productos ──────────────────────────────────────────
+    async function cargarProductos() {
+        try {
+            const resTodos = await fetch(`/api/productos/tienda/${tiendaId}/todos`);
+            if (resTodos.ok) {
+                productos = await resTodos.json();
+                filtrados = [...productos];
+                pagina = 0;
+                mostrarPagina();
+                return;
+            }
+        } catch (err) { console.warn("Error al solicitar /todos:", err); }
 
-    // Búsqueda por inicial (nombre o código)
-    function buscarProductos() {
-      const q = document.getElementById("buscar").value.trim().toLowerCase();
-      if (!q) {
+        productos = [];
+        let page = 0;
+        const size = 200;
+        while (true) {
+            try {
+                const r = await fetch(`/api/productos/tienda/${tiendaId}?page=${page}&size=${size}`);
+                if (!r.ok) break;
+                const data = await r.json();
+                const contenidos = data.content || [];
+                productos.push(...contenidos);
+                if ((data.totalPages !== undefined && page + 1 >= data.totalPages) || contenidos.length < size) break;
+                page++;
+            } catch (e) { console.error("Error en fallback paginado:", e); break; }
+        }
         filtrados = [...productos];
         pagina = 0;
         mostrarPagina();
-        return;
-      }
-      filtrados = productos.filter(p =>
-        (p.nombre || "").toLowerCase().startsWith(q) ||
-        (p.codigo || "").toLowerCase().startsWith(q)
-      );
-      pagina = 0;
-      mostrarPagina();
     }
 
-    // Form submit (crear / actualizar)
+    // ── Renderizar tabla ──────────────────────────────────────────
+    function mostrarPagina() {
+        const tbody = document.querySelector("#tablaProductos tbody");
+        tbody.innerHTML = "";
+
+        const inicio = pagina * tamanoPagina;
+        const paginaActualData = filtrados.slice(inicio, inicio + tamanoPagina);
+
+        if (paginaActualData.length === 0) {
+            document.getElementById("emptyProductos").classList.remove("hidden");
+        } else {
+            document.getElementById("emptyProductos").classList.add("hidden");
+            paginaActualData.forEach(p => {
+                const provs = p.proveedores ? p.proveedores.map(pr => escapeHtml(pr.nombre)).join(", ") : "";
+                // ✅ Mostrar costo de compra; si es 0 mostrar "No registrado"
+                const costoTexto = p.costoCompra > 0 ? fmtCOP(p.costoCompra) : '<span class="text-gray-400 text-xs">No registrado</span>';
+                const tr = document.createElement("tr");
+                tr.className = "border-b border-blue-100 hover:bg-blue-100 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3">${escapeHtml(p.codigo)}</td>
+                    <td class="p-3">${escapeHtml(p.nombre)}</td>
+                    <td class="p-3">${escapeHtml(String(p.cantidad || 0))}</td>
+                    <td class="p-3">${fmtCOP(p.precio)}</td>
+                    <td class="p-3">${costoTexto}</td>
+                    <td class="p-3">${provs}</td>
+                    <td class="p-3 flex gap-2">
+                        <button class="btn-edit bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                            data-id="${p.id}"
+                            data-codigo="${escapeAttr(p.codigo)}"
+                            data-nombre="${escapeAttr(p.nombre)}"
+                            data-cantidad="${p.cantidad}"
+                            data-precio="${p.precio}"
+                            data-costocompra="${p.costoCompra || 0}"
+                            title="Editar producto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path fill-rule="evenodd" d="M5 20h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2m-1-5L14 5l3 3L7 18H4zM15 4l2-2l3 3l-2.001 2.001z"/></svg>
+                        </button>
+                        <button class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${p.id}" title="Eliminar producto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#ffffff"><path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"/><path d="M9 10h2v8H9zm4 0h2v8h-2z"/></svg>
+                        </button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        const total = Math.max(1, Math.ceil(filtrados.length / tamanoPagina));
+        document.getElementById("paginaActual").textContent  = pagina + 1;
+        document.getElementById("totalPaginas").textContent  = total;
+    }
+
+    function cambiarPagina(dir) {
+        const total = Math.ceil(filtrados.length / tamanoPagina);
+        if (dir === -1 && pagina > 0)        { pagina--; mostrarPagina(); }
+        if (dir === 1 && pagina + 1 < total) { pagina++; mostrarPagina(); }
+    }
+
+    function buscarProductos() {
+        const q = document.getElementById("buscar").value.trim().toLowerCase();
+        filtrados = !q ? [...productos] : productos.filter(p =>
+            (p.nombre || "").toLowerCase().startsWith(q) ||
+            (p.codigo || "").toLowerCase().startsWith(q)
+        );
+        pagina = 0;
+        mostrarPagina();
+    }
+
+    // ── Guardar / Editar producto ─────────────────────────────────
     document.getElementById("formProducto").addEventListener("submit", async function (e) {
-  e.preventDefault();
+        e.preventDefault();
 
-  const selectedProvOptions = Array.from(document.getElementById("proveedorId").selectedOptions || [])
-    .map(o => o.value);
+        const selectedProvOptions = Array.from(document.getElementById("proveedorId").selectedOptions || []).map(o => o.value);
 
-  const producto = {
-    codigo: this.codigo.value.trim(),
-    nombre: this.nombre.value.trim(),
-    cantidad: Number(this.cantidad.value || 0),
-    precio: Number(this.precio.value || 0),
-    proveedorIdStrs: selectedProvOptions,
-    tiendaId: tiendaId
-  };
+        const producto = {
+            codigo:       this.codigo.value.trim(),
+            nombre:       this.nombre.value.trim(),
+            cantidad:     Number(this.cantidad.value  || 0),
+            precio:       Number(this.precio.value    || 0),
+            costoCompra:  Number(this.costoCompra.value || 0),  // ✅ NUEVO
+            proveedorIdStrs: selectedProvOptions,
+            tiendaId: tiendaId
+        };
 
-  const isEdit = !!this.dataset.id;
-  const url = isEdit
-    ? `/api/productos/actualizar/${this.dataset.id}`
-    : `/api/productos/crear`;
-  const method = isEdit ? "PUT" : "POST";
+        const isEdit = !!this.dataset.id;
+        const url    = isEdit ? `/api/productos/actualizar/${this.dataset.id}` : `/api/productos/crear`;
+        const method = isEdit ? "PUT" : "POST";
 
-  try {
-    const resp = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(producto)
-    });
-
-    if (!resp.ok) {
-      const msg = await resp.text();
-      if (msg.toLowerCase().includes("código")) showNotification("El código ya está registrado", "warning");
-      else showNotification("Error al guardar: " + msg, "error");
-      return;
-    }
-
-    this.reset();
-    delete this.dataset.id;
-    showNotification(isEdit ? "Producto actualizado exitosamente" : "Producto creado exitosamente", "success");
-    await cargarProductos();
-  } catch (err) {
-    console.error(err);
-    showNotification("Error de conexión con el servidor", "error");
-  }
-});
-    // Tabla actions (editar / eliminar)
-    document.getElementById("tablaProductos").addEventListener("click", async (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-
-      if (btn.classList.contains("btn-edit")) {
-        const form = document.getElementById("formProducto");
-        form.dataset.id = btn.dataset.id;
-        form.codigo.value = btn.dataset.codigo;
-        form.nombre.value = btn.dataset.nombre;
-        form.cantidad.value = btn.dataset.cantidad;
-        form.precio.value = btn.dataset.precio;
-        showNotification("Editando producto...", "info");
-        return;
-      }
-
-      if (btn.classList.contains("btn-delete")) {
-        if (!confirm("¿Eliminar este producto?")) return;
-        const id = btn.dataset.id;
         try {
-          const resp = await fetch(`/api/productos/eliminar/${id}?tiendaId=${tiendaId}`, { method: "DELETE" });
-          if (!resp.ok) throw new Error(await resp.text());
-          showNotification("Producto eliminado exitosamente", "success");
-          await cargarProductos();
+            const resp = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(producto)
+            });
+
+            if (!resp.ok) {
+                const msg = await resp.text();
+                if (msg.toLowerCase().includes("código")) showNotification("El código ya está registrado", "warning");
+                else showNotification("Error al guardar: " + msg, "error");
+                return;
+            }
+
+            this.reset();
+            delete this.dataset.id;
+            document.getElementById("costoCompra").value = "";
+            showNotification(isEdit ? "Producto actualizado exitosamente" : "Producto creado exitosamente", "success");
+            await cargarProductos();
         } catch (err) {
-          console.error(err);
-          showNotification("Error al eliminar producto", "error");
+            console.error(err);
+            showNotification("Error de conexión con el servidor", "error");
         }
-      }
     });
 
-    // Utility escape functions
-    function escapeHtml(str = "") { return String(str).replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
-    function escapeAttr(str = "") { return String(str).replace(/"/g, '&quot;'); }
+    // ── Editar / Eliminar desde tabla ─────────────────────────────
+    document.getElementById("tablaProductos").addEventListener("click", async (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
 
-    // Inicializar
+        if (btn.classList.contains("btn-edit")) {
+            const form = document.getElementById("formProducto");
+            form.dataset.id          = btn.dataset.id;
+            form.codigo.value        = btn.dataset.codigo;
+            form.nombre.value        = btn.dataset.nombre;
+            form.cantidad.value      = btn.dataset.cantidad;
+            form.precio.value        = btn.dataset.precio;
+            // ✅ Rellenar costo de compra al editar
+            form.costoCompra.value   = btn.dataset.costocompra !== "0" ? btn.dataset.costocompra : "";
+            showNotification("Editando producto...", "info");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        if (btn.classList.contains("btn-delete")) {
+            if (!confirm("¿Eliminar este producto?")) return;
+            try {
+                const resp = await fetch(`/api/productos/eliminar/${btn.dataset.id}?tiendaId=${tiendaId}`, { method: "DELETE" });
+                if (!resp.ok) throw new Error(await resp.text());
+                showNotification("Producto eliminado exitosamente", "success");
+                await cargarProductos();
+            } catch (err) {
+                console.error(err);
+                showNotification("Error al eliminar producto", "error");
+            }
+        }
+    });
+
+    // ── Init ──────────────────────────────────────────────────────
     window.addEventListener("DOMContentLoaded", () => {
-      cargarProveedoresSelect();
-      cargarProductos();
+        cargarProveedoresSelect();
+        cargarProductos();
 
-      // Actualizar enlaces del sidebar
-      document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
-      document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
-      document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
-      document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
-      document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;
-      document.getElementById("linkPrediccion").href = `/tiendas/${tiendaId}/prediccion`;
-      document.getElementById("linkInforme").href = `/tiendas/${tiendaId}/informe`;
-      document.getElementById("linkTendero").href = `/tiendas/${tiendaId}/tendero`;
-      document.getElementById("linkPerfil").href = `/tiendas/${tiendaId}/perfil`;
-      document.getElementById("linkTiendas").href = `/tiendas`;
+        document.getElementById("linkDashboard").href    = `/tiendas/${tiendaId}/dashboard`;
+        document.getElementById("linkInventario").href   = `/tiendas/${tiendaId}/inventario`;
+        document.getElementById("linkOptimizacion").href = `/tiendas/${tiendaId}/optimizacion`;
+        document.getElementById("linkProveedores").href  = `/tiendas/${tiendaId}/proveedores`;
+        document.getElementById("linkDeudas").href       = `/tiendas/${tiendaId}/deudas`;
+        document.getElementById("linkPuntoVenta").href   = `/tiendas/${tiendaId}/puntoventa`;
+        document.getElementById("linkPrediccion").href   = `/tiendas/${tiendaId}/prediccion`;
+        document.getElementById("linkInforme").href      = `/tiendas/${tiendaId}/informe`;
+        document.getElementById("linkTendero").href      = `/tiendas/${tiendaId}/tendero`;
+        document.getElementById("linkPerfil").href       = `/tiendas/${tiendaId}/perfil`;
+        document.getElementById("linkTiendas").href      = `/tiendas`;
 
-        // 🧱 Ocultar elementos según el rol
+        const rol = document.getElementById("rolUsuario").value;
         if (rol === "ROLE_TENDERO") {
-            const tenderoMenu = document.getElementById("linkTendero");
-            const tiendasMenu = document.getElementById("linkTiendas");
-
-            if (tenderoMenu) tenderoMenu.style.display = "none";
-            if (tiendasMenu) tiendasMenu.style.display = "none";
+            document.getElementById("linkTendero").style.display = "none";
+            document.getElementById("linkTiendas").style.display  = "none";
         }
     });
-  </script>
-
-
+</script>
 </body>
-
 </html>

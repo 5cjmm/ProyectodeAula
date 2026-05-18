@@ -7,7 +7,7 @@
   <title>ShopMaster - Gestión deudas</title>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
-
+    <script th:src="@{/js/chatbot.js}" th:data-tienda-id="${tiendaId}"></script>
   <style>
 
     /* Sidebar collapse behavior */
@@ -94,6 +94,16 @@
           </svg>
           <span class="sidebar-text">Inventario</span>
         </a>
+
+          <a id="linkOptimizacion"
+             class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+             data-tooltip="Optimización PL">
+              <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span class="sidebar-text">Optimización PL</span>
+          </a>
 
         <a id="linkProveedores"
           class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
@@ -667,6 +677,7 @@
     cargarDeudas();
     document.getElementById("linkDashboard").href = `/tiendas/${tiendaId}/dashboard`;
     document.getElementById("linkInventario").href = `/tiendas/${tiendaId}/inventario`;
+    document.getElementById('linkOptimizacion').href = `/tiendas/${tiendaId}/optimizacion`;
     document.getElementById("linkProveedores").href = `/tiendas/${tiendaId}/proveedores`;
     document.getElementById("linkDeudas").href = `/tiendas/${tiendaId}/deudas`;
     document.getElementById("linkPuntoVenta").href = `/tiendas/${tiendaId}/puntoventa`;

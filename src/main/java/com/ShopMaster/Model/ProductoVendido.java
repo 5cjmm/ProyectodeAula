@@ -2,24 +2,30 @@ package com.ShopMaster.Model;
 
 import org.bson.types.ObjectId;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ProductoVendido {
 
-    private String productoId;      // ID del producto en la colección "productos"
-    private String codigo;          // Código del producto
-    private String nombre;          // Nombre del producto
-    private int cantidad;           // Cantidad vendida
-    private double precioUnitario;  // Precio de venta por unidad
-    private double subtotal;        // cantidad * precioUnitario
+    private String productoId;
+    private String codigo;
+    private String nombre;
+    private int cantidad;
+    private double precioUnitario;
+    private double subtotal;
 
-    // Constructor auxiliar para crear fácilmente desde un objeto Productos
-    public static ProductoVendido desdeProducto(ObjectId id, String codigo, String nombre, int cantidad, double precio) {
+    public ProductoVendido() {}
+
+    public ProductoVendido(String productoId, String codigo, String nombre,
+                           int cantidad, double precioUnitario, double subtotal) {
+        this.productoId     = productoId;
+        this.codigo         = codigo;
+        this.nombre         = nombre;
+        this.cantidad       = cantidad;
+        this.precioUnitario = precioUnitario;
+        this.subtotal       = subtotal;
+    }
+
+    // Constructor auxiliar desde un objeto Productos
+    public static ProductoVendido desdeProducto(ObjectId id, String codigo,
+                                                String nombre, int cantidad, double precio) {
         ProductoVendido pv = new ProductoVendido();
         pv.setProductoId(id.toHexString());
         pv.setCodigo(codigo);
@@ -30,8 +36,22 @@ public class ProductoVendido {
         return pv;
     }
 
+    // Getters
+    public String getProductoId()      { return productoId; }
+    public String getCodigo()          { return codigo; }
+    public String getNombre()          { return nombre; }
+    public int    getCantidad()        { return cantidad; }
+    public double getPrecioUnitario()  { return precioUnitario; }
+    public double getSubtotal()        { return subtotal; }
+
     // Compatibilidad: algunos controladores llaman a getPrecio()
-    public double getPrecio() {
-        return this.precioUnitario;
-    }
+    public double getPrecio()          { return precioUnitario; }
+
+    // Setters
+    public void setProductoId(String productoId)         { this.productoId     = productoId; }
+    public void setCodigo(String codigo)                 { this.codigo         = codigo; }
+    public void setNombre(String nombre)                 { this.nombre         = nombre; }
+    public void setCantidad(int cantidad)                { this.cantidad       = cantidad; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public void setSubtotal(double subtotal)             { this.subtotal       = subtotal; }
 }
