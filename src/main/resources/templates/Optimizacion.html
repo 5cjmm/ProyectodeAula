@@ -23,7 +23,7 @@
 <body class="bg-gray-50">
 <div class="flex min-h-screen">
 
-    <!-- ===== SIDEBAR (idéntico a Deudas.html) ===== -->
+    <!-- ===== SIDEBAR ===== -->
     <aside id="sidebar" class="transition-all duration-300 w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
         <div id="logoContainer" class="flex flex-col items-center mb-10 cursor-pointer">
             <div class="p-4 rounded-xl shadow-sm border border-gray-100 hover:scale-105 transition">
@@ -36,73 +36,43 @@
 
         <nav id="navLinks" class="space-y-2">
             <a id="linkDashboard" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Dashboard">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m4 0h-4m-4 0H5m14 0a2 2 0 002-2V9a2 2 0 00-.586-1.414l-7-7a2 2 0 00-2.828 0l-7 7A2 2 0 003 9v9a2 2 0 002 2h14z" /></svg>
                 <span class="sidebar-text">Dashboard</span>
             </a>
-
             <a id="linkInventario" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Inventario">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18" /></svg>
                 <span class="sidebar-text">Inventario</span>
             </a>
-
-            <!-- Optimización PL (activo) -->
             <a id="linkOptimizacion" class="flex items-center gap-3 px-3 py-2 bg-cyan-50 text-cyan-700 rounded-lg" data-tooltip="Optimización PL">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                 <span class="sidebar-text font-semibold">Optimización PL</span>
             </a>
-
             <a id="linkProveedores" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Proveedores">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7a4 4 0 118 0m-4 4a4 4 0 014 4v1H8v-1a4 4 0 014-4z" /></svg>
                 <span class="sidebar-text">Proveedores</span>
             </a>
-
             <a id="linkDeudas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Deudas">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2v2c0 1.105 1.343 2 3 2s3-.895 3-2v-2c0-1.105-1.343-2-3-2zm0 8v2m0-10V6" /></svg>
                 <span class="sidebar-text">Deudas</span>
             </a>
-
             <a id="linkPuntoVenta" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Punto de Venta">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3zM7 7h10v4H7zM7 15h10v2H7z" /></svg>
                 <span class="sidebar-text">Punto de Venta</span>
             </a>
-
             <a id="linkInforme" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Informe de Ventas">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6V9m4 8V5M5 3v18h14V3H5z" /></svg>
                 <span class="sidebar-text">Informe</span>
             </a>
-
             <a id="linkPrediccion" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Predicción">
-                <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M3 3h14v2H3V3zm0 4h10v2H3V7zm0 4h6v2H3v-2z" /></svg>
                 <span class="sidebar-text">Predicción</span>
             </a>
-
             <a id="linkTendero" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Gestión de Tenderos">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M12 14a4 4 0 100-8 4 4 0 000 8z" /></svg>
                 <span class="sidebar-text">Gestión de Tenderos</span>
             </a>
-
             <a id="linkTiendas" class="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg" data-tooltip="Tiendas">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                </svg>
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
                 <span class="sidebar-text">Tiendas</span>
             </a>
         </nav>
@@ -111,43 +81,29 @@
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="flex-1 flex flex-col">
 
-        <!-- ===== HEADER (idéntico a Deudas.html) ===== -->
+        <!-- ===== HEADER ===== -->
         <header class="bg-white border-b border-gray-200 shadow-sm">
             <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <h1 class="text-xl font-semibold text-gray-800">Optimización PL</h1>
-
                 <div class="relative">
-                    <button id="userMenuButton"
-                            class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
+                    <button id="userMenuButton" class="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
                         <div class="w-9 h-9 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="26" height="26">
                                 <path fill="none" d="M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0M20.5 12.5A4.5 4.5 0 1 1 16 8a4.5 4.5 0 0 1 4.5 4.5" />
                                 <path fill="#0891b2" d="M26.749 24.93A13.99 13.99 0 1 0 2 16a13.9 13.9 0 0 0 3.251 8.93l-.02.017c.07.084.15.156.222.239c.09.103.187.2.28.3q.418.457.87.87q.14.124.28.242q.48.415.99.782c.044.03.084.069.128.1v-.012a13.9 13.9 0 0 0 16 0v.012c.044-.031.083-.07.128-.1q.51-.368.99-.782q.14-.119.28-.242q.451-.413.87-.87c.093-.1.189-.197.28-.3c.071-.083.152-.155.222-.24ZM16 8a4.5 4.5 0 1 1-4.5 4.5A4.5 4.5 0 0 1 16 8M8.007 24.93A4.996 4.996 0 0 1 13 20h6a4.996 4.996 0 0 1 4.993 4.93a11.94 11.94 0 0 1-15.986 0" />
                             </svg>
                         </div>
-                        <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}" class="text-sm font-medium text-gray-700">
-                Hola, Usuario
-              </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6 9l6 6l6-6" />
-                        </svg>
+                        <span id="userGreeting" th:text="'Hola, ' + ${usuario.username}" class="text-sm font-medium text-gray-700">Hola, Usuario</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6 9l6 6l6-6" /></svg>
                     </button>
-
-                    <div id="userDropdown"
-                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 translate-y-[-10px] scale-95 pointer-events-none transition-all duration-200 z-50">
                         <div class="px-4 py-3 border-b border-gray-100">
                             <p class="text-sm text-gray-700">Rol:</p>
-                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}"
-                               class="font-semibold text-gray-900">Administrador</p>
+                            <p id="userRole" th:text="${#lists.contains(usuario.roles, 'ROLE_ADMIN') ? 'Administrador' : 'Tendero'}" class="font-semibold text-gray-900">Administrador</p>
                         </div>
                         <a id="linkPerfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Perfil</a>
-                        <button id="logoutBtn"
-                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                                <g fill="none">
-                                    <path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" />
-                                </g>
-                            </svg>
+                        <button id="logoutBtn" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none"><path fill="#f00034" d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415" /></g></svg>
                             Cerrar sesión
                         </button>
                     </div>
@@ -158,7 +114,6 @@
         <!-- ===== MAIN ===== -->
         <main class="flex-1 p-6 space-y-6 overflow-y-auto">
 
-            <!-- Título interno -->
             <div class="flex items-center justify-between">
                 <div id="lastRunBadge" class="hidden text-xs text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
                     Última ejecución: <span id="lastRunTime">—</span>
@@ -180,12 +135,12 @@
                 <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5">
                     <p class="text-xs text-gray-500 mb-1">Presupuesto usado</p>
                     <p id="metricPresupuesto" class="text-2xl font-bold text-gray-800">—</p>
-                    <p class="text-xs text-gray-400 mt-1">de $<span id="presupuestoLabel">—</span></p>
+                    <p class="text-xs text-gray-400 mt-1">de <span id="presupuestoLabel">—</span></p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5">
                     <p class="text-xs text-gray-500 mb-1">Crédito utilizado</p>
                     <p id="metricCredito" class="text-2xl font-bold text-gray-800">—</p>
-                    <p class="text-xs text-gray-400 mt-1">de $<span id="creditoLabel">—</span> límite</p>
+                    <p class="text-xs text-gray-400 mt-1">de <span id="creditoLabel">—</span> límite</p>
                 </div>
             </div>
 
@@ -195,48 +150,59 @@
                 <div class="lg:col-span-1 space-y-5">
                     <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6">
                         <h3 class="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 16v-2m8-6h2M2 12H4m15.07-7.07l1.42-1.42M5.51 18.49l-1.42 1.42M18.49 18.49l1.42 1.42M5.51 5.51L4.09 4.09"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 16v-2m8-6h2M2 12H4m15.07-7.07l1.42-1.42M5.51 18.49l-1.42 1.42M18.49 18.49l1.42 1.42M5.51 5.51L4.09 4.09"/></svg>
                             Parámetros del modelo
                         </h3>
-                        <div class="space-y-5">
+                        <div class="space-y-6">
+
+                            <!-- Inventario (unidades) -->
                             <div>
                                 <div class="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>Inventario total</span>
                                     <span id="invVal" class="font-semibold text-gray-700">200 u</span>
                                 </div>
-                                <input type="range" id="invSlider" min="50" max="400" value="200" step="1"
+                                <input type="range" id="invSlider" min="10" max="1000" value="200" step="1"
                                        class="w-full h-1.5 bg-gray-200 rounded-full accent-cyan-600 cursor-pointer"
                                        oninput="document.getElementById('invVal').textContent = this.value + ' u'">
+                                <div class="flex justify-between text-[10px] text-gray-300 mt-0.5"><span>10 u</span><span>1.000 u</span></div>
                             </div>
+
+                            <!-- Presupuesto (COP) -->
                             <div>
                                 <div class="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>Presupuesto proveedores</span>
-                                    <span id="presVal" class="font-semibold text-gray-700">$500</span>
+                                    <span id="presVal" class="font-semibold text-gray-700">$500.000</span>
                                 </div>
-                                <input type="range" id="presSlider" min="100" max="1000" value="500" step="10"
+                                <input type="range" id="presSlider" min="10000" max="10000000" value="500000" step="10000"
                                        class="w-full h-1.5 bg-gray-200 rounded-full accent-cyan-600 cursor-pointer"
-                                       oninput="document.getElementById('presVal').textContent = '$' + this.value">
+                                       oninput="document.getElementById('presVal').textContent = fmtCOP(this.value)">
+                                <div class="flex justify-between text-[10px] text-gray-300 mt-0.5"><span>$10.000</span><span>$10.000.000</span></div>
                             </div>
+
+                            <!-- Crédito (COP) -->
                             <div>
                                 <div class="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>Límite crédito clientes</span>
-                                    <span id="credVal" class="font-semibold text-gray-700">$300</span>
+                                    <span id="credVal" class="font-semibold text-gray-700">$300.000</span>
                                 </div>
-                                <input type="range" id="credSlider" min="50" max="600" value="300" step="10"
+                                <input type="range" id="credSlider" min="10000" max="10000000" value="300000" step="10000"
                                        class="w-full h-1.5 bg-gray-200 rounded-full accent-cyan-600 cursor-pointer"
-                                       oninput="document.getElementById('credVal').textContent = '$' + this.value">
+                                       oninput="document.getElementById('credVal').textContent = fmtCOP(this.value)">
+                                <div class="flex justify-between text-[10px] text-gray-300 mt-0.5"><span>$10.000</span><span>$10.000.000</span></div>
                             </div>
+
+                            <!-- Capacidad de ventas (unidades) -->
                             <div>
                                 <div class="flex justify-between text-xs text-gray-500 mb-1">
                                     <span>Capacidad de ventas</span>
                                     <span id="capVal" class="font-semibold text-gray-700">150 u</span>
                                 </div>
-                                <input type="range" id="capSlider" min="50" max="300" value="150" step="1"
+                                <input type="range" id="capSlider" min="10" max="1000" value="150" step="1"
                                        class="w-full h-1.5 bg-gray-200 rounded-full accent-cyan-600 cursor-pointer"
                                        oninput="document.getElementById('capVal').textContent = this.value + ' u'">
+                                <div class="flex justify-between text-[10px] text-gray-300 mt-0.5"><span>10 u</span><span>1.000 u</span></div>
                             </div>
+
                         </div>
                     </div>
 
@@ -264,7 +230,6 @@
                 <!-- Panel derecho: resultados -->
                 <div class="lg:col-span-2 space-y-5">
 
-                    <!-- Placeholder inicial -->
                     <div id="placeholderPanel" class="bg-white rounded-xl shadow-md border border-dashed border-gray-300 p-12 flex flex-col items-center justify-center text-center">
                         <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
@@ -272,7 +237,6 @@
                         <p class="text-gray-400 text-sm">Ajusta los parámetros y presiona<br><strong>Calcular optimización</strong> para ver los resultados</p>
                     </div>
 
-                    <!-- Resultados (oculto hasta calcular) -->
                     <div id="resultadosPanel" class="hidden space-y-5">
 
                         <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5">
@@ -300,13 +264,16 @@
 </div>
 
 <script>
-    // ── Sidebar collapse (igual que Deudas.html — FUERA de DOMContentLoaded) ──
+    // ── Utilidad formato COP ───────────────────────────────────────
+    function fmtCOP(n) {
+      return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0);
+    }
+
+    // ── Sidebar collapse ──────────────────────────────────────────
     const logo    = document.getElementById('logoContainer');
     const sidebar = document.getElementById('sidebar');
 
-    if (localStorage.getItem('sidebar-collapsed') === 'true') {
-      sidebar.classList.add('collapsed');
-    }
+    if (localStorage.getItem('sidebar-collapsed') === 'true') sidebar.classList.add('collapsed');
 
     logo.addEventListener('click', () => {
       sidebar.classList.toggle('collapsed');
@@ -319,15 +286,13 @@
       tooltip.className = 'tooltip opacity-0 absolute bg-black text-white text-xs rounded px-2 py-1 transition duration-200';
       el.appendChild(tooltip);
       el.classList.add('relative');
-      el.addEventListener('mouseenter', () => {
-        if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0');
-      });
+      el.addEventListener('mouseenter', () => { if (sidebar.classList.contains('collapsed')) tooltip.classList.remove('opacity-0'); });
       el.addEventListener('mouseleave', () => tooltip.classList.add('opacity-0'));
     });
 
-    // ── Dropdown usuario ──
-    const button   = document.getElementById('userMenuButton');
-    const dropdown = document.getElementById('userDropdown');
+    // ── Dropdown usuario ──────────────────────────────────────────
+    const button    = document.getElementById('userMenuButton');
+    const dropdown  = document.getElementById('userDropdown');
     const logoutBtn = document.getElementById('logoutBtn');
 
     button.addEventListener('click', (e) => {
@@ -353,7 +318,7 @@
       if (confirm('¿Deseas cerrar sesión?')) window.location.href = '/logout';
     });
 
-    // ── Links y rol (dentro de DOMContentLoaded, igual que Deudas.html) ──
+    // ── Links y rol ───────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
       const tiendaId = document.getElementById('tiendaId').value;
       const rol      = document.getElementById('rolUsuario')?.value;
@@ -376,7 +341,7 @@
       }
     });
 
-    // ── Lógica de optimización ──
+    // ── Optimización ──────────────────────────────────────────────
     const tiendaId = document.getElementById('tiendaId').value;
     let chartInstance = null;
 
@@ -432,25 +397,26 @@
       document.getElementById('placeholderPanel').classList.add('hidden');
       document.getElementById('resultadosPanel').classList.remove('hidden');
 
+      // Métricas — todo en COP
       const totalUnidades    = data.productos.reduce((s, p) => s + p.cantidad, 0);
-      const presupuestoUsado = ((data.usoRestricciones.presupuesto || 0) / 100 * params.presupuesto).toFixed(0);
-      const creditoUsado     = ((data.usoRestricciones.credito     || 0) / 100 * params.creditoDisponible).toFixed(0);
+      const presupuestoUsado = (data.usoRestricciones.presupuesto || 0) / 100 * params.presupuesto;
+      const creditoUsado     = (data.usoRestricciones.credito     || 0) / 100 * params.creditoDisponible;
 
-      document.getElementById('metricGanancia').textContent    = `$${data.gananciaOptima.toFixed(2)}`;
+      document.getElementById('metricGanancia').textContent    = fmtCOP(data.gananciaOptima);
       document.getElementById('metricUnidades').textContent    = totalUnidades.toFixed(0);
-      document.getElementById('capVentasLabel').textContent    = params.capacidadVentas;
-      document.getElementById('metricPresupuesto').textContent = `$${presupuestoUsado}`;
-      document.getElementById('presupuestoLabel').textContent  = params.presupuesto;
-      document.getElementById('metricCredito').textContent     = `$${creditoUsado}`;
-      document.getElementById('creditoLabel').textContent      = params.creditoDisponible;
+      document.getElementById('capVentasLabel').textContent    = params.capacidadVentas + ' u';
+      document.getElementById('metricPresupuesto').textContent = fmtCOP(presupuestoUsado);
+      document.getElementById('presupuestoLabel').textContent  = fmtCOP(params.presupuesto);
+      document.getElementById('metricCredito').textContent     = fmtCOP(creditoUsado);
+      document.getElementById('creditoLabel').textContent      = fmtCOP(params.creditoDisponible);
 
       document.getElementById('lastRunBadge').classList.remove('hidden');
       document.getElementById('lastRunTime').textContent = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
 
       // Tarjetas de productos
-      const iconos = ['📦'];
-      const grid   = document.getElementById('productosGrid');
-      grid.innerHTML = '';
+      const iconos      = ['📦'];
+      const grid        = document.getElementById('productosGrid');
+      grid.innerHTML    = '';
       const maxGanancia = Math.max(...data.productos.map(p => p.ganancia));
 
       data.productos.forEach((p, i) => {
@@ -458,33 +424,27 @@
         grid.innerHTML += `
           <div class="flex flex-col items-center text-center bg-gray-50 ${esMejor ? 'ring-1 ring-emerald-400' : ''} rounded-xl p-3">
             <span class="text-2xl mb-1">${iconos[i % iconos.length]}</span>
-            <p class="text-xs text-gray-500 mb-1">${p.nombre}</p>
+            <p class="text-xs text-gray-500 mb-1 leading-tight">${p.nombre}</p>
             <p class="text-xl font-bold text-gray-800">${p.cantidad.toFixed(0)}</p>
-            <p class="text-xs text-emerald-600 font-medium mt-1">+$${p.ganancia.toFixed(2)}</p>
+            <p class="text-xs text-emerald-600 font-medium mt-1">${fmtCOP(p.ganancia)}</p>
             ${esMejor ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 rounded-full px-1.5 mt-1">★ mejor</span>' : ''}
           </div>`;
       });
 
-      // Gráfica Chart.js
+      // Gráfica
       const colores = ['#06b6d4','#10b981','#f59e0b','#6366f1','#ec4899','#f97316','#14b8a6','#8b5cf6','#84cc16','#ef4444'];
       if (chartInstance) chartInstance.destroy();
       chartInstance = new Chart(document.getElementById('chartGanancias'), {
         type: 'bar',
         data: {
           labels:   data.productos.map(p => p.nombre),
-          datasets: [{
-            label: 'Ganancia ($)',
-            data:  data.productos.map(p => p.ganancia),
-            backgroundColor: colores.slice(0, data.productos.length),
-            borderRadius: 6,
-            borderSkipped: false
-          }]
+          datasets: [{ label: 'Ganancia', data: data.productos.map(p => p.ganancia), backgroundColor: colores.slice(0, data.productos.length), borderRadius: 6, borderSkipped: false }]
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtCOP(ctx.raw) } } },
           scales: {
-            y: { beginAtZero: true, ticks: { callback: v => '$' + v } },
+            y: { beginAtZero: true, ticks: { callback: v => fmtCOP(v) } },
             x: { grid: { display: false } }
           }
         }
@@ -522,7 +482,7 @@
       const recom = [];
 
       const mejor = data.productos.reduce((a, b) => a.ganancia > b.ganancia ? a : b);
-      recom.push({ tipo: 'ok', texto: `Prioriza <strong>${mejor.nombre}</strong> — mayor ganancia del lote ($${mejor.ganancia.toFixed(2)})` });
+      recom.push({ tipo: 'ok', texto: `Prioriza <strong>${mejor.nombre}</strong> — mayor ganancia del lote (${fmtCOP(mejor.ganancia)})` });
 
       const uso = data.usoRestricciones;
       if (uso.capacidadVentas >= 90) recom.push({ tipo: 'warn', texto: 'Capacidad de ventas casi al límite — considera ampliar personal o turnos' });
