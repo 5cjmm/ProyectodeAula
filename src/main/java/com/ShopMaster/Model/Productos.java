@@ -18,6 +18,9 @@ public class Productos {
     private String codigo;
 
     private String nombre;
+    // Categoría del producto (opcional). La usan la app móvil y sus gráficos;
+    // si viene vacía se muestra como "Sin categoría".
+    private String categoria;
     private int cantidad;
     private double precio;
     // NUEVO: precio al que se le compra al proveedor
@@ -54,6 +57,9 @@ public class Productos {
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }

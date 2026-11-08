@@ -21,4 +21,7 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     boolean           existsByEmail(String email);
 
     List<Usuario> findByRolesContainingAndTiendasId(String rol, String tiendaId);
+
+    // Usuarios que tienen una tienda con ese id (para obtener el nombre de la tienda de un tendero)
+    List<Usuario> findByTiendasId(String tiendaId);
 }

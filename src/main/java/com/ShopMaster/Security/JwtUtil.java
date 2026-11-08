@@ -3,15 +3,37 @@ package com.ShopMaster.Security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // Clave aleatoria por defecto (solo sirve hasta que el servidor se reinicia).
+    // En producción define la variable de entorno JWT_SECRET (mínimo 32 caracteres)
+    // para que los tokens sigan siendo válidos después de cada despliegue.
+    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long expiration = 1000 * 60 * 60; // 1 hora
+
+    @Value("${jwt.secret:}")
+    public void setSecret(String secret) {
+        if (secret == null || secret.isBlank()) {
+            return;
+        }
+        byte[] bytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length < 32) {
+            throw new IllegalStateException("JWT_SECRET debe tener al menos 32 caracteres");
+        }
+        this.key = Keys.hmacShaKeyFor(bytes);
+    }
+
+    /** Vigencia del token en segundos (se informa a la app móvil en el login). */
+    public long getExpirationSeconds() {
+        return expiration / 1000;
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()
