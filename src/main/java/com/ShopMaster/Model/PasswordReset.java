@@ -22,7 +22,7 @@ public class PasswordReset {
     private String codigoHash;
 
     // Mongo borra el documento solo cuando llega esta fecha (si el índice TTL está creado)
-    @Indexed(expireAfterSeconds = 0)
+    @Indexed(expireAfter = "0s")
     private Date expiraEn;
 
     private int intentos;
