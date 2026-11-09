@@ -69,6 +69,12 @@ public class ProductosService {
             producto.setProveedorIds(existente.getProveedorIds());
         }
 
+        // 🏷️ Si el formulario no envía categoría, conservar la que ya tenía
+        // (así editar un producto desde la web no borra la categoría de la app móvil)
+        if (producto.getCategoria() == null) {
+            producto.setCategoria(existente.getCategoria());
+        }
+
         return productosRepository.save(producto);
     }
 
