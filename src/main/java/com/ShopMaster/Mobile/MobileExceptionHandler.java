@@ -23,7 +23,8 @@ import com.ShopMaster.Controller.JwtAuthController;
         JwtAuthController.class,
         MobilePerfilController.class,
         MobileInventarioController.class,
-        MobileChatController.class
+        MobileChatController.class,
+        MobilePrediccionController.class
 })
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MobileExceptionHandler {
