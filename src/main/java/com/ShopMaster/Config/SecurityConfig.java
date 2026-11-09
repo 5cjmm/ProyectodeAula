@@ -11,8 +11,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.ShopMaster.Repository.UsuarioRepository;
 import com.ShopMaster.Security.CustomAuthenticationSuccessHandler;
@@ -73,6 +77,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                // La API (/api/**) responde 401 en JSON cuando falta el token o venció,
+                // en lugar de redirigir a /login como hacen las páginas web.
+                .exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor(
+                        apiEntryPoint(), new AntPathRequestMatcher("/api/**")))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -90,5 +98,12 @@ public class SecurityConfig {
         return http.build();
     }
 
+    private AuthenticationEntryPoint apiEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":false,\"message\":\"Token inválido o vencido\"}");
+        };
+    }
 
 }
