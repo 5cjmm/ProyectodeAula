@@ -166,4 +166,29 @@ class MobilePrediccionServiceTest {
         assertFalse(InflacionDane.CARTAGENA.containsKey(2019), "no se inventan datos de Cartagena 2015-2019");
         assertEquals(2025, InflacionDane.ultimoAnio(InflacionDane.NACIONAL));
     }
+
+    @Test
+    void panoramaComparaTodosLosProductosConElIpc() {
+        when(modelo.predictMultiYear(ARROZ, 2025, 1)).thenReturn(Map.of(2025, 11200.0));
+        when(modelo.predictMultiYear("Leche Colanta 1L", 2025, 1)).thenReturn(Map.of(2025, 4300.0 * 1.02));
+
+        Map<String, Object> d = data(servicio.panorama());
+        assertEquals(2025, d.get("anio"));
+        assertEquals(5.10, (Double) d.get("ipcNacionalPct"), 1e-9);
+        assertEquals(4.80, (Double) d.get("ipcCartagenaPct"), 1e-9);
+
+        List<Map<String, Object>> productos = lista(d.get("productos"));
+        assertEquals(2, productos.size()); // "unknown" no tiene historial
+        // Ordenado de mayor a menor diferencia frente al IPC: el arroz (+7.5 %) sube más que la leche (+2 %).
+        assertEquals(ARROZ, productos.get(0).get("nombre"));
+        assertEquals("POR_ENCIMA", productos.get(0).get("veredicto"));
+        assertEquals("POR_DEBAJO", productos.get(1).get("veredicto"));
+        assertEquals(2.71, (Double) productos.get(0).get("diferenciaPuntos"), 1e-9);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> conteo = (Map<String, Object>) d.get("conteo");
+        assertEquals(1, conteo.get("porEncima"));
+        assertEquals(0, conteo.get("enLinea"));
+        assertEquals(1, conteo.get("porDebajo"));
+    }
 }
