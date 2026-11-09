@@ -128,6 +128,76 @@ public class MobilePrediccionService {
         return MobileApiResponse.ok(d);
     }
 
+    // ── GET /api/prediccion/panorama ──────────────────────────────────────────
+
+    /**
+     * Pronóstico del primer año futuro de todos los productos del modelo, comparado con la
+     * inflación. Alimenta los gráficos comparativos de la app (radar, treemap y ranking).
+     */
+    public Map<String, Object> panorama() {
+        List<Map<String, Object>> items = new ArrayList<>();
+        Map<String, Object> referencia = null;
+        int porEncima = 0;
+        int enLinea = 0;
+        int porDebajo = 0;
+
+        for (String nombre : precios.getProductCategories()) {
+            TreeMap<Integer, Double> historial = new TreeMap<>(precios.getHistory(nombre));
+            if (historial.isEmpty()) {
+                continue;
+            }
+            int ultimoAnio = historial.lastKey();
+            Double valor = precios.predictMultiYear(nombre, ultimoAnio + 1, 1).get(ultimoAnio + 1);
+            if (valor == null || valor.isNaN() || valor.isInfinite()) {
+                continue; // un producto sin pronóstico no debe tumbar todo el panorama
+            }
+            Map<String, Object> punto = puntoPronostico(ultimoAnio + 1, valor, historial.get(ultimoAnio));
+            if (referencia == null) {
+                referencia = punto;
+            }
+            double variacion = (Double) punto.get("variacionPct");
+            Double cartagena = (Double) punto.get("ipcCartagenaPct");
+            double base = cartagena != null ? cartagena : (Double) punto.get("ipcNacionalPct");
+            String veredicto = (String) punto.get("veredicto");
+            switch (veredicto) {
+                case POR_ENCIMA -> porEncima++;
+                case POR_DEBAJO -> porDebajo++;
+                default -> enLinea++;
+            }
+
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("nombre", nombre);
+            item.put("ultimoPrecio", redondear(historial.get(ultimoAnio)));
+            item.put("precioPronosticado", punto.get("precio"));
+            item.put("variacionPct", variacion);
+            item.put("diferenciaPuntos", redondear(variacion - base));
+            item.put("veredicto", veredicto);
+            items.add(item);
+        }
+        if (referencia == null) {
+            throw MobileException.notFound("No hay historial de precios para comparar");
+        }
+        items.sort((a, b) -> Double.compare((Double) b.get("diferenciaPuntos"), (Double) a.get("diferenciaPuntos")));
+
+        Map<String, Object> conteo = new LinkedHashMap<>();
+        conteo.put("porEncima", porEncima);
+        conteo.put("enLinea", enLinea);
+        conteo.put("porDebajo", porDebajo);
+
+        Map<String, Object> d = new LinkedHashMap<>();
+        d.put("anio", referencia.get("anio"));
+        d.put("ipcNacionalPct", referencia.get("ipcNacionalPct"));
+        d.put("ipcCartagenaPct", referencia.get("ipcCartagenaPct"));
+        d.put("ipcEsReferencia", referencia.get("ipcEsReferencia"));
+        d.put("conteo", conteo);
+        d.put("productos", items);
+        Map<String, Object> fuentes = new LinkedHashMap<>();
+        fuentes.put("precios", "Dataset de productos de consumo masivo (Kaggle), precios por año");
+        fuentes.put("inflacion", InflacionDane.FUENTE);
+        d.put("fuentes", fuentes);
+        return MobileApiResponse.ok(d);
+    }
+
     // ── Piezas ────────────────────────────────────────────────────────────────
 
     private Map<String, Object> puntoPronostico(int anio, double valor, double previo) {
