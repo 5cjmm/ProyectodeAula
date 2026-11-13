@@ -1,9 +1,11 @@
 package com.ShopMaster.API.controller;
 
+import com.ShopMaster.API.dto.EstimacionRequest;
 import com.ShopMaster.API.dto.PredictionResponse;
 import com.ShopMaster.API.dto.PriceRequest;
 import com.ShopMaster.API.dto.PriceResponse;
 import com.ShopMaster.API.model.PatientData;
+import com.ShopMaster.API.service.ModeloRedPrecios;
 import com.ShopMaster.API.service.PredictionService;
 import com.ShopMaster.API.service.PricePredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class PredictionController {
 
     @Autowired
     private PricePredictionService pricePredictionService;
+
+    @Autowired
+    private ModeloRedPrecios redPrecios;
 
     @PostMapping
     public PredictionResponse predict(@RequestBody PatientData data) {
@@ -55,6 +60,32 @@ public class PredictionController {
     @GetMapping("/price/model")
     public Map<String, Object> modelInfo() {
         return pricePredictionService.getModelInfo();
+    }
+
+    /** Opciones del formulario y ficha de la red neuronal (variable predictiva, métricas, comparativa). */
+    @GetMapping("/estimar/opciones")
+    public Map<String, Object> estimarOpciones() {
+        Map<String, Object> r = new java.util.LinkedHashMap<>(redPrecios.opciones());
+        r.put("modelo", redPrecios.ficha());
+        return r;
+    }
+
+    /** Estima el precio de un producto con la red neuronal entrenada con el dataset de Kaggle. */
+    @PostMapping("/estimar")
+    public Map<String, Object> estimarPrecio(@RequestBody EstimacionRequest req) {
+        if (!redPrecios.disponible()) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE, "El modelo de red neuronal no está disponible");
+        }
+        try {
+            Map<String, Object> r = redPrecios.estimar(req.getSubcategoria(), req.getMarca(), req.getUnidadVenta(),
+                    req.getCantidad(), req.getUnidadMedida());
+            r.put("modelo", redPrecios.ficha());
+            return r;
+        } catch (IllegalArgumentException e) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @GetMapping("/price/products")
