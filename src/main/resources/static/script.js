@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       // display list of predictions como tarjetas minimalistas con indicador de tendencia y COP al lado
       // Mostrar predicciones en tarjetas tipo dashboard financiero
       const preds = predData.predictions || predData;
+      const intervals = predData.intervals || null;
+      renderModelo(predData.model);
       listDiv.className = "mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5";
 
       const yearsArray = Object.entries(preds);
@@ -118,17 +120,26 @@ document.addEventListener('DOMContentLoaded', async function () {
           }
         }
 
+        // Intervalo de confianza del 95 % (si el modelo lo calcula)
+        const rango = intervals && intervals[year];
+        const rangeEl = document.createElement('p');
+        if (rango) {
+          rangeEl.className = "text-xs text-gray-500 mt-2";
+          rangeEl.textContent = `Rango 95 %: $${Math.round(rango[0]).toLocaleString('es-CO')} – $${Math.round(rango[1]).toLocaleString('es-CO')}`;
+        }
+
         // Ensamblar tarjeta
         card.appendChild(header);
         card.appendChild(priceEl);
         card.appendChild(trendContainer);
+        if (rango) card.appendChild(rangeEl);
 
         listDiv.appendChild(card);
       }
 
 
       // prepare and render chart using Chart.js
-      renderChart(histData, preds);
+      renderChart(histData, preds, intervals);
 
     } catch (error) {
       alert('Ocurrió un error: ' + error.message);
@@ -137,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 let priceChart = null;
-function renderChart(historyMap, predictionsMap) {
+function renderChart(historyMap, predictionsMap, intervals) {
   // historyMap and predictionsMap are objects mapping year->price
   const yearsSet = new Set();
   for (const y of Object.keys(historyMap || {})) yearsSet.add(Number(y));
@@ -147,6 +158,8 @@ function renderChart(historyMap, predictionsMap) {
   const historyValues = years.map(y => (historyMap && historyMap[y] != null) ? Number(historyMap[y]) : null);
   const predictedValues = years.map(y => (predictionsMap && predictionsMap[y] != null) ? Number(predictionsMap[y]) : null);
 
+  const minValues = years.map(y => (intervals && intervals[y]) ? Number(intervals[y][0]) : null);
+  const maxValues = years.map(y => (intervals && intervals[y]) ? Number(intervals[y][1]) : null);
   const ctx = document.getElementById('priceChart').getContext('2d');
   const data = {
     labels: years.map(String),
@@ -171,6 +184,15 @@ function renderChart(historyMap, predictionsMap) {
     ]
   };
 
+  // Banda del intervalo de confianza del 95 %: el máximo se rellena hasta el mínimo
+  if (intervals) {
+    data.datasets.push(
+      { label: 'Mínimo (95 %)', data: minValues, borderWidth: 0, pointRadius: 0, fill: false, spanGaps: true },
+      { label: 'Máximo (95 %)', data: maxValues, borderWidth: 0, pointRadius: 0, fill: '-1',
+        backgroundColor: 'rgba(75, 192, 192, 0.18)', spanGaps: true }
+    );
+  }
+
   const config = {
     type: 'line',
     data: data,
@@ -188,4 +210,66 @@ function renderChart(historyMap, predictionsMap) {
   } else {
     priceChart = new Chart(ctx, config);
   }
+}
+
+
+function escapeHtml(t) {
+  return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Ficha del modelo: variable predictiva, predictoras, porcentaje predictivo y comparación de modelos
+function renderModelo(model) {
+  const box = document.getElementById('modeloInfo');
+  if (!box) return;
+  if (!model || !model.metricas) { box.innerHTML = ''; return; }
+
+  const m = model.metricas;
+  const pct = Number(m.porcentajePredictivo);
+  const r2 = Number(m.r2);
+  const predictoras = (model.variablesPredictoras || []).map(escapeHtml).join(', ');
+
+  const tarjeta = (titulo, valor, nota) => `
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+      <p class="text-xs font-medium text-gray-500">${titulo}</p>
+      <p class="text-2xl font-extrabold text-gray-900 mt-1">${valor}</p>
+      <p class="text-xs text-gray-400 mt-1">${nota}</p>
+    </div>`;
+
+  let tabla = '';
+  if (Array.isArray(model.comparativa) && model.comparativa.length) {
+    const filas = model.comparativa.map(c => {
+      const elegido = c.modelo === model.modelo;
+      return `<tr class="${elegido ? 'bg-blue-50 font-semibold' : ''} border-t border-gray-100">
+        <td class="py-2 pr-3">${escapeHtml(c.modelo)}${elegido ? ' <span class="text-xs text-blue-600">(en uso)</span>' : ''}</td>
+        <td class="py-2 px-3 text-right">${Number(c.porcentajePredictivo).toFixed(2)} %</td>
+        <td class="py-2 px-3 text-right">${Number(c.r2).toFixed(3)}</td>
+        <td class="py-2 px-3 text-right">${Number(c.mapePct).toFixed(2)} %</td>
+        <td class="py-2 pl-3 text-right">$${Math.round(c.mae).toLocaleString('es-CO')}</td>
+      </tr>`;
+    }).join('');
+    tabla = `
+      <h4 class="text-sm font-semibold text-gray-700 mt-6 mb-2">Comparación de modelos (validación temporal)</h4>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-gray-700">
+          <thead><tr class="text-xs text-gray-500">
+            <th class="text-left pb-2 pr-3">Modelo</th><th class="text-right pb-2 px-3">Porcentaje predictivo</th>
+            <th class="text-right pb-2 px-3">R²</th><th class="text-right pb-2 px-3">Error (MAPE)</th><th class="text-right pb-2 pl-3">Error medio (MAE)</th>
+          </tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>`;
+  }
+
+  box.innerHTML = `
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      ${tarjeta('Variable predictiva', escapeHtml(model.variablePredictiva || 'precio'), 'Lo que el modelo pronostica (COP)')}
+      ${tarjeta('Variables predictoras', predictoras || '—', 'Datos con los que se predice')}
+      ${tarjeta('Porcentaje predictivo', isFinite(pct) ? pct.toFixed(2) + ' %' : '—', 'Precisión = 100 − error medio (MAPE)')}
+      ${tarjeta('Coeficiente R²', isFinite(r2) ? r2.toFixed(3) : '—', 'Variación de precios explicada')}
+    </div>
+    <p class="text-xs text-gray-500 mt-3">
+      <strong>Modelo:</strong> ${escapeHtml(model.modelo)} · <strong>Validación:</strong> ${escapeHtml(model.validacion)} ·
+      <strong>Datos:</strong> ${escapeHtml(model.dataset)}
+    </p>
+    ${tabla}`;
 }
