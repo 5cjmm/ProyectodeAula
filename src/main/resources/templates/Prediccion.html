@@ -260,6 +260,48 @@
 
             <!-- Contenido del módulo de predicción -->
             <main class="flex-1 p-6 space-y-6">
+                <div class="bg-white shadow-md rounded-xl p-6 border border-blue-200">
+                    <div class="mb-2">
+                        <h2 class="text-2xl font-semibold text-gray-800">Estimación de precio con red neuronal</h2>
+                        <p class="text-sm text-gray-500 mt-1">Estima el precio de referencia de un producto según su subcategoría,
+                            marca, unidad de venta y cantidad. Modelo entrenado con el dataset de Kaggle
+                            <em>Productos de Consumo Masivo</em>.</p>
+                    </div>
+
+                    <form id="estimarForm" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subcategoría:</label>
+                            <select id="estSubcategoria" class="w-full border-gray-300 rounded-lg p-2.5 border"></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Marca:</label>
+                            <select id="estMarca" class="w-full border-gray-300 rounded-lg p-2.5 border"></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de venta:</label>
+                            <select id="estUnidadVenta" class="w-full border-gray-300 rounded-lg p-2.5 border"></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad:</label>
+                            <input type="number" id="estCantidad" min="1" step="any" placeholder="Ej: 500"
+                                class="w-full border-gray-300 rounded-lg p-2.5 border disabled:bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de medida:</label>
+                            <select id="estUnidadMedida" class="w-full border-gray-300 rounded-lg p-2.5 border"></select>
+                        </div>
+                        <div class="flex items-end justify-end">
+                            <button type="submit"
+                                class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-10 rounded-lg transition-all duration-200">
+                                Estimar precio
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="estResultado" class="hidden bg-gray-50 border border-gray-200 rounded-lg p-6 shadow-inner mb-6"></div>
+                    <div id="estModelo"></div>
+                </div>
+
                 <div
                     class="bg-white shadow-md rounded-xl p-6 border border-blue-200 focus:ring-cyan-500 focus:border-cyan-500 transition">
                     <div class="flex items-center justify-between mb-6">
@@ -271,7 +313,7 @@
                                         d="M13 3.207L7.854 8.354h-.708L5.5 6.707l-3.646 3.647l-.708-.708l4-4h.708L7.5 7.293l5.146-5.147h.707l2 2l-.707.708z" />
                                 </g>
                             </svg>
-                            Predicción de Precios
+                            Proyección histórica por años (serie 2015-2024)
                         </h2>
                     </div>
 
@@ -316,6 +358,7 @@
         </div>
     </div>
 
+    <script src="/js/estimacion.js"></script>
     <script src="/script.js"></script>
 
     <script>
