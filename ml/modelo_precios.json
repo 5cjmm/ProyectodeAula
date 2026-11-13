@@ -1,0 +1,258 @@
+{
+  "version": "2.0",
+  "tipoProblema": "Regresión supervisada",
+  "modelo": "Regresión log-lineal por producto",
+  "formula": "ln(precio) = a + b · año   →   precio = exp(a + b · año)",
+  "variablePredictiva": "precio",
+  "variablesPredictoras": [
+    "año",
+    "producto"
+  ],
+  "dataset": "Productos de Consumo Masivo (Kaggle) · 22 productos · 2015-2024",
+  "observaciones": 220,
+  "validacion": "Hold-out temporal: entrenamiento 2015-2021, prueba 2022-2024",
+  "metricas": {
+    "mae": 165.5,
+    "rmse": 225.35,
+    "mapePct": 2.146,
+    "r2": 0.9948,
+    "porcentajePredictivo": 97.85,
+    "sigmaLog": 0.02867
+  },
+  "comparativa": [
+    {
+      "modelo": "Regresión log-lineal por producto",
+      "mae": 165.5,
+      "rmse": 225.35,
+      "mapePct": 2.146,
+      "r2": 0.9948,
+      "porcentajePredictivo": 97.85
+    },
+    {
+      "modelo": "Regresión lineal por producto",
+      "mae": 311.52,
+      "rmse": 406.27,
+      "mapePct": 3.827,
+      "r2": 0.9831,
+      "porcentajePredictivo": 96.17
+    },
+    {
+      "modelo": "Red neuronal MLP (log precio)",
+      "mae": 352.0,
+      "rmse": 443.52,
+      "mapePct": 4.458,
+      "r2": 0.9799,
+      "porcentajePredictivo": 95.54
+    },
+    {
+      "modelo": "Ridge global (log precio)",
+      "mae": 515.83,
+      "rmse": 630.71,
+      "mapePct": 6.474,
+      "r2": 0.9593,
+      "porcentajePredictivo": 93.53
+    },
+    {
+      "modelo": "Regresión lineal global (año + producto)",
+      "mae": 842.82,
+      "rmse": 989.68,
+      "mapePct": 11.294,
+      "r2": 0.8998,
+      "porcentajePredictivo": 88.71
+    },
+    {
+      "modelo": "Random Forest",
+      "mae": 1052.56,
+      "rmse": 1312.75,
+      "mapePct": 11.763,
+      "r2": 0.8238,
+      "porcentajePredictivo": 88.24
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "mae": 1245.51,
+      "rmse": 1637.62,
+      "mapePct": 12.857,
+      "r2": 0.7258,
+      "porcentajePredictivo": 87.14
+    }
+  ],
+  "productos": {
+    "Agua Brisa 600ml": {
+      "a": -118.19273289588158,
+      "b": 0.06257490915351314,
+      "crecimientoAnualPct": 6.457420228341304,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 4759.7,
+      "mapeHoldoutPct": 1.93
+    },
+    "Arroz Diana x 500g": {
+      "a": -137.9501910223749,
+      "b": 0.07272795498622327,
+      "crecimientoAnualPct": 7.543792958895512,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 10417.77,
+      "mapeHoldoutPct": 1.52
+    },
+    "Chocorramo": {
+      "a": -118.70429113265939,
+      "b": 0.06330714325078299,
+      "crecimientoAnualPct": 6.535400527772772,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 12362.75,
+      "mapeHoldoutPct": 0.62
+    },
+    "Coca-Cola 1.5L": {
+      "a": -140.21216164864845,
+      "b": 0.07360797213049317,
+      "crecimientoAnualPct": 7.6384749952563835,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 6518.33,
+      "mapeHoldoutPct": 1.58
+    },
+    "Colombiana 1.5L": {
+      "a": -127.255748437413,
+      "b": 0.06749111423516949,
+      "crecimientoAnualPct": 6.982075338004168,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 11667.9,
+      "mapeHoldoutPct": 3.11
+    },
+    "Detergente Ariel 1kg": {
+      "a": -105.43795560131565,
+      "b": 0.05612876496771497,
+      "crecimientoAnualPct": 5.773387403629471,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 3639.28,
+      "mapeHoldoutPct": 4.14
+    },
+    "Fanta 1.5L": {
+      "a": -118.22554557003374,
+      "b": 0.06296788356025773,
+      "crecimientoAnualPct": 6.499263491026275,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 9922.3,
+      "mapeHoldoutPct": 3.27
+    },
+    "Gansito Ramo": {
+      "a": -109.2089236921372,
+      "b": 0.058160810134299176,
+      "crecimientoAnualPct": 5.988542232386251,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 4944.03,
+      "mapeHoldoutPct": 0.62
+    },
+    "Gaseosa Postobón 1.5L": {
+      "a": -89.60394976302686,
+      "b": 0.048627341648709556,
+      "crecimientoAnualPct": 4.982905027085205,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 6802.96,
+      "mapeHoldoutPct": 1.23
+    },
+    "Jabón Protex 120g": {
+      "a": -115.7085028461584,
+      "b": 0.06129317797051193,
+      "crecimientoAnualPct": 6.321057841802702,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 4288.79,
+      "mapeHoldoutPct": 2.71
+    },
+    "Leche Alquería 1L": {
+      "a": -116.64905369505826,
+      "b": 0.061842398564374824,
+      "crecimientoAnualPct": 6.379467594782073,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 5212.86,
+      "mapeHoldoutPct": 5.85
+    },
+    "Leche Colanta 1L": {
+      "a": -87.56307939443782,
+      "b": 0.0476921790543296,
+      "crecimientoAnualPct": 4.884774832249805,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 7831.73,
+      "mapeHoldoutPct": 1.15
+    },
+    "Lentejas El Dorado x 500g": {
+      "a": -112.1047419425186,
+      "b": 0.06006630035598768,
+      "crecimientoAnualPct": 6.190694902022509,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 12814.56,
+      "mapeHoldoutPct": 1.16
+    },
+    "Mantequilla Alquería 250g": {
+      "a": -103.73864656398568,
+      "b": 0.05582326334872555,
+      "crecimientoAnualPct": 5.741078398009702,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 10307.63,
+      "mapeHoldoutPct": 0.71
+    },
+    "Pan Bimbo Tajado": {
+      "a": -115.25526380428971,
+      "b": 0.06117479659374282,
+      "crecimientoAnualPct": 6.3084721535660915,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 5177.61,
+      "mapeHoldoutPct": 1.29
+    },
+    "Queso Alpina 250g": {
+      "a": -108.32690826253832,
+      "b": 0.05763029707170366,
+      "crecimientoAnualPct": 5.932328838534806,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 4100.81,
+      "mapeHoldoutPct": 0.7
+    },
+    "Queso Colanta 250g": {
+      "a": -133.04191098016452,
+      "b": 0.07044962767444918,
+      "crecimientoAnualPct": 7.299051904166443,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 13952.61,
+      "mapeHoldoutPct": 0.7
+    },
+    "Shampoo Head & Shoulders 350ml": {
+      "a": -137.62445700768112,
+      "b": 0.07266089442140361,
+      "crecimientoAnualPct": 7.536581253210062,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 12661.49,
+      "mapeHoldoutPct": 1.24
+    },
+    "Sprite 1.5L": {
+      "a": -107.9888832770637,
+      "b": 0.05799329185786713,
+      "crecimientoAnualPct": 5.970788701531915,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 11918.18,
+      "mapeHoldoutPct": 3.31
+    },
+    "Suavitel 1L": {
+      "a": -112.40600911157196,
+      "b": 0.060107619161849896,
+      "crecimientoAnualPct": 6.195082665377494,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 10081.26,
+      "mapeHoldoutPct": 4.19
+    },
+    "Tostadas Bimbo": {
+      "a": -135.35687964002906,
+      "b": 0.07142746025816656,
+      "crecimientoAnualPct": 7.404023727390752,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 10093.2,
+      "mapeHoldoutPct": 3.49
+    },
+    "Yogurt Alpina 200ml": {
+      "a": -102.71753949590288,
+      "b": 0.05513342291608709,
+      "crecimientoAnualPct": 5.668159080978308,
+      "ultimoAnio": 2024,
+      "ultimoPrecio": 7102.55,
+      "mapeHoldoutPct": 2.67
+    }
+  }
+}

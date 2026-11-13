@@ -27,6 +27,10 @@ public class PricePredictionService {
     @Autowired(required = false)
     private MongoTemplate mongoTemplate;
 
+    /** Modelo entrenado en Python (Colab) y exportado a JSON; si existe, tiene prioridad sobre el de Weka. */
+    @Autowired(required = false)
+    private ModeloPreciosJson modeloJson;
+
     @Value("${app.model.filename:price.model}")
     private String modelFilename;
 
@@ -147,6 +151,15 @@ public class PricePredictionService {
 
         int baseYear = (startYear == null) ? Year.now().getValue() : startYear;
 
+        // Modelo de Python exportado a JSON (regresión log-lineal por producto)
+        if (modeloJson != null && modeloJson.contiene(product)) {
+            Map<Integer, Double> r = new LinkedHashMap<>();
+            for (int i = 0; i < years; i++) {
+                r.put(baseYear + i, modeloJson.predecir(product, baseYear + i));
+            }
+            return r;
+        }
+
         List<String> categories = loadProductCategories();
         // If the provided product is not in categories, add it (helps when categories were minimal)
         if (!categories.contains(product)) {
@@ -184,6 +197,26 @@ public class PricePredictionService {
         }
 
         return results;
+    }
+
+    /** Intervalo de confianza del 95 % {mínimo, máximo} del pronóstico, o null si el modelo no lo calcula. */
+    public double[] predictInterval(String product, int year) {
+        if (modeloJson != null && modeloJson.contiene(product)) {
+            return modeloJson.intervalo(product, year);
+        }
+        return null;
+    }
+
+    /** Ficha del modelo en uso (variable predictiva, predictoras, porcentaje predictivo y comparativa). */
+    public Map<String, Object> getModelInfo() {
+        if (modeloJson != null && modeloJson.disponible()) {
+            return modeloJson.ficha();
+        }
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("modelo", "Modelo Weka (price.model)");
+        m.put("variablePredictiva", "precio");
+        m.put("variablesPredictoras", List.of("año", "producto"));
+        return m;
     }
 
     // expose product categories for frontend
