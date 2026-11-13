@@ -112,7 +112,13 @@ public class MobilePrediccionService {
             if (valor == null || valor.isNaN() || valor.isInfinite()) {
                 throw new IllegalStateException("El modelo no pudo calcular el pronóstico de " + nombre + " para " + anio);
             }
-            futuro.add(puntoPronostico(anio, valor, previo));
+            Map<String, Object> punto = puntoPronostico(anio, valor, previo);
+            double[] intervalo = precios.predictInterval(nombre, anio);
+            if (intervalo != null && intervalo.length == 2) {
+                punto.put("minimo", redondear(intervalo[0]));
+                punto.put("maximo", redondear(intervalo[1]));
+            }
+            futuro.add(punto);
             previo = valor;
         }
 
@@ -121,11 +127,42 @@ public class MobilePrediccionService {
         d.put("historico", historico);
         d.put("pronostico", futuro);
         d.put("resumen", resumen(nombre, futuro.get(0)));
+        Map<String, Object> ficha = fichaModelo();
+        if (!ficha.isEmpty()) {
+            d.put("modelo", ficha);
+        }
         Map<String, Object> fuentes = new LinkedHashMap<>();
         fuentes.put("precios", "Dataset de productos de consumo masivo (Kaggle), precios por año");
         fuentes.put("inflacion", InflacionDane.FUENTE);
         d.put("fuentes", fuentes);
         return MobileApiResponse.ok(d);
+    }
+
+    // ── GET /api/prediccion/modelo ────────────────────────────────────────────
+
+    /** Ficha completa del modelo, con la tabla comparativa de los modelos evaluados. */
+    public Map<String, Object> modelo() {
+        Map<String, Object> info = precios.getModelInfo();
+        if (info == null || info.isEmpty()) {
+            throw MobileException.notFound("No hay información del modelo de predicción");
+        }
+        return MobileApiResponse.ok(new LinkedHashMap<>(info));
+    }
+
+    /** Resumen del modelo para acompañar cada pronóstico (sin la tabla comparativa). */
+    private Map<String, Object> fichaModelo() {
+        Map<String, Object> info = precios.getModelInfo();
+        Map<String, Object> ficha = new LinkedHashMap<>();
+        if (info == null) {
+            return ficha;
+        }
+        for (String campo : new String[] { "modelo", "tipoProblema", "variablePredictiva", "variablesPredictoras",
+                "validacion", "metricas" }) {
+            if (info.get(campo) != null) {
+                ficha.put(campo, info.get(campo));
+            }
+        }
+        return ficha;
     }
 
     // ── GET /api/prediccion/panorama ──────────────────────────────────────────

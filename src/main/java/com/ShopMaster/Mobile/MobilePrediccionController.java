@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  *  GET /api/prediccion/productos
  *  GET /api/prediccion/precios?producto=Arroz Diana x 500g&anios=3
  *  GET /api/prediccion/panorama
+ *  GET /api/prediccion/modelo
  */
 @RestController
 public class MobilePrediccionController {
@@ -38,5 +39,10 @@ public class MobilePrediccionController {
     @GetMapping("/api/prediccion/panorama")
     public ResponseEntity<Map<String, Object>> panorama() {
         return ResponseEntity.ok(prediccion.panorama());
+    }
+
+    @GetMapping("/api/prediccion/modelo")
+    public ResponseEntity<Map<String, Object>> modelo() {
+        return ResponseEntity.ok(prediccion.modelo());
     }
 }

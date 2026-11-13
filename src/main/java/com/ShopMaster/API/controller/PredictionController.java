@@ -41,7 +41,20 @@ public class PredictionController {
     public PriceResponse predictPrice(@RequestBody PriceRequest request) {
         // If startYear is null, service will default to current year
         Map<Integer, Double> preds = pricePredictionService.predictMultiYear(request.getProduct(), request.getStartYear(), request.getYears());
-        return new PriceResponse(preds);
+        Map<Integer, double[]> intervals = new java.util.LinkedHashMap<>();
+        for (Integer year : preds.keySet()) {
+            double[] iv = pricePredictionService.predictInterval(request.getProduct(), year);
+            if (iv != null) {
+                intervals.put(year, iv);
+            }
+        }
+        return new PriceResponse(preds, intervals.isEmpty() ? null : intervals, pricePredictionService.getModelInfo());
+    }
+
+    /** Ficha del modelo: variable predictiva, predictoras, porcentaje predictivo y tabla comparativa. */
+    @GetMapping("/price/model")
+    public Map<String, Object> modelInfo() {
+        return pricePredictionService.getModelInfo();
     }
 
     @GetMapping("/price/products")
