@@ -191,4 +191,37 @@ class MobilePrediccionServiceTest {
         assertEquals(0, conteo.get("enLinea"));
         assertEquals(1, conteo.get("porDebajo"));
     }
+
+    @Test
+    void incluyeIntervaloYFichaDelModeloCuandoExisten() {
+        when(modelo.predictInterval(ARROZ, 2025)).thenReturn(new double[] { 10600.0, 11800.0 });
+        when(modelo.getModelInfo()).thenReturn(Map.of(
+                "modelo", "Regresión log-lineal por producto",
+                "variablePredictiva", "precio",
+                "variablesPredictoras", List.of("año", "producto"),
+                "metricas", Map.of("porcentajePredictivo", 97.85, "r2", 0.9948),
+                "comparativa", List.of(Map.of("modelo", "otro"))));
+
+        Map<String, Object> d = data(servicio.precios(ARROZ, "3"));
+        Map<String, Object> primero = lista(d.get("pronostico")).get(0);
+        assertEquals(10600.0, (Double) primero.get("minimo"), 1e-9);
+        assertEquals(11800.0, (Double) primero.get("maximo"), 1e-9);
+        assertFalse(lista(d.get("pronostico")).get(1).containsKey("minimo")); // el modelo no dio intervalo de 2026
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> ficha = (Map<String, Object>) d.get("modelo");
+        assertEquals("precio", ficha.get("variablePredictiva"));
+        assertTrue(ficha.containsKey("metricas"));
+        assertFalse(ficha.containsKey("comparativa")); // la comparativa va solo en /modelo
+
+        assertTrue(data(servicio.modelo()).containsKey("comparativa"));
+    }
+
+    @Test
+    void sinInformacionDelModeloNoHayFichaYModeloDa404() {
+        Map<String, Object> d = data(servicio.precios(ARROZ, "3"));
+        assertFalse(d.containsKey("modelo"));
+        MobileException e = assertThrows(MobileException.class, () -> servicio.modelo());
+        assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+    }
 }
